@@ -1,0 +1,1 @@
+- Label sticker price correctly in SchoolCard

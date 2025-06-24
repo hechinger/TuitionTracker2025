@@ -1,0 +1,20 @@
+@use "@/styles/colors.scss";
+
+.moreOptions {
+  padding: 20px;
+
+  .label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .placeholder {
+    font-size: 18px;
+    padding: none;
+    background: none;
+    outline: none;
+    border: none;
+    color: colors.$text-light;
+  }
+}

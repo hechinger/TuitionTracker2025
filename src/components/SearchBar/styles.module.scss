@@ -1,0 +1,27 @@
+@use "@/styles/colors.scss";
+
+.searchBarContainer {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: stretch;
+  background: white;
+  border: 1px solid colors.$text-light;
+  width: 100%;
+  max-width: 890px;
+  margin: 40px auto;
+
+  .searchButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-self: flex-end;
+    padding: 0px 20px;
+
+    button {
+      background: colors.$brand-yellow;
+      outline: none;
+      border: 2px solid colors.$brand-yellow-dark;
+      padding: 12px;
+      cursor: pointer;
+    }
+  }
+}

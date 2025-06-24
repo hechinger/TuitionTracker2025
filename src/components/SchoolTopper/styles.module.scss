@@ -1,0 +1,68 @@
+@use "@/styles/colors.scss";
+@use "@/styles/fonts.scss";
+
+.topper {
+  position: relative;
+  border: 1px solid colors.$border-main;
+  padding: 58px 40px;
+  max-width: 780px;
+  margin: 40px auto;
+  text-align: center;
+
+  .schoolImage {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .info {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    text-transform: uppercase;
+    color: colors.$text-light;
+  }
+
+  .prices {
+    display: flex;
+    justify-content: center;
+
+    .price {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 12px;
+
+      &::first-child {
+        border-right: 1px solid colors.$border-main;
+      }
+
+      .priceNumber {
+        position: relative;
+        font-size: 40px;
+        font-family: fonts.$numbers;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 8px;
+          left: 0;
+          width: 100%;
+          height: 6px;
+          background: colors.$text-main;
+          opacity: 0.3;
+        }
+      }
+
+      .priceLabel {
+        font-size: 14px;
+        color: colors.$text-light;
+      }
+    }
+  }
+}

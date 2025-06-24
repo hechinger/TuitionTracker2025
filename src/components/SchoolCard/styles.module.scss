@@ -1,0 +1,60 @@
+@use "@/styles/colors.scss";
+@use "@/styles/fonts.scss";
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .save {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    button {
+      background: none;
+      padding: 0;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: grid;
+      grid-template-areas: "star";
+
+      * {
+        grid-area: star;
+        grid-area: star;
+      }
+    }
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .name {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .price {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+
+      .number {
+        font-family: fonts.$numbers;
+        font-size: 40;
+        font-weight: light;
+      }
+    }
+  }
+}

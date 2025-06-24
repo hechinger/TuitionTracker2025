@@ -1,0 +1,10 @@
+.container {
+  margin: 40px;
+
+  .schools {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    column-gap: 1em;
+    row-gap: 1em;
+  }
+}

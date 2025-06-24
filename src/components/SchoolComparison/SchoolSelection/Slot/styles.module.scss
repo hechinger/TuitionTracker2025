@@ -1,0 +1,54 @@
+@use "@/styles/colors.scss";
+@use "@/styles/fonts.scss";
+
+.slot {
+  &.empty {
+    border: 1px dashed colors.$border-main;
+    color: colors.$text-light;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+  }
+
+  &.over {
+    outline: 1px solid red;
+  }
+
+  .school {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .name {
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      .price {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+
+        .number {
+          font-family: fonts.$numbers;
+          font-size: 40;
+          font-weight: light;
+        }
+      }
+    }
+  }
+}

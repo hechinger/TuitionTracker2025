@@ -1,0 +1,28 @@
+.schoolSelection {
+  .savedSchools {
+    margin: 40px 0;
+    padding: 0 40px;
+    width: 100%;
+    overflow-x: auto;
+
+    .title {
+      margin-bottom: 1em;
+    }
+
+    .schools {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 250px;
+      grid-template-rows: auto;
+      column-gap: 1em;
+    }
+  }
+
+  .selection {
+    .slots {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 12px;
+    }
+  }
+}

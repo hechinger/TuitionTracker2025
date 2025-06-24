@@ -1,0 +1,44 @@
+@use '@/styles/colors.scss';
+@use '@/styles/fonts.scss';
+
+.brandTopper {
+  background-color: colors.$brand-yellow;
+  color: black;
+  padding: 20px 4rem 10rem;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: 300px auto;
+  column-gap: 1.5rem;
+  align-items: center;
+
+  .logo {
+    width: 100%;
+  }
+
+  .tag {
+    font-size: fonts.$size-sm;
+    font-style: italic;
+  }
+}
+
+.menuList {
+  align-self: center;
+  display: flex;
+  gap: .25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .menuListItem {
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+}

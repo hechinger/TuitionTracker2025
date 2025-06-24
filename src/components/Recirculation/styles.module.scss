@@ -1,0 +1,23 @@
+@use '@/styles/colors.scss' as colors;
+
+.recirculation {
+  display: flex;
+  gap: 20px;
+  background-color: colors.$bg-dark;
+  color: white;
+}
+
+.story {
+  text-align: center;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.headline {
+  margin-top: 10px;
+  font-size: 16px;
+}

@@ -1,0 +1,26 @@
+@use "@/styles/colors.scss";
+
+.contactUs {
+  position: relative;
+  margin: 40px auto;
+  max-width: 400px;
+  background: colors.$brand-yellow;
+  border-top: 4px solid colors.$brand-yellow-dark;
+  padding: 20px;
+  text-align: center;
+
+  .icon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(-2px);
+    width: 32px;
+    height: 32px;
+    background: colors.$bg-dark;
+    border-radius: 50%;
+  }
+
+  h2 {
+    margin-bottom: 0.6em;
+  }
+}

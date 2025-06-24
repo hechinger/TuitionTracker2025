@@ -1,0 +1,24 @@
+@use "@/styles/colors.scss";
+
+.barContainer {
+  position: relative;
+  height: 24px;
+  background: #ccc;
+
+  .barHighlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--percent);
+    height: 100%;
+    background: colors.$text-main;
+  }
+
+  .label {
+    position: absolute;
+    top: 50%;
+    left: var(--percent);
+    transform: translate(4px, -50%);
+    line-height: 1em;
+  }
+}
