@@ -1,5 +1,118 @@
-$national: "Georgia", serif;
+$national: "National", "Helvetica", "sans-serif";
+$body: "Tiempos", "Georgia", "serif";
 $numbers: Helvetica, sans-serif;
 
 $size-sm: 0.8em;
 $size-md: 1.2em;
+
+@mixin font-faces {
+  @font-face {
+    font-family: "National";
+    src: url("./font_files/NationalWeb-Book.eot");
+    src: url("./font_files/NationalWeb-Book.eot") format("eot"),
+      url("./font_files/NationalWeb-Book.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "National";
+    src: url("./font_files/NationalWeb-BookItalic.eot");
+    src: url("./font_files/NationalWeb-BookItalic.eot") format("eot"),
+      url("./font_files/NationalWeb-BookItalic.woff") format("woff");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "National";
+    src: url("./font_files/NationalWeb-Bold.eot");
+    src: url("./font_files/NationalWeb-Bold.eot") format("eot"),
+      url("./font_files/NationalWeb-Bold.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "National";
+    src: url("./font_files/NationalWeb-BoldItalic.eot");
+    src: url("./font_files/NationalWeb-BoldItalic.eot") format("eot"),
+      url("./font_files/NationalWeb-BoldItalic.woff") format("woff");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "National";
+    src: url("./font_files/NationalWeb-Black.eot");
+    src: url("./font_files/NationalWeb-Black.eot") format("eot"),
+      url("./font_files/NationalWeb-Black.woff") format("woff");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Tiempos";
+    src: url("./font_files/TiemposHeadlineWeb-Black.eot");
+    src: url("./font_files/TiemposHeadlineWeb-Black.eot") format("eot"),
+      url("./font_files/TiemposHeadlineWeb-Black.woff") format("woff");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Tiempos";
+    src: url("./font_files/TiemposHeadlineWeb-BlackItalic.eot");
+    src: url("./font_files/TiemposHeadlineWeb-BlackItalic.eot") format("eot"),
+      url("./font_files/TiemposHeadlineWeb-BlackItalic.woff") format("woff");
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Tiempos";
+    src: url("./font_files/TiemposTextWeb-Regular.eot");
+    src: url("./font_files/TiemposTextWeb-Regular.eot") format("eot"),
+      url("./font_files/TiemposTextWeb-Regular.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Tiempos";
+    src: url("./font_files/TiemposTextWeb-RegularItalic.eot");
+    src: url("./font_files/TiemposTextWeb-RegularItalic.eot") format("eot"),
+      url("./font_files/TiemposTextWeb-RegularItalic.woff") format("woff");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Tiempos";
+    src: url("./font_files/TiemposTextWeb-Semibold.eot");
+    src: url("./font_files/TiemposTextWeb-Semibold.eot") format("eot"),
+      url("./font_files/TiemposTextWeb-Semibold.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Tiempos";
+    src: url("./font_files/TiemposTextWeb-SemiboldItalic.eot");
+    src: url("./font_files/TiemposTextWeb-SemiboldItalic.eot") format("eot"),
+      url("./font_files/TiemposTextWeb-SemiboldItalic.woff") format("woff");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+  }
+}

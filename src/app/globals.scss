@@ -1,14 +1,32 @@
 @use "@/styles/colors.scss";
+@use "@/styles/fonts.scss";
+
+@include fonts.font-faces();
 
 :root {
   --background: white;
-  --foreground: colors.$text-main;
+  --foreground: #{colors.$text-main};
+
+  --newspack-theme-font-body: #{fonts.$national};
+
+  --newspack-theme-font-size-base: 20px;
+  --newspack-theme-font-size-base-sm: 18px;
+  --newspack-theme-font-size-xxs: 0.6em;
+  --newspack-theme-font-size-xs: 0.7em;
+  --newspack-theme-font-size-sm: 0.8em;
+  --newspack-theme-font-size-md: 1.2em;
+  --newspack-theme-font-size-lg: 1.4em;
+  --newspack-theme-font-size-xl: 1.8em;
+  --newspack-theme-font-size-xxl: 2.2em;
+  --newspack-theme-font-size-xxxl: 2.8em;
+  --newspack-theme-font-size-xxxxl: 3.2em;
+  --newspack-theme-font-size-xxxxxl: 4em;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--newspack-theme-font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
