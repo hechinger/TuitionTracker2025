@@ -16,6 +16,7 @@
     border: none;
     display: block;
     width: 100%;
+    background: none;
 
     &::placeholder {
       color: colors.$text-light;

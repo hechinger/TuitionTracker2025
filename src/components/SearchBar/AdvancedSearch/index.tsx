@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useCallback } from "react";
+import { BuildingApartmentIcon, CertificateIcon, CurrencyCircleDollarIcon } from "@phosphor-icons/react";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import type { SearchOptions, UpdateSearch } from "@/hooks/useSearchState";
 import styles from "./styles.module.scss";
@@ -36,14 +37,17 @@ const schoolTypes = [
   {
     value: "public",
     label: "Public",
+    icon: <BuildingApartmentIcon size="48" />,
   },
   {
     value: "private",
     label: "Private",
+    icon: <CertificateIcon size="48" />,
   },
   {
     value: "for-profit",
     label: "For-profit",
+    icon: <CurrencyCircleDollarIcon size="48" />,
   },
 ] as const;
 
@@ -86,9 +90,9 @@ export default function AdvancedSearch(props: {
 
   return (
     <div>
-      <h2>More search options</h2>
+      <h2 className={styles.title}>More search options</h2>
 
-      <div>
+      <div className={styles.costSection}>
         <h3>What it will cost</h3>
 
         <div className={styles.bracket}>
@@ -129,7 +133,7 @@ export default function AdvancedSearch(props: {
         </div>
       </div>
 
-      <div>
+      <div className={styles.schoolTypeSection}>
         <h3>School type</h3>
 
         <div className={styles.schoolTypes}>
@@ -144,6 +148,7 @@ export default function AdvancedSearch(props: {
                 onChange={(e) => updateSchoolType(schoolType.value, e.target.checked)}
               />
               <div className={styles.schoolTypeIcon}>
+                {schoolType.icon}
               </div>
               <span>{schoolType.label}</span>
             </label>
@@ -151,7 +156,7 @@ export default function AdvancedSearch(props: {
         </div>
       </div>
 
-      <div>
+      <div className={styles.degreeTypeSection}>
         <h3>Degree type</h3>
 
         <div className={styles.degreeTypes}>
@@ -172,7 +177,7 @@ export default function AdvancedSearch(props: {
         </div>
       </div>
 
-      <div>
+      <div className={styles.otherSection}>
         <h3>Other school attributes</h3>
 
         <div className={styles.other}>
@@ -192,6 +197,22 @@ export default function AdvancedSearch(props: {
             <span>Historically black (HBCU)</span>
           </label>
         </div>
+      </div>
+
+      <div className={styles.controls}>
+        <button
+          type="button"
+          className={styles.clearButton}
+        >
+          Clear
+        </button>
+
+        <button
+          type="button"
+          className={styles.searchButton}
+        >
+          Search
+        </button>
       </div>
     </div>
   );

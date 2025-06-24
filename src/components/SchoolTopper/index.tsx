@@ -1,5 +1,6 @@
 "use client";
 
+import { GraduationCapIcon, MapPinIcon } from "@phosphor-icons/react";
 import { useSchool } from "@/hooks/useSchool";
 import { formatDollars } from "@/utils/formatDollars";
 import styles from "./styles.module.scss";
@@ -26,12 +27,18 @@ export default function SchoolTopper(props: {
       </h1>
 
       <div className={styles.info}>
-        <div>
-          {`${school.city}, ${school.state}`}
+        <div className={styles.infoItem}>
+          <MapPinIcon />
+          <span>
+            {`${school.city}, ${school.state}`}
+          </span>
         </div>
 
-        <div>
-          {`${school.schoolControl} ${school.degreeLevel}`}
+        <div className={styles.infoItem}>
+          <GraduationCapIcon />
+          <span>
+            {`${school.schoolControl} ${school.degreeLevel}`}
+          </span>
         </div>
       </div>
 

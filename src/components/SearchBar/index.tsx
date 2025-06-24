@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+import ClickAwayListener from "react-click-away-listener";
 import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
 import Well from "@/components/Well";
@@ -37,46 +38,69 @@ export default function SearchBar(props: {
   });
 
   return (
-    <div className={clsx({ [styles.highlight]: props.highlight })}>
+    <div className={clsx(styles.wrapper, { [styles.highlight]: props.highlight })}>
       <Well>
-        <div className={styles.searchBarContainer}>
-          <WhereInput
-            value={search.where}
-            onChange={(value: string) => updateSearch("where", value)}
-            onFocus={() => setInputState("where")}
-            schools={schools}
-          />
-
-          <MoreOptions
-            onFocus={() => setInputState("more")}
-          />
-
-          <div className={styles.searchButtonContainer}>
-            <button
-              type="submit"
-              onClick={() => {
-                router.push(`/search?${searchQueryString}`);
-              }}
+        <ClickAwayListener onClickAway={() => setInputState(undefined)}>
+          <div
+            className={clsx(styles.searchBarContainer, {
+              [styles.active]: !!inputState,
+            })}
+          >
+            <div
+              className={clsx({
+                [styles.grayed]: inputState && inputState !== "where",
+                [styles.dividerRight]: !inputState,
+              })}
             >
-              <MagnifyingGlassIcon size="32" />
-            </button>
+              <WhereInput
+                value={search.where}
+                onChange={(value: string) => updateSearch("where", value)}
+                onFocus={() => setInputState("where")}
+                schools={schools}
+              />
+            </div>
+
+            <div
+              className={clsx({
+                [styles.grayed]: inputState && inputState !== "more",
+              })}
+            >
+              <MoreOptions
+                onFocus={() => setInputState("more")}
+              />
+            </div>
+
+            <div
+              className={clsx(styles.searchButtonContainer, {
+                [styles.grayed]: inputState && inputState !== "more",
+              })}
+            >
+              <button
+                type="submit"
+                onClick={() => {
+                  router.push(`/search?${searchQueryString}`);
+                }}
+              >
+                <MagnifyingGlassIcon size="32" />
+              </button>
+            </div>
+
+            <Dropdown isOpen={!!inputState}>
+              {inputState === "where" && (
+                <WhereSuggestions
+                  suggestions={whereSuggestions}
+                />
+              )}
+
+              {inputState === "more" && (
+                <AdvancedSearch
+                  search={search}
+                  updateSearch={updateSearch}
+                />
+              )}
+            </Dropdown>
           </div>
-
-          <Dropdown isOpen={!!inputState}>
-            {inputState === "where" && (
-              <WhereSuggestions
-                suggestions={whereSuggestions}
-              />
-            )}
-
-            {inputState === "more" && (
-              <AdvancedSearch
-                search={search}
-                updateSearch={updateSearch}
-              />
-            )}
-          </Dropdown>
-        </div>
+        </ClickAwayListener>
       </Well>
     </div>
   );

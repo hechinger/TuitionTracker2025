@@ -4,6 +4,7 @@ import { useState } from "react";
 import chunk from "lodash/chunk";
 import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
+import Well from "@/components/Well";
 import SchoolCard from "@/components/SchoolCard";
 import { useFilteredSchools } from "./useFilteredSchools";
 import styles from "./styles.module.scss";
@@ -34,22 +35,24 @@ export default function SearchResults() {
 
   return (
     <div className={styles.container}>
-      <div>
-        Found
-        {' '}
-        {filteredSchools.length.toLocaleString()}
-        {' '}
-        {filteredSchools.length === 1 ? 'school' : 'schools'}
-      </div>
+      <Well>
+        <div className={styles.stats}>
+          Found
+          {' '}
+          {filteredSchools.length.toLocaleString()}
+          {' '}
+          {filteredSchools.length === 1 ? 'school' : 'schools'}
+        </div>
 
-      <div className={styles.schools}>
-        {activeSchools.map((school) => (
-          <SchoolCard
-            key={school.id}
-            school={school}
-          />
-        ))}
-      </div>
+        <div className={styles.schools}>
+          {activeSchools.map((school) => (
+            <SchoolCard
+              key={school.id}
+              school={school}
+            />
+          ))}
+        </div>
+      </Well>
     </div>
   );
 }

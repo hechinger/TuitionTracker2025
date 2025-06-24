@@ -4,7 +4,7 @@
 .topper {
   position: relative;
   border: 1px solid colors.$border-main;
-  padding: 58px 40px;
+  padding: 50px 40px;
   max-width: 780px;
   margin: 40px auto;
   text-align: center;
@@ -20,12 +20,22 @@
     transform: translate(-50%, -50%);
   }
 
+  .name {
+    font-size: 52px;
+  }
+
   .info {
     display: flex;
     justify-content: center;
     gap: 16px;
     text-transform: uppercase;
     color: colors.$text-light;
+
+    .infoItem {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
   }
 
   .prices {

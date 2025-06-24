@@ -1,3 +1,4 @@
+import PageTopOverlap from "@/components/PageTopOverlap";
 import SearchBar from "@/components/SearchBar";
 import SchoolTopper from "@/components/SchoolTopper";
 import HistoricalPrices from "@/components/HistoricalPrices";
@@ -14,8 +15,10 @@ export default async function School(props: {
   const { school } = await props.params;
   const schoolId = `${school.split('-').at(-1)}`;
   return (
-    <div>
-      <SearchBar />
+    <>
+      <PageTopOverlap>
+        <SearchBar />
+      </PageTopOverlap>
       <SchoolTopper schoolId={schoolId} />
       <HistoricalPrices schoolId={schoolId} />
       <IncomeBracketBarChart schoolId={schoolId} />
@@ -24,6 +27,6 @@ export default async function School(props: {
       <ContactUs />
       <StudentRetentionSection schoolId={schoolId} />
       <DemographicsSection schoolId={schoolId} />
-    </div>
+    </>
   );
 }

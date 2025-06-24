@@ -1,19 +1,28 @@
 @use "@/styles/colors.scss";
 
-.highlight {
+.wrapper {
   padding: 40px 0;
-  background: colors.$bg-light;
+
+  .highlight {
+    background: colors.$bg-light;
+  }
 }
 
 .searchBarContainer {
+  position: relative;
+  z-index: 5;
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr 1fr auto;
   align-items: stretch;
   background: white;
   border: 1px solid colors.$text-light;
   width: 100%;
   max-width: 890px;
   margin: 10px auto;
+
+  &.active {
+    filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  }
 
   .searchButtonContainer {
     display: flex;
@@ -28,5 +37,24 @@
       padding: 12px;
       cursor: pointer;
     }
+  }
+}
+
+.grayed {
+  background: colors.$bg-light;
+}
+
+.dividerRight {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 60%;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: colors.$border-main;
   }
 }

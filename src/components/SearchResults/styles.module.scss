@@ -1,5 +1,9 @@
 .container {
-  margin: 40px;
+  margin: 40px 0;
+
+  .stats {
+    margin-bottom: 20px;
+  }
 
   .schools {
     display: grid;
