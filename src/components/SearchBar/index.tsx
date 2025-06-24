@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
+import Well from "@/components/Well";
 import { useSuggestions } from "./useSuggestions";
 import WhereInput from "./WhereInput";
 import MoreOptions from "./MoreOptions";
@@ -15,8 +17,10 @@ import styles from "./styles.module.scss";
 
 export default function SearchBar(props: {
   autoload?: boolean;
+  highlight?: boolean;
 } = {
   autoload: false,
+  highlight: false,
 }) {
   const router = useRouter();
 
@@ -33,43 +37,47 @@ export default function SearchBar(props: {
   });
 
   return (
-    <div className={styles.searchBarContainer}>
-      <WhereInput
-        value={search.where}
-        onChange={(value: string) => updateSearch("where", value)}
-        onFocus={() => setInputState("where")}
-        schools={schools}
-      />
-
-      <MoreOptions
-        onFocus={() => setInputState("more")}
-      />
-
-      <div className={styles.searchButtonContainer}>
-        <button
-          type="submit"
-          onClick={() => {
-            router.push(`/search?${searchQueryString}`);
-          }}
-        >
-          <MagnifyingGlassIcon size="32" />
-        </button>
-      </div>
-
-      <Dropdown isOpen={!!inputState}>
-        {inputState === "where" && (
-          <WhereSuggestions
-            suggestions={whereSuggestions}
+    <div className={clsx({ [styles.highlight]: props.highlight })}>
+      <Well>
+        <div className={styles.searchBarContainer}>
+          <WhereInput
+            value={search.where}
+            onChange={(value: string) => updateSearch("where", value)}
+            onFocus={() => setInputState("where")}
+            schools={schools}
           />
-        )}
 
-        {inputState === "more" && (
-          <AdvancedSearch
-            search={search}
-            updateSearch={updateSearch}
+          <MoreOptions
+            onFocus={() => setInputState("more")}
           />
-        )}
-      </Dropdown>
+
+          <div className={styles.searchButtonContainer}>
+            <button
+              type="submit"
+              onClick={() => {
+                router.push(`/search?${searchQueryString}`);
+              }}
+            >
+              <MagnifyingGlassIcon size="32" />
+            </button>
+          </div>
+
+          <Dropdown isOpen={!!inputState}>
+            {inputState === "where" && (
+              <WhereSuggestions
+                suggestions={whereSuggestions}
+              />
+            )}
+
+            {inputState === "more" && (
+              <AdvancedSearch
+                search={search}
+                updateSearch={updateSearch}
+              />
+            )}
+          </Dropdown>
+        </div>
+      </Well>
     </div>
   );
 }

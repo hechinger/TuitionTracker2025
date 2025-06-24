@@ -47,7 +47,7 @@ export default function SchoolCard(props: {
             <span className={styles.number}>
               {formatDollars(props.school.stickerPrice.price)}
             </span>
-            <span>
+            <span className={styles.numberLabel}>
               sticker price
             </span>
           </div>

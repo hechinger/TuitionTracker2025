@@ -1,5 +1,10 @@
 @use "@/styles/colors.scss";
 
+.highlight {
+  padding: 40px 0;
+  background: colors.$bg-light;
+}
+
 .searchBarContainer {
   display: grid;
   grid-template-columns: auto auto auto;
@@ -8,7 +13,7 @@
   border: 1px solid colors.$text-light;
   width: 100%;
   max-width: 890px;
-  margin: 40px auto;
+  margin: 10px auto;
 
   .searchButtonContainer {
     display: flex;

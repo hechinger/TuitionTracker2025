@@ -1,11 +1,11 @@
+$side-padding: calc((100vw - 890px) / 2);
+
 .recommendedSection {
   margin: 40px 0;
-  padding: 0 40px;
-  width: 100%;
-  overflow-x: auto;
 
   .title {
     margin-bottom: 1em;
+    padding-left: $side-padding;
   }
 
   .schools {
@@ -14,5 +14,8 @@
     grid-auto-columns: 250px;
     grid-template-rows: auto;
     column-gap: 1em;
+    padding-bottom: 12px;
+    padding-left: $side-padding;
+    padding-right: $side-padding;
   }
 }

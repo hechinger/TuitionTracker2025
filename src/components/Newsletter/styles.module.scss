@@ -1,0 +1,36 @@
+@use "@/styles/colors.scss";
+
+.newsletter {
+  background: colors.$brand-yellow;
+  border-top: 4px solid colors.$brand-yellow-dark;
+  padding: 20px;
+
+  h2 {
+    margin-bottom: 0.6em;
+  }
+
+  .form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 10px;
+    margin-top: 1em;
+
+    .input {
+      background: rgba(#fff, 33%);
+      border: 1px solid black;
+      padding: 10px 16px;
+
+      &::placeholder {
+        color: black;
+      }
+    }
+
+    .submit {
+      padding: 9px;
+      background: black;
+      outline: none;
+      border: none;
+      color: white;
+    }
+  }
+}

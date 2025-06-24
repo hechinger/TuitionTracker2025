@@ -162,3 +162,10 @@ export type IncomeBracket = {
   bracket: string | undefined;
   setIncomeBracket: (bracket: string | undefined) => void;
 };
+
+export type RecirculationArticle = {
+  url: string;
+  headline: string;
+  image: string;
+  imageAlt: string;
+};

@@ -1,23 +1,35 @@
 @use '@/styles/colors.scss' as colors;
 
 .recirculation {
-  display: flex;
-  gap: 20px;
   background-color: colors.$bg-dark;
   color: white;
-}
+  padding: 40px 0;
+  margin: 40px 0;
 
-.story {
-  text-align: center;
-}
+  .title {
+    margin-bottom: 1em;
+    font-weight: bold;
+  }
 
-.image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-}
+  .articles {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 1em;
 
-.headline {
-  margin-top: 10px;
-  font-size: 16px;
+    .article {
+      display: block;
+
+      .img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        margin-bottom: 1em;
+      }
+
+      .headline {
+        font-weight: bold;
+      }
+    }
+  }
 }
