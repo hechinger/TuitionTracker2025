@@ -1,9 +1,7 @@
-import type { SearchOptions, UpdateSearch } from "@/hooks/useSearchState";
 import styles from "./styles.module.scss";
 
 export default function MoreOptions(props: {
-  search: SearchOptions;
-  updateSearch: UpdateSearch;
+  onFocus: () => void;
 }) {
   return (
     <div className={styles.moreOptions}>
@@ -14,6 +12,7 @@ export default function MoreOptions(props: {
       <button
         type="button"
         className={styles.placeholder}
+        onClick={() => props.onFocus()}
       >
         More search options
       </button>

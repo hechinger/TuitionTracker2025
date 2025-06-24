@@ -1,4 +1,4 @@
-export type SchoolControl = "public" | "private" | "forprofit";
+export type SchoolControl = "public" | "private" | "for-profit";
 export type DegreeLevel = "2-year" | "4-year";
 export type StickerPriceType = string;
 
@@ -160,5 +160,5 @@ export type SavedSchools = {
 
 export type IncomeBracket = {
   bracket: string | undefined;
-  setIncomeBracket: (bracket: string) => void;
+  setIncomeBracket: (bracket: string | undefined) => void;
 };

@@ -1,11 +1,17 @@
+"use client";
+
 import { useId } from "react";
+import type { SchoolIndex } from "@/types";
 import styles from "./styles.module.scss";
 
 export default function WhereInput(props: {
   value: string;
   onChange: (value: string) => void;
+  onFocus: () => void;
+  schools: SchoolIndex[];
 }) {
   const id = `where-input-${useId()}`;
+
   return (
     <div className={styles.whereInput}>
       <label htmlFor={id}>
@@ -20,6 +26,7 @@ export default function WhereInput(props: {
           type="text"
           placeholder="Find a school or pick a state"
           onChange={(e) => props.onChange(e.target.value)}
+          onFocus={props.onFocus}
         />
       </label>
     </div>

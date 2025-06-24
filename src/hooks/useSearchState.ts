@@ -2,9 +2,20 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { z } from "zod";
 
+export const schoolTypes = ["public", "private", "for-profit"] as const;
+export const degreeTypes = ["any", "4-year", "2-year"] as const;
+
+export type SchoolType = typeof schoolTypes[number];
+export type DegreeType = typeof degreeTypes[number];
+
 const SearchSchema = z.object({
   where: z.string().default(""),
-  schoolType: z.enum(['public', 'private', 'for-profit']).optional(),
+  minPrice: z.number().default(0),
+  maxPrice: z.number().optional(),
+  schoolType: z.array(z.enum(schoolTypes)).default([]),
+  degreeType: z.enum(degreeTypes).default("any"),
+  tribalCollege: z.boolean().default(false),
+  hbcu: z.boolean().default(false),
 });
 
 export type SearchOptions = z.infer<typeof SearchSchema>;

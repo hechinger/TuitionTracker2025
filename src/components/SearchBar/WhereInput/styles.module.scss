@@ -1,6 +1,7 @@
 @use "@/styles/colors.scss";
 
 .whereInput {
+  position: relative;
   padding: 20px;
 
   .label {

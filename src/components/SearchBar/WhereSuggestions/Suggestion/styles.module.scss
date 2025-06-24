@@ -1,0 +1,13 @@
+.suggestion {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .button {
+    padding: 0;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+}
