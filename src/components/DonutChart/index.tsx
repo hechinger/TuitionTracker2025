@@ -5,7 +5,6 @@ import styles from "./styles.module.scss";
 export default function DonutChart(props: {
   value: number;
   label: string;
-  color?: string;
   title?: string;
   benchmark?: number;
   benchmarkLabel?: string;
@@ -15,7 +14,7 @@ export default function DonutChart(props: {
 
   const scale = scaleLinear()
     .domain([0, 1])
-    .range([0, 2 * Math.PI]);
+    .range([2 * Math.PI, 0]);
 
   const data = [
     {
@@ -36,8 +35,6 @@ export default function DonutChart(props: {
     style: 'percent',
   });
 
-  const color = props.color || "steelblue";
-
   return (
     <div className={styles.donutContainer}>
       {props.title && (
@@ -55,7 +52,7 @@ export default function DonutChart(props: {
               <path
                 key={i}
                 d={segment(d) || ""}
-                fill={i === 0 ? color : "#ccc"}
+                className={i === 0 ? styles.dataSegment : styles.bgSegment}
               />
             ))}
           </g>
@@ -64,7 +61,6 @@ export default function DonutChart(props: {
         <div className={styles.number}>
           <span
             className={styles.bigNumber}
-            style={{ color }}
           >
             {text}
           </span>

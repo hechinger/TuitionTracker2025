@@ -30,6 +30,8 @@
     gap: 16px;
     text-transform: uppercase;
     color: colors.$text-light;
+    margin-top: 12px;
+    margin-bottom: 24px;
 
     .infoItem {
       display: flex;
@@ -46,26 +48,36 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 0 12px;
+      padding: 0 24px;
 
-      &::first-child {
+      &:first-child {
         border-right: 1px solid colors.$border-main;
       }
 
       .priceNumber {
         position: relative;
+        display: inline-block;
         font-size: 40px;
         font-family: fonts.$numbers;
 
         &::after {
           content: "";
           position: absolute;
+          z-index: -1;
           bottom: 8px;
           left: 0;
           width: 100%;
           height: 6px;
           background: colors.$text-main;
           opacity: 0.3;
+        }
+
+        &.sticker::after {
+          background: colors.$brand-blue;
+        }
+
+        &.net::after {
+          background: colors.$brand-pink;
         }
       }
 
@@ -74,5 +86,19 @@
         color: colors.$text-light;
       }
     }
+  }
+
+  .saveButton {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid colors.$border-main;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 40px;
+    cursor: pointer;
   }
 }

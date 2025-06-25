@@ -1,0 +1,51 @@
+@use "@/styles/colors.scss";
+
+.chart {
+  position: relative;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.plot {
+  position: relative;
+}
+
+.canvas {
+  display: block;
+}
+
+.axisRing {
+  stroke: colors.$border-main;
+  fill: none;
+}
+
+.axisSpoke {
+  stroke: colors.$border-main;
+  fill: none;
+}
+
+.dataRing {
+  stroke: colors.$brand-blue;
+  stroke-width: 2px;
+  fill: colors.$brand-blue;
+  fill-opacity: 0.2;
+}
+
+.dataPoint {
+  fill: colors.$brand-blue;
+}
+
+.annotation {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .categoryLabel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10ch;
+    text-align: center;
+  }
+}

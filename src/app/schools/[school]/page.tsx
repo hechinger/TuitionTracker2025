@@ -2,7 +2,6 @@ import PageTopOverlap from "@/components/PageTopOverlap";
 import SearchBar from "@/components/SearchBar";
 import SchoolTopper from "@/components/SchoolTopper";
 import HistoricalPrices from "@/components/HistoricalPrices";
-import IncomeBracketBarChart from "@/components/IncomeBracketBarChart";
 import SchoolDetails from "@/components/SchoolDetails";
 import GraduationRateSection from "@/components/GraduationRateSection";
 import StudentRetentionSection from "@/components/StudentRetentionSection";
@@ -21,7 +20,6 @@ export default async function School(props: {
       </PageTopOverlap>
       <SchoolTopper schoolId={schoolId} />
       <HistoricalPrices schoolId={schoolId} />
-      <IncomeBracketBarChart schoolId={schoolId} />
       <SchoolDetails schoolId={schoolId} />
       <GraduationRateSection schoolId={schoolId} />
       <ContactUs />

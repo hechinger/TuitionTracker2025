@@ -1,3 +1,6 @@
+@use "@/styles/colors.scss";
+@use "@/styles/fonts.scss";
+
 .donutContainer {
   display: inline-block;
 
@@ -14,6 +17,14 @@
       margin: 0 auto;
     }
 
+    .bgSegment {
+      fill: colors.$bg-light;
+    }
+
+    .dataSegment {
+      fill: colors.$brand-blue;
+    }
+
     .number {
       position: absolute;
       top: 50%;
@@ -27,6 +38,8 @@
       .bigNumber {
         font-size: 40px;
         font-weight: bold;
+        font-family: fonts.$numbers;
+        color: colors.$brand-blue-dark;
       }
 
       .smallLabel {

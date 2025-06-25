@@ -42,9 +42,17 @@ const getBrackets = (opts) => {
   const averagePriceSum = netPricesByBracket.reduce((sum, b) => sum + (b[1].price || 0), 0);
   const averagePrice = averagePriceSum  / netPricesByBracket.length;
 
+  const averagePriceMinSum = netPricesByBracket.reduce((sum, b) => sum + (b[1].min || 0), 0);
+  const averagePriceMin = averagePriceMinSum  / netPricesByBracket.length;
+
+  const averagePriceMaxSum = netPricesByBracket.reduce((sum, b) => sum + (b[1].max || 0), 0);
+  const averagePriceMax = averagePriceMaxSum  / netPricesByBracket.length;
+
   return {
     average: {
       price: averagePrice,
+      min: averagePriceMin || undefined,
+      max: averagePriceMax || undefined,
     },
     ...Object.fromEntries(netPricesByBracket),
   };
@@ -188,15 +196,17 @@ const convertData = (schools) => {
 const fullData = convertData(data);
 const indexData = fullData.map(({ details, ...school }) => school);
 
-fs.writeFileSync(
-  path.resolve(__dirname, "../src/data/schools_index.json"),
-  JSON.stringify(indexData),
-);
-
-fullData.forEach((school) => {
-  const { id, details } = school;
+["../src/data", "../public/api-static"].forEach((dname) => {
   fs.writeFileSync(
-    path.resolve(__dirname, `../src/data/split/school_${id}.json`),
-    JSON.stringify(details),
+    path.resolve(__dirname, path.join(dname, "schools_index.json")),
+    JSON.stringify(indexData),
   );
+
+  fullData.forEach((school) => {
+    const { id, details } = school;
+    fs.writeFileSync(
+      path.resolve(__dirname, path.join(dname, `split/school_${id}.json`)),
+      JSON.stringify(details),
+    );
+  });
 });

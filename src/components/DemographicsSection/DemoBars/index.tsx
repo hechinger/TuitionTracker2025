@@ -11,7 +11,7 @@ const demoLabels = {
   nathawpacisl: "Native Hawaiian/Pacific Islander",
   black: "Black",
   asian: "Asian",
-  amerindalasknat: "Aerican Indian/Alaska Native",
+  amerindalasknat: "American Indian/Alaska Native",
   nonresident: "Nonresident",
 } as Record<string, string>;
 
@@ -33,7 +33,7 @@ export default function DemoBars(props: {
   }) as React.CSSProperties;
 
   return (
-    <div>
+    <div className={styles.bars}>
       {values.map((d) => (
         <div key={d.demo}>
           <h3>{demoLabels[d.demo]}</h3>

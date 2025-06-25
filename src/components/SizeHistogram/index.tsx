@@ -63,8 +63,6 @@ export default function SizeHistogram(props: {
     };
   }, [schools, width, height]);
 
-  console.log(bins);
-
   return (
     <div>
       {props.title && (

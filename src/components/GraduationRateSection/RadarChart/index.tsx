@@ -66,22 +66,24 @@ export default function RadarChart(props: {
     value: props.school.graduationBachelors.byRace[c.key],
   }));
 
+  const spokeLength = (width / 2) - 30;
   const angle = scaleOrdinal()
     .domain(data.map((c) => c.key))
     .range(data.map((_, i) => i * ((2 * Math.PI) / data.length)));
   const r = scaleLinear()
     .domain([0, 1])
-    .range([0, width / 2]);
+    .range([0, spokeLength]);
 
   const line = lineRadial<DataPoint>()
     .angle((d) => angle(d.key) || 0)
     .radius((d) => r(d.value) || 0)
     .curve(curveLinearClosed);
 
-  console.log(data.map((d) => ({
-    angle: angle(d.key),
-    radius: r(d.value),
-  })));
+  const getXY = (angle: number, radius: number) => {
+    const x = Math.cos(angle - (Math.PI / 2)) * radius;
+    const y = Math.sin(angle - (Math.PI / 2)) * radius;
+    return { x, y };
+  };
 
   const r100 = data.map((c) => ({
     key: c.key,
@@ -96,44 +98,79 @@ export default function RadarChart(props: {
   }));
 
   return (
-    <div ref={ref}>
-      <svg
-        width={width}
-        height={height}
-        viewBox={`0 0 ${width} ${height}`}
+    <div
+      ref={ref}
+      className={styles.chart}
+    >
+      <div
+        className={styles.plot}
+        style={{ width, height }}
       >
-        <g transform={`translate(${width / 2}, ${height / 2})`}>
-          <path
-            d={line(r100) || ""}
-            fill="none"
-            stroke="#ccc"
-          />
-
-          <path
-            d={line(r50) || ""}
-            fill="none"
-            stroke="#ccc"
-          />
-
-          {data.map((d) => (
-            <line
-              key={d.key}
-              x1={0}
-              y1={0}
-              x2={Math.cos(angle(d.key)) * width / 2}
-              y2={Math.sin(angle(d.key)) * width / 2}
-              stroke="#ccc"
+        <svg
+          width={width}
+          height={height}
+          viewBox={`0 0 ${width} ${height}`}
+          className={styles.canvas}
+        >
+          <g transform={`translate(${width / 2}, ${height / 2})`}>
+            <path
+              d={line(r100) || ""}
+              className={styles.axisRing}
             />
-          ))}
 
-          <path
-            d={line(data) || ""}
-            fill="none"
-            stroke="steelblue"
-            strokeWidth={2}
-          />
-        </g>
-      </svg>
+            <path
+              d={line(r50) || ""}
+              className={styles.axisRing}
+            />
+
+            {data.map((d) => (
+              <line
+                key={d.key}
+                x1={0}
+                y1={0}
+                x2={getXY(angle(d.key), spokeLength).x}
+                y2={getXY(angle(d.key), spokeLength).y}
+                className={styles.axisSpoke}
+              />
+            ))}
+
+            <path
+              d={line(data) || ""}
+              className={styles.dataRing}
+            />
+            {data.map((d) => (
+              <circle
+                key={d.key}
+                cx={getXY(angle(d.key), r(d.value)).x}
+                cy={getXY(angle(d.key), r(d.value)).y}
+                r="4"
+                className={styles.dataPoint}
+              />
+            ))}
+          </g>
+        </svg>
+
+        <div
+          className={styles.annotation}
+        >
+          {data.map((d) => (
+            <div
+              key={d.key}
+              className={styles.categoryLabel}
+              style={{
+                transform: [
+                  `translate(${width / 2}px, ${height / 2}px)`,
+                  `translateX(${getXY(angle(d.key), width / 2).x}px)`,
+                  `translateY(${getXY(angle(d.key), height / 2).y}px)`,
+                  `translate(-50%, -50%)`,
+                ].join(' '),
+              }}
+            >
+              {d.label}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

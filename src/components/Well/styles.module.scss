@@ -14,12 +14,17 @@
   &.text {
     margin-left: auto;
     margin-right: auto;
-    max-width: 700px;
+    max-width: 600px;
   }
 
   &.narrow {
     margin-left: auto;
     margin-right: auto;
-    max-width: 400px;
+    max-width: 380px;
+  }
+
+  &.section {
+    margin-top: 80px;
+    margin-bottom: 80px;
   }
 }

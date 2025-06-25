@@ -1,5 +1,11 @@
 @use "@/styles/colors.scss";
 
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .barContainer {
   position: relative;
   height: 24px;

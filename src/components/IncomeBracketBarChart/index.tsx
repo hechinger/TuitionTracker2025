@@ -3,21 +3,26 @@
 import { useMemo, useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { useSchool } from "@/hooks/useSchool";
+import { formatDollars } from "@/utils/formatDollars";
 import { scaleLinear, scaleBand } from "d3-scale";
-import { max, extent } from "d3-array";
-import { line } from "d3-shape";
-import get from "lodash/get";
-import { type YearData } from "@/types";
+import { max } from "d3-array";
 import styles from "./styles.module.scss";
 
-const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+const margin = { top: 20, right: 0, bottom: 25, left: 0 };
 const brackets = [
   "0_30000",
   "30001_48000",
   "48001_75000",
   "75001_110000",
   "110001",
-];
+] as const;
+const bracketLabels = {
+  "0_30000": "$0-$30K",
+  "30001_48000": "$30K-$48K",
+  "48001_75000": "$48K-$75K",
+  "75001_110000": "$75K-$110K",
+  "110001": ">$110K",
+} as const;
 
 export default function IncomeBracketBarChart(props: {
   schoolId: string;
@@ -25,7 +30,7 @@ export default function IncomeBracketBarChart(props: {
   const { data: school } = useSchool(props.schoolId);
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
-  const height = 400;
+  const height = 300;
 
   const {
     maxYearData,
@@ -43,7 +48,7 @@ export default function IncomeBracketBarChart(props: {
     const x = scaleBand()
       .domain(brackets)
       .range([margin.left, width - margin.right])
-      .padding(0.1);
+      .paddingInner(0.2);
     const y = scaleLinear()
       .domain([
         0,
@@ -55,31 +60,75 @@ export default function IncomeBracketBarChart(props: {
   }, [school, width, height]);
 
   return (
-    <div>
+    <div className={styles.container}>
       {school && (
-        <h2>Income Brackets at {school.name}</h2>
+        <h2 className={styles.chartTitle}>
+          Income Brackets at {school.name}
+        </h2>
       )}
       <div ref={ref}>
         {school && (
-          <svg
-            className={styles.canvas}
-            width={width}
-            height={height}
-            viewBox={`0 0 ${width} ${height}`}
-          >
-            <g>
-              {brackets.map((bracket) => (
-                <rect
-                  key={bracket}
-                  x={x(bracket) || 0}
-                  y={y(maxYearData.netPricesByBracket[bracket].price || 0)}
-                  width={x.bandwidth()}
-                  height={y(0) - y(maxYearData.netPricesByBracket[bracket].price)}
-                  fill="steelblue"
+          <div className={styles.plot}>
+            <svg
+              className={styles.canvas}
+              width={width}
+              height={height}
+              viewBox={`0 0 ${width} ${height}`}
+            >
+              <g>
+                {brackets.map((bracket) => (
+                  <rect
+                    key={bracket}
+                    x={x(bracket) || 0}
+                    y={y(maxYearData.netPricesByBracket[bracket].price || 0)}
+                    width={x.bandwidth()}
+                    height={y(0) - y(maxYearData.netPricesByBracket[bracket].price)}
+                    className={styles.bar}
+                  />
+                ))}
+              </g>
+
+              <g>
+                <line
+                  x1={0}
+                  y1={y(0) + 5}
+                  x2={width}
+                  y2={y(0) + 5}
+                  className={styles.axisLine}
                 />
+              </g>
+            </svg>
+
+            <div className={styles.annotation}>
+              {brackets.map((bracket) => (
+                <div
+                  key={bracket}
+                  className={styles.yLabel}
+                  style={{
+                    transform: [
+                      `translateY(${y(maxYearData.netPricesByBracket[bracket].price || 0)}px)`,
+                      "translateY(-100%)",
+                      "translateY(-4px)",
+                      `translateX(${x(bracket) + (x.bandwidth() / 2)}px)`,
+                      "translateX(-50%)",
+                    ].join(' '),
+                  }}
+                >
+                  {formatDollars(maxYearData.netPricesByBracket[bracket].price || 0, { round: true })}
+                </div>
               ))}
-            </g>
-          </svg>
+
+              {brackets.map((tick) => (
+                <div
+                  key={tick}
+                  className={styles.xLabel}
+                  style={{ transform: `translateX(${x(tick) + (x.bandwidth() / 2)}px) translateX(-50%)` }}
+                >
+                  {bracketLabels[tick]}
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>
