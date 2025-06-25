@@ -24,11 +24,12 @@
         width: 100%;
         aspect-ratio: 16 / 9;
         object-fit: cover;
-        margin-bottom: 1em;
+        margin-bottom: 12px;
       }
 
       .headline {
         font-weight: bold;
+        font-size: 18px;
       }
     }
   }

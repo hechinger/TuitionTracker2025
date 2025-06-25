@@ -1,4 +1,5 @@
 import DonutChart from "@/components/DonutChart";
+import Well from "@/components/Well";
 import { useSchool } from "@/hooks/useSchool";
 import type { SchoolIndex } from "@/types";
 import styles from "./styles.module.scss";
@@ -21,7 +22,7 @@ export default function GraduationRates(props: {
   schools: SchoolIndex[];
 }) {
   return (
-    <div>
+    <Well section>
       <h2>Graduation Rates</h2>
 
       <div className={styles.charts}>
@@ -32,6 +33,6 @@ export default function GraduationRates(props: {
           />
         ))}
       </div>
-    </div>
+    </Well>
   );
 }

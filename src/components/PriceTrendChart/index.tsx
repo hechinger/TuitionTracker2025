@@ -6,6 +6,7 @@ import { max, extent } from "d3-array";
 import { line, area } from "d3-shape";
 import get from "lodash/get";
 import { formatDollars } from "@/utils/formatDollars";
+import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import type { YearData, SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -15,6 +16,8 @@ export default function PriceTrendChart(props: {
   school: SchoolDetail | undefined;
 }) {
   const { school } = props;
+
+  const { bracket = "average" } = useIncomeBracket();
 
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
@@ -104,11 +107,11 @@ export default function PriceTrendChart(props: {
             />
 
             <path
-              d={getArea("netPricesByBracket.average")}
+              d={getArea(`netPricesByBracket.${bracket}`)}
               className={styles.netArea}
             />
             <path
-              d={getPath("netPricesByBracket.average.price")}
+              d={getPath(`netPricesByBracket.${bracket}.price`)}
               className={styles.netLine}
             />
           </svg>

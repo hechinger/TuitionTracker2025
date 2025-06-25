@@ -2,6 +2,12 @@ export type SchoolControl = "public" | "private" | "for-profit";
 export type DegreeLevel = "2-year" | "4-year";
 export type StickerPriceType = string;
 
+export type IncomeBracketKey = "0_30000"
+  | "30001_48000"
+  | "48001_75000"
+  | "75001_110000"
+  | "110001";
+
 export type SchoolIndex = {
   id: string;
   slug: string;
@@ -159,8 +165,8 @@ export type SavedSchools = {
 };
 
 export type IncomeBracket = {
-  bracket: string | undefined;
-  setIncomeBracket: (bracket: string | undefined) => void;
+  bracket: IncomeBracketKey | undefined;
+  setIncomeBracket: (bracket: IncomeBracketKey | undefined) => void;
 };
 
 export type RecirculationArticle = {

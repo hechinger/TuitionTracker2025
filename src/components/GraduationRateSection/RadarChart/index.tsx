@@ -44,7 +44,7 @@ const categories = [
     key: "unknown",
     label: "Unknown",
   },
-];
+] as const;
 
 type DataPoint = {
   key: string;
@@ -67,7 +67,7 @@ export default function RadarChart(props: {
   }));
 
   const spokeLength = (width / 2) - 30;
-  const angle = scaleOrdinal()
+  const angle = scaleOrdinal<string, number>()
     .domain(data.map((c) => c.key))
     .range(data.map((_, i) => i * ((2 * Math.PI) / data.length)));
   const r = scaleLinear()

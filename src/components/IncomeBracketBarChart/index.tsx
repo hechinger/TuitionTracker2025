@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useRef } from "react";
+import clsx from "clsx";
 import { useResizeObserver } from "usehooks-ts";
 import { useSchool } from "@/hooks/useSchool";
 import { formatDollars } from "@/utils/formatDollars";
 import { scaleLinear, scaleBand } from "d3-scale";
 import { max } from "d3-array";
+import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import styles from "./styles.module.scss";
 
 const margin = { top: 20, right: 0, bottom: 25, left: 0 };
@@ -27,6 +29,8 @@ const bracketLabels = {
 export default function IncomeBracketBarChart(props: {
   schoolId: string;
 }) {
+  const { bracket: incomeBracket = "average" } = useIncomeBracket();
+
   const { data: school } = useSchool(props.schoolId);
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
@@ -45,7 +49,7 @@ export default function IncomeBracketBarChart(props: {
     }
 
     const [maxYearData] = school.years.slice().sort((a, b) => b.startYear - a.startYear);
-    const x = scaleBand()
+    const x = scaleBand<keyof typeof bracketLabels>()
       .domain(brackets)
       .range([margin.left, width - margin.right])
       .paddingInner(0.2);
@@ -67,7 +71,7 @@ export default function IncomeBracketBarChart(props: {
         </h2>
       )}
       <div ref={ref}>
-        {school && (
+        {school && maxYearData && (
           <div className={styles.plot}>
             <svg
               className={styles.canvas}
@@ -83,7 +87,10 @@ export default function IncomeBracketBarChart(props: {
                     y={y(maxYearData.netPricesByBracket[bracket].price || 0)}
                     width={x.bandwidth()}
                     height={y(0) - y(maxYearData.netPricesByBracket[bracket].price)}
-                    className={styles.bar}
+                    className={clsx(styles.bar, {
+                      [styles.highlight]: bracket === incomeBracket,
+                      [styles.mute]: incomeBracket !== "average" && bracket !== incomeBracket,
+                    })}
                   />
                 ))}
               </g>
@@ -109,7 +116,7 @@ export default function IncomeBracketBarChart(props: {
                       `translateY(${y(maxYearData.netPricesByBracket[bracket].price || 0)}px)`,
                       "translateY(-100%)",
                       "translateY(-4px)",
-                      `translateX(${x(bracket) + (x.bandwidth() / 2)}px)`,
+                      `translateX(${x(bracket)! + (x.bandwidth() / 2)}px)`,
                       "translateX(-50%)",
                     ].join(' '),
                   }}
@@ -122,7 +129,7 @@ export default function IncomeBracketBarChart(props: {
                 <div
                   key={tick}
                   className={styles.xLabel}
-                  style={{ transform: `translateX(${x(tick) + (x.bandwidth() / 2)}px) translateX(-50%)` }}
+                  style={{ transform: `translateX(${x(tick)! + (x.bandwidth() / 2)}px) translateX(-50%)` }}
                 >
                   {bracketLabels[tick]}
                 </div>

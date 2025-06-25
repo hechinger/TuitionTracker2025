@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRightIcon, GraduationCapIcon, MapPinIcon } from "@phosphor-icons/react";
-import type { Suggestion } from "../useSuggestions";
+import type { Suggestion } from "../../useSuggestions";
 import styles from "./styles.module.scss";
 
 const mainIcons = {

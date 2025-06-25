@@ -1,6 +1,6 @@
+import DataProvider from "@/components/DataProvider";
 import type { Metadata } from "next";
 import BrandTopper from "@/components/BrandTopper";
-import DataProvider from "@/components/DataProvider";
 import PageContent from "@/components/PageContent";
 import BrandFooter from "@/components/BrandFooter";
 import "./globals.scss";

@@ -1,12 +1,26 @@
+@use "@/styles/colors.scss";
+
+$side-padding: calc((100vw - min(90vw, 1200px)) / 2);
+
 .schoolSelection {
   .savedSchools {
     margin: 40px 0;
-    padding: 0 40px;
-    width: 100%;
-    overflow-x: auto;
 
-    .title {
-      margin-bottom: 1em;
+    .header {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: $side-padding;
+      padding-right: $side-padding;
+    }
+
+    .copyButton {
+      background: colors.$bg-dark;
+      border: none;
+      padding: 4px 8px;
+      color: white;
+      cursor: pointer;
     }
 
     .schools {
@@ -15,10 +29,27 @@
       grid-auto-columns: 250px;
       grid-template-rows: auto;
       column-gap: 1em;
+      padding-bottom: 12px;
+      padding-left: $side-padding;
+      padding-right: $side-padding;
     }
   }
 
   .selection {
+    .header {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .clearButton {
+      background: colors.$bg-light;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
     .slots {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;

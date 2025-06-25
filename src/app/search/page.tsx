@@ -6,7 +6,7 @@ export default function Search() {
   return (
     <>
       <PageTopOverlap>
-        <SearchBar autoload />
+        <SearchBar autoload withNav />
       </PageTopOverlap>
       <SearchResults />
     </>

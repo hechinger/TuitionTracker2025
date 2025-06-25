@@ -10,7 +10,7 @@ import { useFilteredSchools } from "./useFilteredSchools";
 import styles from "./styles.module.scss";
 
 export default function SearchResults() {
-  const [page, setPage] = useState(0);
+  const [page, /* setPage */] = useState(0);
 
   const { search } = useSearchState({
     autoload: true,

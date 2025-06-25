@@ -1,5 +1,6 @@
 import { createContext, useState, useCallback, useEffect } from "react";
-import { SavedSchools, IncomeBracket } from "@/types";
+import { useRouter, usePathname } from "next/navigation";
+import type { SavedSchools, IncomeBracket, IncomeBracketKey } from "@/types";
 
 export const StorageContext = createContext({
   savedSchools: {
@@ -30,6 +31,9 @@ const setValue = (key: string, value: unknown) => {
 };
 
 export function useStorageContext() {
+  const pathname = usePathname();
+  const router = useRouter();
+
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const [savedSchools, setSavedSchools] = useState<string[]>([]);
@@ -49,10 +53,25 @@ export function useStorageContext() {
 
   // Load values from existing storage
   useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const savedSchoolsParam = q.get("saved-schools");
+    if (savedSchoolsParam) {
+      try {
+        setValue("savedSchools", JSON.parse(savedSchoolsParam));
+      } catch(error) {
+        console.error("Failed to load saved schools from query param", savedSchoolsParam);
+        console.error(error);
+      }
+      const newQ = new URLSearchParams(q);
+      newQ.delete("saved-schools");
+      const newQString = `${newQ}`;
+      router.replace(`${pathname}${newQString ? `?${newQString}` : ""}`);
+    }
+
     setSavedSchools(getValue<string[]>("savedSchools") || []);
     setIncomeBracket(getValue<string>("incomeBracket"));
     setIsLoaded(true);
-  }, []);
+  }, [router, pathname]);
 
   // Write new values back to storage
   useEffect(() => {
@@ -68,7 +87,7 @@ export function useStorageContext() {
       schoolIsSaved,
     },
     incomeBracket: {
-      bracket: incomeBracket,
+      bracket: incomeBracket as IncomeBracketKey,
       setIncomeBracket,
     },
   };

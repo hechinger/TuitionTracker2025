@@ -4,7 +4,9 @@ import { GraduationCapIcon, MapPinIcon, StarIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useSchool } from "@/hooks/useSchool";
 import { useSavedSchools } from "@/hooks/useSavedSchools";
+import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { formatDollars } from "@/utils/formatDollars";
+import IncomeBracketSelect from "@/components/IncomeBracketSelect";
 import styles from "./styles.module.scss";
 
 export default function SchoolTopper(props: {
@@ -15,6 +17,7 @@ export default function SchoolTopper(props: {
   } = useSchool(props.schoolId);
 
   const savedSchools = useSavedSchools();
+  const { bracket = "average" } = useIncomeBracket();
 
   if (!school) return null;
 
@@ -60,11 +63,12 @@ export default function SchoolTopper(props: {
 
         <div className={styles.price}>
           <span className={clsx(styles.priceNumber, styles.net)}>
-            {formatDollars(school.netPricesByBracket.average)}
+            {formatDollars(school.netPricesByBracket[bracket])}
           </span>
           <span className={styles.priceLabel}>
             projected average net price
           </span>
+          <IncomeBracketSelect />
         </div>
       </div>
 

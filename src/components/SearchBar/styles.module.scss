@@ -8,6 +8,25 @@
   }
 }
 
+.nav {
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 890px;
+
+  .brand {
+    font-weight: 900;
+    font-size: 20px;
+  }
+
+  .savedSchools {
+    background: colors.$bg-dark;
+    color: white;
+    padding: 4px 8px;
+  }
+}
+
 .searchBarContainer {
   position: relative;
   z-index: 5;

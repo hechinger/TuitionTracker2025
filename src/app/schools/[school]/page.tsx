@@ -16,7 +16,7 @@ export default async function School(props: {
   return (
     <>
       <PageTopOverlap>
-        <SearchBar />
+        <SearchBar withNav />
       </PageTopOverlap>
       <SchoolTopper schoolId={schoolId} />
       <HistoricalPrices schoolId={schoolId} />

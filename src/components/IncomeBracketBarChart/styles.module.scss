@@ -19,6 +19,14 @@
 
 .bar {
   fill: colors.$brand-pink;
+
+  &.mute {
+    fill-opacity: 0.4;
+  }
+
+  &.highlight {
+    fill-opacity: 1;
+  }
 }
 
 .axisLine {

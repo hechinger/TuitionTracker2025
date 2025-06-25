@@ -19,9 +19,9 @@ export default function SizeHistogram(props: {
   const height = 200;
 
   const {
-    x,
-    y,
-    bins,
+    // x,
+    // y,
+    // bins,
     areaPath,
     points,
   } = useMemo(() => {

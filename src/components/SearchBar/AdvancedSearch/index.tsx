@@ -3,6 +3,7 @@
 import { useId, useCallback } from "react";
 import { BuildingApartmentIcon, CertificateIcon, CurrencyCircleDollarIcon } from "@phosphor-icons/react";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
+import type { IncomeBracketKey } from "@/types";
 import type { SearchOptions, UpdateSearch } from "@/hooks/useSearchState";
 import styles from "./styles.module.scss";
 
@@ -105,7 +106,11 @@ export default function AdvancedSearch(props: {
                 name={`income-bracket-${id}`}
                 value={bracket.value || ""}
                 checked={incomeBracket.bracket === bracket.value}
-                onChange={(e) => incomeBracket.setIncomeBracket(e.target.value || undefined)}
+                onChange={(e) => {
+                  incomeBracket.setIncomeBracket(
+                    (e.target.value) as IncomeBracketKey || undefined,
+                  );
+                }}
               />
               <span>{bracket.label}</span>
             </label>

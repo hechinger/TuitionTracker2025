@@ -1,4 +1,5 @@
 import SizeHistogram from "@/components/SizeHistogram";
+import Well from "@/components/Well";
 import type { SchoolIndex } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -6,7 +7,7 @@ export default function SchoolSizes(props: {
   schools: SchoolIndex[];
 }) {
   return (
-    <div>
+    <Well section>
       <h2>School Sizes</h2>
 
       <div className={styles.charts}>
@@ -18,6 +19,6 @@ export default function SchoolSizes(props: {
           />
         ))}
       </div>
-    </div>
+    </Well>
   );
 }

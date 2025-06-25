@@ -1,4 +1,5 @@
 import PriceTrendChart from "@/components/PriceTrendChart";
+import Well from "@/components/Well";
 import { useSchool } from "@/hooks/useSchool";
 import type { SchoolIndex } from "@/types";
 import styles from "./styles.module.scss";
@@ -19,7 +20,7 @@ export default function PriceTrend(props: {
   schools: SchoolIndex[];
 }) {
   return (
-    <div>
+    <Well section>
       <h2>
         Historical Price Trend
       </h2>
@@ -32,6 +33,6 @@ export default function PriceTrend(props: {
           />
         ))}
       </div>
-    </div>
+    </Well>
   );
 }

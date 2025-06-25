@@ -7,6 +7,7 @@ import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
 import PriceTrendChart from "@/components/PriceTrendChart";
 import IncomeBracketBarChart from "@/components/IncomeBracketBarChart";
+import IncomeBracketSelect from "@/components/IncomeBracketSelect";
 import styles from "./styles.module.scss";
 
 const historicTemplate = `
@@ -53,13 +54,11 @@ export default function HistoricalPrices(props: {
   const minBracket = brackets[minIndex(brackets, (b) => b[1])];
   const maxBracket = brackets[maxIndex(brackets, (b) => b[1])];
 
-  const minBracketName = bracketStudents[minBracket[0]];
+  const minBracketName = bracketStudents[minBracket[0] as keyof typeof bracketStudents];
   const minBracketPrice = minBracket[1];
 
-  const maxBracketName = bracketStudents[maxBracket[0]];
+  const maxBracketName = bracketStudents[maxBracket[0] as keyof typeof bracketStudents];
   const maxBracketPrice = maxBracket[1];
-
-  console.log({ brackets, minBracket, maxBracket });
 
   const bracketContext = {
     schoolName: school.name,
@@ -83,6 +82,8 @@ export default function HistoricalPrices(props: {
         {school && (
           <h2 className={styles.chartTitle}>
             Prices at {school.name} over time
+            {' '}
+            <IncomeBracketSelect />
           </h2>
         )}
 

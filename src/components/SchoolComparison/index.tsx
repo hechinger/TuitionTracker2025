@@ -1,11 +1,13 @@
 "use client";
 
 import ContactUs from "@/components/ContactUs";
+import Well from "@/components/Well";
 import { useComparisonSchools } from "./useComparisonSchools";
 import SchoolSelection from "./SchoolSelection";
 import PriceTrend from "./PriceTrend";
 import GraduationRates from "./GraduationRates";
 import SchoolSizes from "./SchoolSizes";
+import styles from "./styles.module.scss";
 
 export default function SchoolComparison() {
   const {
@@ -18,7 +20,11 @@ export default function SchoolComparison() {
 
   return (
     <div>
-      <h1>Compare your favorite schools</h1>
+      <Well>
+        <h1 className={styles.title}>
+          Compare your favorite schools
+        </h1>
+      </Well>
       <SchoolSelection
         savedSchools={savedSchools}
         optionSchools={optionSchools}

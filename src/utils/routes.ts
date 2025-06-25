@@ -4,6 +4,10 @@ export function getSchoolRoute(school: SchoolIndex) {
   return `/schools/${school.slug}-${school.id}`;
 }
 
+export function getCompareRoute() {
+  return `/saved-schools/`;
+}
+
 export const api = {
   // index: () => '/api/schools/',
   index: () => '/api-static/schools_index.json',
