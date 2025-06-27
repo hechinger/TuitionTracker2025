@@ -1,0 +1,20 @@
+@use "@/styles/colors.scss";
+
+.title {
+  margin-bottom: 12px;
+}
+
+.graf {
+  margin-bottom: 1em;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 12px;
+}
+
+.placeholder {
+  height: 120px;
+  background: colors.$bg-light;
+}

@@ -12,6 +12,11 @@ const retentionTemplate = `
   </p>
 `;
 
+const nationalAverages = {
+  fullTime: 0.7185,
+  partTime: 0.4584,
+};
+
 export default function StudentRetentionSection(props: {
   schoolId: string;
 }) {
@@ -45,12 +50,16 @@ export default function StudentRetentionSection(props: {
             value={school.retention.fullTime}
             label="retention"
             title="Full-time students"
+            benchmark={nationalAverages.fullTime}
+            benchmarkLabel="Nat’l average"
           />
 
           <DonutChart
             value={school.retention.partTime}
             label="retention"
             title="Part-time students"
+            benchmark={nationalAverages.partTime}
+            benchmarkLabel="Nat’l average"
           />
         </div>
       )}

@@ -47,7 +47,7 @@ export default function DonutChart(props: {
   const tickEnd = getXY(data[0].endAngle, outerRadius);
 
   const benchmarkStart = getXY(scale(props.benchmark || 0), innerRadius);
-  const benchmarkEnd = getXY(scale(props.benchmark || 0), outerRadius + 6);
+  const benchmarkEnd = getXY(scale(props.benchmark || 0), outerRadius);
 
   return (
     <div className={styles.donutContainer}>
@@ -100,22 +100,15 @@ export default function DonutChart(props: {
             {props.label}
           </span>
         </div>
-
-        <div className={styles.annotation}>
-          {props.benchmarkLabel && (
-            <div
-              className={styles.benchmark}
-              style={{
-                top: benchmarkEnd.y,
-                left: benchmarkEnd.x,
-                transform: `translate(-25%, 0%) translate(${width / 2}px, ${height / 2}px)`,
-              }}
-            >
-              {props.benchmarkLabel}
-            </div>
-          )}
-        </div>
       </div>
+
+      {props.benchmarkLabel && (
+        <div
+          className={styles.benchmark}
+        >
+          {`${props.benchmarkLabel}: ${formatPercent(props.benchmark || 0)}`}
+        </div>
+      )}
     </div>
   );
 }

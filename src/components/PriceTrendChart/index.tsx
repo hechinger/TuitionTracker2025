@@ -8,6 +8,7 @@ import get from "lodash/get";
 import { formatDollars } from "@/utils/formatDollars";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import type { YearData, SchoolDetail } from "@/types";
+import Legend from "./Legend";
 import styles from "./styles.module.scss";
 
 const margin = { top: 20, right: 60, bottom: 20, left: 80 };
@@ -90,84 +91,87 @@ export default function PriceTrendChart(props: {
   }, [school, width, height, props.max]);
 
   return (
-    <div ref={ref} className={styles.container}>
-      {school && (
-        <div className={styles.plot}>
-          <svg
-            className={styles.canvas}
-            width={width}
-            height={height}
-            viewBox={`0 0 ${width} ${height}`}
-          >
-            <g>
-              {y.ticks(4).map((tick) => (
-                <line
+    <div className={styles.legendWrapper}>
+      <div ref={ref} className={styles.container}>
+        {school && (
+          <div className={styles.plot}>
+            <svg
+              className={styles.canvas}
+              width={width}
+              height={height}
+              viewBox={`0 0 ${width} ${height}`}
+            >
+              <g>
+                {y.ticks(4).map((tick) => (
+                  <line
+                    key={tick}
+                    x1={0}
+                    y1={y(tick)}
+                    x2={width - margin.right}
+                    y2={y(tick)}
+                    className={clsx(styles.axisLine, { [styles.zero]: tick === 0 })}
+                  />
+                ))}
+              </g>
+
+              <path
+                d={getPath("stickerPrice.price")}
+                className={styles.stickerLine}
+              />
+
+              <path
+                d={getArea(`netPricesByBracket.${bracket}`)}
+                className={styles.netArea}
+              />
+              <path
+                d={getPath(`netPricesByBracket.${bracket}.price`)}
+                className={styles.netLine}
+              />
+            </svg>
+
+            <div className={styles.annotation}>
+              {y.ticks(4).filter((tick) => tick !== 0).map((tick) => (
+                <div
                   key={tick}
-                  x1={0}
-                  y1={y(tick)}
-                  x2={width - margin.right}
-                  y2={y(tick)}
-                  className={clsx(styles.axisLine, { [styles.zero]: tick === 0 })}
-                />
+                  className={clsx(styles.yLabel)}
+                  style={{ transform: `translateY(${y(tick)}px) translateY(-50%)` }}
+                >
+                  {formatDollars(tick, { round: true })}
+                </div>
               ))}
-            </g>
 
-            <path
-              d={getPath("stickerPrice.price")}
-              className={styles.stickerLine}
-            />
+              {x.ticks(4).map((tick) => (
+                <div
+                  key={tick}
+                  className={clsx(styles.xLabel)}
+                  style={{ transform: `translateX(${x(tick)}px) translateX(-50%)` }}
+                >
+                  {`${tick.toString().slice(2)}-${(tick + 1).toString().slice(2)}`}
+                </div>
+              ))}
 
-            <path
-              d={getArea(`netPricesByBracket.${bracket}`)}
-              className={styles.netArea}
-            />
-            <path
-              d={getPath(`netPricesByBracket.${bracket}.price`)}
-              className={styles.netLine}
-            />
-          </svg>
-
-          <div className={styles.annotation}>
-            {y.ticks(4).filter((tick) => tick !== 0).map((tick) => (
               <div
-                key={tick}
-                className={clsx(styles.yLabel)}
-                style={{ transform: `translateY(${y(tick)}px) translateY(-50%)` }}
+                className={styles.dataLabel}
+                style={{
+                  transform: `translateY(${y(school.stickerPrice.price)}px) translate(-${margin.right - 4}px, -18px)`,
+                }}
               >
-                {formatDollars(tick, { round: true })}
+                <strong>{formatDollars(school.stickerPrice.price)}</strong> sticker price
               </div>
-            ))}
 
-            {x.ticks(4).map((tick) => (
               <div
-                key={tick}
-                className={clsx(styles.xLabel)}
-                style={{ transform: `translateX(${x(tick)}px) translateX(-50%)` }}
+                className={styles.dataLabel}
+                style={{
+                  transform: `translateY(${y(school.netPricesByBracket[bracket])}px) translate(-${margin.right - 4}px, -18px)`,
+                }}
               >
-                {`${tick.toString().slice(2)}-${(tick + 1).toString().slice(2)}`}
+                <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong> net price
               </div>
-            ))}
-
-            <div
-              className={styles.dataLabel}
-              style={{
-                transform: `translateY(${y(school.stickerPrice.price)}px) translate(-${margin.right - 4}px, -18px)`,
-              }}
-            >
-              <strong>{formatDollars(school.stickerPrice.price)}</strong> sticker price
-            </div>
-
-            <div
-              className={styles.dataLabel}
-              style={{
-                transform: `translateY(${y(school.netPricesByBracket[bracket])}px) translate(-${margin.right - 4}px, -18px)`,
-              }}
-            >
-              <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong> net price
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+      <Legend />
     </div>
   );
 }

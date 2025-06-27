@@ -7,7 +7,7 @@ import styles from "./styles.module.scss";
 
 const demoLabels = {
   unknown: "Unknown",
-  multiple: "Two or more races",
+  multiple: "Multiple races",
   white: "White",
   hisp: "Hispanic",
   nathawpacisl: "Native Hawaiian/Pacific Islander",
