@@ -1,6 +1,8 @@
 "use client";
 
+import clsx from "clsx";
 import { type SchoolDetail } from "@/types";
+import { formatPercent } from "@/utils/formatPercent";
 import styles from "./styles.module.scss";
 
 const demoLabels = {
@@ -42,11 +44,8 @@ export default function DemoBars(props: {
             style={getStyles(d.value)}
           >
             <div className={styles.barHighlight} />
-            <div className={styles.label}>
-              {d.value.toLocaleString(undefined, {
-                style: 'percent',
-                maximumFractionDigits: 0,
-              })}
+            <div className={clsx(styles.label, { [styles.left]: d.value > 0.8 })}>
+              {formatPercent(d.value)}
             </div>
           </div>
         </div>

@@ -1,7 +1,9 @@
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
-const AdSlot = () => {
-  return <div className={styles.adSlot} />;
-};
-
-export default AdSlot;
+export default function AdSlot() {
+  return (
+    <div className={styles.adSlot}>
+      <span>Advertisement</span>
+    </div>
+  );
+}

@@ -26,5 +26,10 @@
     left: var(--percent);
     transform: translate(4px, -50%);
     line-height: 1em;
+
+    &.left {
+      transform: translate(-4px, -50%) translateX(-100%);
+      color: white;
+    }
   }
 }

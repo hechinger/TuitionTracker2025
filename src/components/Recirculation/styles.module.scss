@@ -1,4 +1,5 @@
-@use '@/styles/colors.scss' as colors;
+@use "@/styles/colors.scss";
+@use "@/styles/breakpoints.scss";
 
 .recirculation {
   background-color: colors.$bg-dark;
@@ -13,8 +14,13 @@
 
   .articles {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    column-gap: 1em;
+    grid-template-columns: 1fr;
+    row-gap: 2em;
+
+    @include breakpoints.at-least("md") {
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 1em;
+    }
 
     .article {
       display: block;

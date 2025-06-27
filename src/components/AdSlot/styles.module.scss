@@ -1,4 +1,12 @@
+@use "@/styles/colors.scss";
+
 .adSlot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 40px;
-  background-color: lightgray;
+  margin: 40px 0;
+  background-color: colors.$bg-light;
+  text-transform: uppercase;
+  color: colors.$text-light;
 }

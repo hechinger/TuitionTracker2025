@@ -1,10 +1,12 @@
 "use client";
 
 import { useId, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { BuildingApartmentIcon, CertificateIcon, CurrencyCircleDollarIcon } from "@phosphor-icons/react";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
-import type { IncomeBracketKey } from "@/types";
+import type { IncomeBracketKey, SchoolIndex } from "@/types";
 import type { SearchOptions, UpdateSearch } from "@/hooks/useSearchState";
+import PriceHistogram from "./PriceHistogram";
 import styles from "./styles.module.scss";
 
 const incomeBrackets = [
@@ -68,12 +70,17 @@ const degreeTypes = [
 ] as const;
 
 export default function AdvancedSearch(props: {
+  schools: SchoolIndex[];
   search: SearchOptions;
+  resetAdvanced: () => void;
   updateSearch: UpdateSearch;
+  searchQueryString: string;
 }) {
+  const router = useRouter();
+
   const id = useId();
 
-  const { search, updateSearch } = props;
+  const { search, resetAdvanced, updateSearch } = props;
 
   const incomeBracket = useIncomeBracket();
 
@@ -91,116 +98,135 @@ export default function AdvancedSearch(props: {
 
   return (
     <div>
-      <h2 className={styles.title}>More search options</h2>
+      <div className={styles.sections}>
+        <div className={styles.costSection}>
+          <h3>What it will cost</h3>
 
-      <div className={styles.costSection}>
-        <h3>What it will cost</h3>
+          <p className={styles.instructions}>
+            Optionally select your household income to get a better price estimate.
+          </p>
 
-        <div className={styles.bracket}>
-          {incomeBrackets.map((bracket) => (
-            <label
-              key={bracket.value}
-            >
-              <input
-                type="radio"
-                name={`income-bracket-${id}`}
-                value={bracket.value || ""}
-                checked={incomeBracket.bracket === bracket.value}
-                onChange={(e) => {
-                  incomeBracket.setIncomeBracket(
-                    (e.target.value) as IncomeBracketKey || undefined,
-                  );
-                }}
+          <div className={styles.bracket}>
+            {incomeBrackets.map((bracket) => (
+              <label
+                key={bracket.value || ""}
+                className={styles.bracketLabel}
+              >
+                <input
+                  type="radio"
+                  name={`income-bracket-${id}`}
+                  value={bracket.value || ""}
+                  checked={incomeBracket.bracket === bracket.value}
+                  onChange={(e) => {
+                    incomeBracket.setIncomeBracket(
+                      (e.target.value) as IncomeBracketKey || undefined,
+                    );
+                  }}
+                />
+                <span>{bracket.label}</span>
+              </label>
+            ))}
+          </div>
+
+          <div>
+            <div className={styles.priceHistogram}>
+              <PriceHistogram
+                schools={props.schools}
+                bracket={incomeBracket.bracket}
+                minPrice={search.minPrice}
+                maxPrice={search.maxPrice}
+                updateMinPrice={(price: number) => updateSearch("minPrice", price)}
+                updateMaxPrice={(price: number) => updateSearch("maxPrice", price)}
               />
-              <span>{bracket.label}</span>
-            </label>
-          ))}
+            </div>
+
+            <div className={styles.cost}>
+              <label>
+                <input
+                  type="number"
+                  value={search.minPrice}
+                  onChange={(e) => updateSearch("minPrice", +e.target.value)}
+                />
+                <span>Minimum</span>
+              </label>
+
+              <label>
+                <input
+                  type="number"
+                  value={search.maxPrice}
+                  onChange={(e) => updateSearch("maxPrice", +e.target.value)}
+                />
+                <span>Maximum</span>
+              </label>
+            </div>
+          </div>
         </div>
 
-        <div className={styles.cost}>
-          <label>
-            Minimum
-            <input
-              type="number"
-              value={search.minPrice}
-              onChange={(e) => updateSearch("minPrice", +e.target.value)}
-            />
-          </label>
+        <div className={styles.schoolTypeSection}>
+          <h3>School type</h3>
 
-          <label>
-            Maximum
-            <input
-              type="number"
-              value={search.maxPrice}
-              onChange={(e) => updateSearch("maxPrice", +e.target.value)}
-            />
-          </label>
+          <div className={styles.schoolTypes}>
+            {schoolTypes.map((schoolType) => (
+              <label
+                key={schoolType.value}
+              >
+                <input
+                  type="checkbox"
+                  className={styles.schoolTypeButton}
+                  checked={search.schoolType.includes(schoolType.value)}
+                  onChange={(e) => updateSchoolType(schoolType.value, e.target.checked)}
+                />
+                <div className={styles.schoolTypeIcon}>
+                  {schoolType.icon}
+                </div>
+                <span>{schoolType.label}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className={styles.schoolTypeSection}>
-        <h3>School type</h3>
+        <div className={styles.degreeTypeSection}>
+          <h3>Degree type</h3>
 
-        <div className={styles.schoolTypes}>
-          {schoolTypes.map((schoolType) => (
-            <label
-              key={schoolType.value}
-            >
+          <div className={styles.degreeTypes}>
+            {degreeTypes.map((degreeType) => (
+              <label
+                key={degreeType.value}
+                className={styles.degreeTypeLabel}
+              >
+                <input
+                  type="radio"
+                  name={`degree-type-${id}`}
+                  value={degreeType.value}
+                  checked={search.degreeType === degreeType.value}
+                  onChange={(e) => updateSearch("degreeType", e.target.value)}
+                />
+                <span>{degreeType.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.otherSection}>
+          <h3>Other school attributes</h3>
+
+          <div className={styles.other}>
+            <label>
               <input
                 type="checkbox"
-                className={styles.schoolTypeButton}
-                checked={search.schoolType.includes(schoolType.value)}
-                onChange={(e) => updateSchoolType(schoolType.value, e.target.checked)}
+                onChange={(e) => updateSearch("tribalCollege", e.target.checked)}
               />
-              <div className={styles.schoolTypeIcon}>
-                {schoolType.icon}
-              </div>
-              <span>{schoolType.label}</span>
+              <span>Tribal college</span>
             </label>
-          ))}
-        </div>
-      </div>
 
-      <div className={styles.degreeTypeSection}>
-        <h3>Degree type</h3>
-
-        <div className={styles.degreeTypes}>
-          {degreeTypes.map((degreeType) => (
-            <label
-              key={degreeType.value}
-            >
+            <label>
               <input
-                type="radio"
-                name={`degree-type-${id}`}
-                value={degreeType.value}
-                checked={search.degreeType === degreeType.value}
-                onChange={(e) => updateSearch("degreeType", e.target.value)}
+                type="checkbox"
+                onChange={(e) => updateSearch("hbcu", e.target.checked)}
               />
-              <span>{degreeType.label}</span>
+              <span>Historically black (HBCU)</span>
             </label>
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.otherSection}>
-        <h3>Other school attributes</h3>
-
-        <div className={styles.other}>
-          <label>
-            <input
-              type="checkbox"
-              onChange={(e) => updateSearch("tribalCollege", e.target.checked)}
-            />
-            <span>Tribal college</span>
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              onChange={(e) => updateSearch("hbcu", e.target.checked)}
-            />
-            <span>Historically black (HBCU)</span>
-          </label>
+          </div>
         </div>
       </div>
 
@@ -208,13 +234,17 @@ export default function AdvancedSearch(props: {
         <button
           type="button"
           className={styles.clearButton}
+          onClick={resetAdvanced}
         >
           Clear
         </button>
 
         <button
-          type="button"
+          type="submit"
           className={styles.searchButton}
+          onClick={() => {
+            router.push(`/search?${props.searchQueryString}`);
+          }}
         >
           Search
         </button>

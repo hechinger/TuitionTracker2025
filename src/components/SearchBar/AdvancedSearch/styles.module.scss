@@ -1,9 +1,8 @@
 @use "@/styles/colors.scss";
 
-.title {
-  text-align: center;
-  padding: 8px 20px;
-  border-bottom: 1px solid colors.$border-main;
+.sections {
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 .costSection,
@@ -11,15 +10,92 @@
 .degreeTypeSection,
 .otherSection {
   padding: 20px;
-  border-bottom: 1px solid colors.$border-main;
 
   h3 {
     margin-bottom: 8px;
   }
 }
 
+.bracket {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.instructions {
+  color: colors.$text-light;
+  margin-bottom: 12px;
+}
+
+.bracketLabel {
+  display: inline-block;
+  flex-grow: 1;
+  text-align: center;
+  padding: 4px 8px;
+  border: 1px solid colors.$border-main;
+  border-right-width: 0px;
+  background: white;
+  cursor: pointer;
+
+  &:last-child {
+    border-right-width: 1px;
+  }
+
+  &:has(input[type="radio"]:checked) + & {
+    border-left-width: 0px;
+  }
+
+  &:has(input[type="radio"]:checked) {
+    border: 1px solid colors.$text-light;
+    background: colors.$bg-light;
+    font-weight: bold;
+  }
+
+  input[type="radio"] {
+    clip: rect(1px, 1px, 1px, 1px);
+    word-wrap: normal;
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    overflow-wrap: normal;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+}
+
+.priceHistogram {
+  margin: 18px 0 12px;
+}
+
+.cost {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  label {
+    justify-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: colors.$text-light;
+
+    &:last-child {
+      justify-self: flex-end;
+    }
+  }
+
+  input {
+    border: 1px solid colors.$border-main;
+    padding: 6px 8px;
+    text-align: right;
+  }
+}
+
 .schoolTypes {
   display: flex;
+  align-items: stretch;
   flex-wrap: wrap;
   gap: 12px;
 
@@ -67,38 +143,51 @@
 .degreeTypes {
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
+}
 
-  label {
-    display: inline-block;
-    padding: 4px 8px;
-    border: 1px solid colors.$border-main;
-    background: white;
-    cursor: pointer;
+.degreeTypeLabel {
+  display: inline-block;
+  flex-grow: 1;
+  text-align: center;
+  padding: 4px 8px;
+  border: 1px solid colors.$border-main;
+  border-right-width: 0px;
+  background: white;
+  cursor: pointer;
 
-    &:has(input[type="radio"]:checked) {
-      border: 1px solid colors.$text-light;
-      background: colors.$bg-light;
-      font-weight: bold;
-    }
+  &:last-child {
+    border-right-width: 1px;
+  }
 
-    input[type="radio"] {
-      clip: rect(1px, 1px, 1px, 1px);
-      word-wrap: normal;
-      border: 0;
-      clip-path: inset(50%);
-      height: 1px;
-      margin: -1px;
-      overflow: hidden;
-      overflow-wrap: normal;
-      padding: 0;
-      position: absolute;
-      width: 1px;
-    }
+  &:has(input[type="radio"]:checked) + & {
+    border-left-width: 0px;
+  }
+
+  &:has(input[type="radio"]:checked) {
+    border: 1px solid colors.$text-light;
+    background: colors.$bg-light;
+    font-weight: bold;
+  }
+
+  input[type="radio"] {
+    clip: rect(1px, 1px, 1px, 1px);
+    word-wrap: normal;
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    overflow-wrap: normal;
+    padding: 0;
+    position: absolute;
+    width: 1px;
   }
 }
 
 .other {
   display: flex;
+  align-items: stretch;
   flex-wrap: wrap;
   gap: 12px;
 
@@ -136,6 +225,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-top: 1px solid colors.$border-main;
 
   .clearButton {
     background: none;

@@ -1,16 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import chunk from "lodash/chunk";
 import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
 import Well from "@/components/Well";
 import SchoolCard from "@/components/SchoolCard";
 import { useFilteredSchools } from "./useFilteredSchools";
+import Pagination from "./Pagination";
 import styles from "./styles.module.scss";
 
 export default function SearchResults() {
-  const [page, /* setPage */] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(0);
+  const updatePage = useCallback((value: number) => {
+    setPage(value);
+    if (!ref.current) return;
+    ref.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, []);
+
+  const [sorting, setSorting] = useState("alpha");
 
   const { search } = useSearchState({
     autoload: true,
@@ -24,6 +36,7 @@ export default function SearchResults() {
   const filteredSchools = useFilteredSchools({
     schools,
     search,
+    sorting,
   });
 
   if (isPending) {
@@ -34,14 +47,32 @@ export default function SearchResults() {
   const activeSchools = pages[page] || [];
 
   return (
-    <div className={styles.container}>
+    <div
+      ref={ref}
+      className={styles.container}
+    >
       <Well>
-        <div className={styles.stats}>
-          Found
-          {' '}
-          {filteredSchools.length.toLocaleString()}
-          {' '}
-          {filteredSchools.length === 1 ? 'school' : 'schools'}
+        <div className={styles.resultsTop}>
+          <div className={styles.stats}>
+            Found
+            {' '}
+            {filteredSchools.length.toLocaleString()}
+            {' '}
+            {filteredSchools.length === 1 ? 'school' : 'schools'}
+          </div>
+
+          <div className={styles.sorting}>
+            <span>Sort by</span>
+
+            <select
+              value={sorting}
+              onChange={(e) => setSorting(e.target.value)}
+            >
+              <option value="alpha">Name</option>
+              <option value="priceLowHigh">Price $ - $$$</option>
+              <option value="priceHighLow">Price $$$ - $</option>
+            </select>
+          </div>
         </div>
 
         <div className={styles.schools}>
@@ -52,6 +83,12 @@ export default function SearchResults() {
             />
           ))}
         </div>
+
+        <Pagination
+          page={page}
+          setPage={updatePage}
+          totalPages={pages.length}
+        />
       </Well>
     </div>
   );

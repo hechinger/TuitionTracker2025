@@ -37,7 +37,7 @@ export default function SearchBar(props: {
   const [inputState, setInputState] = useState<string>();
 
   const { data: schools = [] } = useSchools();
-  const { search, updateSearch, searchQueryString } = useSearchState({
+  const { search, resetAdvanced, updateSearch, searchQueryString } = useSearchState({
     autoload: props.autoload,
   });
 
@@ -48,7 +48,7 @@ export default function SearchBar(props: {
 
   return (
     <div className={clsx(styles.wrapper, { [styles.highlight]: props.highlight })}>
-      <Well>
+      <div>
         {props.withNav && (
           <div className={styles.nav}>
             <Link href="/" className={styles.brand}>
@@ -117,14 +117,17 @@ export default function SearchBar(props: {
 
               {inputState === "more" && (
                 <AdvancedSearch
+                  schools={schools}
                   search={search}
+                  resetAdvanced={resetAdvanced}
                   updateSearch={updateSearch}
+                  searchQueryString={searchQueryString}
                 />
               )}
             </Dropdown>
           </div>
         </ClickAwayListener>
-      </Well>
+      </div>
     </div>
   );
 }

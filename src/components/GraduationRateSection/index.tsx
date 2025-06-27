@@ -3,6 +3,8 @@
 import { useSchool } from "@/hooks/useSchool";
 import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
+import { formatPercent } from "@/utils/formatPercent";
+import { getGraduation } from "@/utils/formatSchoolInfo";
 import OverallBar from "./OverallBar";
 import RadarChart from "./RadarChart";
 import styles from "./styles.module.scss";
@@ -26,14 +28,12 @@ export default function GraduationRateSection(props: {
 
   if (!school) return null;
 
+  const grad = getGraduation(school);
   const overallContext = {
     schoolName: school.name,
-    graduationRate: school.graduationBachelors.total.toLocaleString(undefined, {
-      style: "percent",
-      maximumFractionDigits: 0,
-    }),
-    degreeType: "bachelor’s degree",
-    degreeYears: "six years",
+    graduationRate: formatPercent(grad.total),
+    degreeType: (school.degreeLevel === "2-year") ? "associate’s degree" : "bachelor’s degree",
+    degreeYears: (school.degreeLevel === "2-year") ? "four years" : "six years",
   };
 
   const demoContext = {

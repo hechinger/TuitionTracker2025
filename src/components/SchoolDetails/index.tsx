@@ -8,6 +8,11 @@ import {
   TrophyIcon,
   CaretDownIcon,
 } from "@phosphor-icons/react";
+import {
+  formatSchoolControl,
+  formatDegreeLevel,
+  getGraduation,
+} from "@/utils/formatSchoolInfo";
 import Well from "@/components/Well";
 import { useSchool } from "@/hooks/useSchool";
 import styles from "./styles.module.scss";
@@ -27,10 +32,13 @@ export default function SchoolDetails(props: {
     style: "percent",
     maximumFractionDigits: 0,
   });
-  const gradRate = school.graduationBachelors.total.toLocaleString(undefined, {
+  const gradRate = getGraduation(school).total.toLocaleString(undefined, {
     style: "percent",
     maximumFractionDigits: 0,
   });
+
+  const schoolControl = formatSchoolControl(school.schoolControl);
+  const degreeLevel = formatDegreeLevel(school.degreeLevel);
 
   return (
     <Well width="text">
@@ -58,7 +66,7 @@ export default function SchoolDetails(props: {
           <div className={styles.fact}>
             <BuildingApartmentIcon />
             <span>
-              Public, 4-year school
+              {`${schoolControl}, ${degreeLevel} school`}
             </span>
           </div>
 

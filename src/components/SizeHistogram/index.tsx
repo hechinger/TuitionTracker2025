@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useMemo } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { scaleLinear } from "d3-scale";
@@ -6,7 +8,7 @@ import { line } from "d3-shape";
 import { useSchools } from "@/hooks/useSchools";
 import styles from "./styles.module.scss";
 
-const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+const margin = { top: 30, right: 10, bottom: 20, left: 10 };
 
 export default function SizeHistogram(props: {
   size: number;
@@ -16,11 +18,16 @@ export default function SizeHistogram(props: {
 
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
-  const height = 200;
+
+  const chartHeight = 60;
+  const height = chartHeight + margin.top + margin.bottom;
+
+  const chartHeight2 = 20;
+  const height2 = chartHeight2 + margin.top + margin.bottom;
 
   const {
-    // x,
-    // y,
+    x,
+    y,
     // bins,
     areaPath,
     points,
@@ -63,13 +70,19 @@ export default function SizeHistogram(props: {
     };
   }, [schools, width, height]);
 
+  const [lab1, lab2] = x.domain();
+  const dataLabelPosition = props.size;
+
   return (
     <div>
       {props.title && (
         <h3>{props.title}</h3>
       )}
 
-      <div ref={ref}>
+      <div
+        ref={ref}
+        className={styles.plot}
+      >
         <svg
           className={styles.canvas}
           width={width}
@@ -78,10 +91,97 @@ export default function SizeHistogram(props: {
         >
           <path
             d={areaPath(points) || ""}
-            fill="#ccc"
-            stroke="black"
+            className={styles.histogram}
+          />
+
+          <line
+            x1={x(props.size)}
+            y1={margin.top - 10}
+            x2={x(props.size)}
+            y2={height - margin.bottom}
+            className={styles.dataLine}
+          />
+
+          <line
+            x1={x.range()[0] - 4}
+            y1={y(0) + 0.5}
+            x2={x.range()[1] + 4}
+            y2={y(0) + 0.5}
+            className={styles.axis}
           />
         </svg>
+
+        <div className={styles.annotation}>
+          <div
+            className={styles.label}
+            style={{
+              transform: `translateX(${x(lab1)}px)`,
+            }}
+          >
+            {lab1.toLocaleString()} students
+          </div>
+
+          <div
+            className={styles.label}
+            style={{
+              transform: `translateX(${x(lab2)}px) translateX(-100%)`,
+            }}
+          >
+            {lab2.toLocaleString()} students
+          </div>
+
+          <div
+            className={styles.dataLabel}
+            style={{
+              transform: `translateX(${x(dataLabelPosition)}px) translateX(-50%)`,
+            }}
+          >
+            {props.size.toLocaleString()} students
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={styles.plot}
+      >
+        <svg
+          className={styles.canvas}
+          width={width}
+          height={height2}
+          viewBox={`0 0 ${width} ${height2}`}
+        >
+          {schools.map((school) => (
+            <rect
+              key={school.id}
+              x={x(school.enrollment)}
+              y={margin.top}
+              width={2}
+              height={height2 - margin.top - margin.bottom}
+              fill="black"
+              fillOpacity="0.1"
+            />
+          ))}
+        </svg>
+
+        <div className={styles.annotation}>
+          <div
+            className={styles.label}
+            style={{
+              transform: `translateX(${x(lab1)}px)`,
+            }}
+          >
+            {lab1.toLocaleString()} students
+          </div>
+
+          <div
+            className={styles.label}
+            style={{
+              transform: `translateX(${x(lab2)}px) translateX(-100%)`,
+            }}
+          >
+            {lab2.toLocaleString()} students
+          </div>
+        </div>
       </div>
     </div>
   );

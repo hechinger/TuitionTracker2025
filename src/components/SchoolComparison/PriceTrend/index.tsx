@@ -12,6 +12,7 @@ function Chart(props: {
   return (
     <PriceTrendChart
       school={school}
+      max={100000}
     />
   );
 }

@@ -2,11 +2,27 @@ export type SchoolControl = "public" | "private" | "for-profit";
 export type DegreeLevel = "2-year" | "4-year";
 export type StickerPriceType = string;
 
-export type IncomeBracketKey = "0_30000"
+export type IncomeBracketKey = "average"
+  | "0_30000"
   | "30001_48000"
   | "48001_75000"
   | "75001_110000"
   | "110001";
+
+export type Graduation = {
+  total: number;
+  byRace: {
+    unknown: number;
+    multiple: number;
+    white: number;
+    hisp: number;
+    nathawpacisl: number;
+    black: number;
+    asian: number;
+    amerindalasknat: number;
+    nonresident: number;
+  },
+};
 
 export type SchoolIndex = {
   id: string;
@@ -127,34 +143,8 @@ export type SchoolDetail = {
     fullTime: number;
     partTime: number;
   },
-  graduationBachelors: {
-    total: number;
-    byRace: {
-      unknown: number;
-      multiple: number;
-      white: number;
-      hisp: number;
-      nathawpacisl: number;
-      black: number;
-      asian: number;
-      amerindalasknat: number;
-      nonresident: number;
-    },
-  },
-  graduationAssociates: {
-    total: number;
-    byRace: {
-      unknown: number;
-      multiple: number;
-      white: number;
-      hisp: number;
-      nathawpacisl: number;
-      black: number;
-      asian: number;
-      amerindalasknat: number;
-      nonresident: number;
-    },
-  },
+  graduationBachelors: Graduation;
+  graduationAssociates: Graduation;
   years: YearData[];
 };
 

@@ -1,0 +1,21 @@
+@use "sass:map";
+
+$breakpoint-sm: 600px;
+$breakpoint-md: 782px;
+
+$breakpoint-floors: (
+  "sm": 0px,
+  "md": $breakpoint-sm,
+  "lg": $breakpoint-md,
+);
+
+@mixin at-least($breakpoint) {
+  @if not map-has-key($breakpoint-floors, $breakpoint) {
+    @error "Invalid breakpoint `#{$breakpoint}` provided to breakpoint-at-least. "
+      + "Available breakpoints are: #{map-keys($breakpoint-floors)}.";
+  }
+
+  @media screen and (min-width: map.get($breakpoint-floors, $breakpoint)) {
+    @content;
+  }
+}

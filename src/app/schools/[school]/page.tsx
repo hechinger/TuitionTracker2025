@@ -1,3 +1,4 @@
+import AdSlot from "@/components/AdSlot";
 import PageTopOverlap from "@/components/PageTopOverlap";
 import SearchBar from "@/components/SearchBar";
 import SchoolTopper from "@/components/SchoolTopper";
@@ -19,6 +20,7 @@ export default async function School(props: {
         <SearchBar withNav />
       </PageTopOverlap>
       <SchoolTopper schoolId={schoolId} />
+      <AdSlot />
       <HistoricalPrices schoolId={schoolId} />
       <SchoolDetails schoolId={schoolId} />
       <GraduationRateSection schoolId={schoolId} />

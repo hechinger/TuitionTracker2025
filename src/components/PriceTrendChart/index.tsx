@@ -14,6 +14,7 @@ const margin = { top: 20, right: 20, bottom: 20, left: 60 };
 
 export default function PriceTrendChart(props: {
   school: SchoolDetail | undefined;
+  max?: number;
 }) {
   const { school } = props;
 
@@ -45,7 +46,7 @@ export default function PriceTrendChart(props: {
       .domain(extent(years) as [number, number])
       .range([margin.left, width - margin.right]);
     const y = scaleLinear()
-      .domain([0, max(prices) || 0])
+      .domain([0, props.max || max(prices) || 0])
       .range([height - margin.bottom, margin.top])
       .nice();
 
@@ -76,7 +77,7 @@ export default function PriceTrendChart(props: {
       getPath,
       getArea,
     };
-  }, [school, width, height]);
+  }, [school, width, height, props.max]);
 
   return (
     <div ref={ref} className={styles.container}>

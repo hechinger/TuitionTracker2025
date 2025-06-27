@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import type { SchoolIndex } from "@/types";
+import type { IncomeBracketKey, SchoolIndex } from "@/types";
 import type { SearchOptions } from "@/hooks/useSearchState";
+import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 
 const matchName = (opts: {
   school: SchoolIndex;
@@ -13,6 +14,19 @@ const matchName = (opts: {
   ];
   const lowerName = opts.name.toLowerCase();
   return aliases.some((alias) => alias.includes(lowerName));
+};
+
+const matchCost = (opts: {
+  school: SchoolIndex;
+  bracket?: IncomeBracketKey;
+  minPrice: SearchOptions["minPrice"];
+  maxPrice: SearchOptions["maxPrice"];
+}) => {
+  const { bracket = "average" } = opts;
+  const cost = opts.school.netPricesByBracket[bracket];
+  if (cost < opts.minPrice) return false;
+  if (opts.maxPrice && opts.maxPrice < cost) return false;
+  return true;
 };
 
 const matchSchoolType = (opts: {
@@ -50,19 +64,41 @@ const matchHbcu = (opts: {
 export function useFilteredSchools(opts: {
   schools: SchoolIndex[];
   search: SearchOptions;
+  sorting: string;
 }) {
   const {
     schools = [],
     search,
+    sorting,
   } = opts;
 
+  const { bracket = "average" } = useIncomeBracket();
+
   return useMemo(() => {
-    return schools.filter((school) => (
+    const schoolSet = schools.filter((school) => (
       matchName({ school, name: search.where })
+      && matchCost({ school, bracket, minPrice: search.minPrice, maxPrice: search.maxPrice })
       && matchSchoolType({ school, schoolType: search.schoolType })
       && matchDegreeType({ school, degreeType: search.degreeType })
       && matchTribalCollege({ school, tribalCollege: search.tribalCollege })
       && matchHbcu({ school, hbcu: search.hbcu })
     ));
-  }, [schools, search]);
+
+    return schoolSet.sort((a, b) => {
+      const priceA = a.stickerPrice.price; // a.netPricesByBracket[bracket];
+      const priceB = b.stickerPrice.price; // b.netPricesByBracket[bracket];
+
+      const alpha = a.name.localeCompare(b.name);
+
+      if (sorting === "priceLowHigh") {
+        return (priceA - priceB) || alpha;
+      }
+
+      if (sorting === "priceHighLow") {
+        return (priceB - priceA) || alpha;
+      }
+
+      return a.name.localeCompare(b.name);
+    });
+  }, [schools, search, bracket, sorting]);
 }

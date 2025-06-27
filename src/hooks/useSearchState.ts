@@ -55,8 +55,15 @@ export function useSearchState({
     setSearch((old) => ({ ...old, ...parsed }));
   }, []);
 
+  const resetAdvanced = useCallback(() => {
+    setSearch((old) => SearchSchema.parse({
+      where: old.where,
+    }));
+  }, []);
+
   return {
     search,
+    resetAdvanced,
     updateSearch,
     searchQueryString,
   };
