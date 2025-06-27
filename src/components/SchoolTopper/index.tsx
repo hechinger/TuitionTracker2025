@@ -72,9 +72,9 @@ export default function SchoolTopper(props: {
               {formatDollars(school.netPricesByBracket[bracket])}
             </span>
             <span className={styles.priceLabel}>
-              projected average net price
+              projected average net price for
             </span>
-            <IncomeBracketSelect />
+            <IncomeBracketSelect className={styles.select} />
           </div>
         </div>
 

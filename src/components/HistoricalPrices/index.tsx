@@ -81,7 +81,7 @@ export default function HistoricalPrices(props: {
       <div className={styles.chart}>
         {school && (
           <h2 className={styles.chartTitle}>
-            Prices at {school.name} over time
+            Prices at {school.name} over time for
             {' '}
             <IncomeBracketSelect />
           </h2>

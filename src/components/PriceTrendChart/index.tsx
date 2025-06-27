@@ -10,7 +10,7 @@ import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import type { YearData, SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
-const margin = { top: 20, right: 20, bottom: 20, left: 60 };
+const margin = { top: 20, right: 60, bottom: 20, left: 80 };
 
 export default function PriceTrendChart(props: {
   school: SchoolDetail | undefined;
@@ -18,11 +18,13 @@ export default function PriceTrendChart(props: {
 }) {
   const { school } = props;
 
+  console.log(school);
+
   const { bracket = "average" } = useIncomeBracket();
 
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
-  const height = 400;
+  const height = 320;
 
   const {
     x,
@@ -62,11 +64,19 @@ export default function PriceTrendChart(props: {
         .x((d) => x(d.startYear))
         .y0((d) => {
           const price = get(d, key);
-          return y(price.min || price.price);
+          if (price.min === undefined) return y(price.price);
+          return y(Math.min(
+            price.min * d.stickerPrice.price,
+            price.price,
+          ));
         })
         .y1((d) => {
           const price = get(d, key);
-          return y(price.max || price.price);
+          if (price.max === undefined) return y(price.price);
+          return y(Math.max(
+            price.max * d.stickerPrice.price,
+            price.price,
+          ));
         });
       return path(school.years) || "";
     };
@@ -137,6 +147,24 @@ export default function PriceTrendChart(props: {
                 {`${tick.toString().slice(2)}-${(tick + 1).toString().slice(2)}`}
               </div>
             ))}
+
+            <div
+              className={styles.dataLabel}
+              style={{
+                transform: `translateY(${y(school.stickerPrice.price)}px) translate(-${margin.right - 4}px, -18px)`,
+              }}
+            >
+              <strong>{formatDollars(school.stickerPrice.price)}</strong> sticker price
+            </div>
+
+            <div
+              className={styles.dataLabel}
+              style={{
+                transform: `translateY(${y(school.netPricesByBracket[bracket])}px) translate(-${margin.right - 4}px, -18px)`,
+              }}
+            >
+              <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong> net price
+            </div>
           </div>
         </div>
       )}

@@ -94,14 +94,14 @@ export default function GenderBars(props: {
           className={styles.label}
           style={{ transform: `translateX(${x(0)}px)` }}
         >
-          {formatPercent(male)} female
+          {formatPercent(female)} female
         </div>
 
         <div
           className={styles.label}
           style={{ transform: `translateX(${x(1)}px) translateX(-100%)` }}
         >
-          {formatPercent(female)} male
+          {formatPercent(male)} male
         </div>
 
         {other > 0 && (

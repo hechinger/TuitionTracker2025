@@ -54,6 +54,10 @@
         border-right: 1px solid colors.$border-main;
       }
 
+      .select {
+        display: inline-block;
+      }
+
       .priceNumber {
         position: relative;
         display: inline-block;

@@ -4,6 +4,9 @@ import { useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { scaleLinear, scaleOrdinal } from "d3-scale";
 import { lineRadial, curveLinearClosed } from "d3-shape";
+import OutlineFilter from "@/components/OutlineFilter";
+import { formatPercent } from "@/utils/formatPercent";
+import { getGraduation } from "@/utils/formatSchoolInfo";
 import { type SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -34,7 +37,7 @@ const categories = [
   },
   {
     key: "multiple",
-    label: "Two or more races",
+    label: "Multiple races",
   },
   // {
   //   key: "nonresident",
@@ -42,9 +45,34 @@ const categories = [
   // },
   {
     key: "unknown",
-    label: "Unknown",
+    label: "Unknown race",
   },
 ] as const;
+
+const nationalAverage = {
+  "4-year": {
+    amerindalasknat: 0.4267,
+    asian: 0.5677,
+    black: 0.4036,
+    hisp: 0.4790,
+    nathawpacisl: 0.4656,
+    white: 0.5439,
+    multiple: 0.4700,
+    nonresident: 0.4901,
+    unknown: 0.5556,
+  },
+  "2-year": {
+    amerindalasknat: 0.3244,
+    asian: 0.4727,
+    black: 0.3008,
+    hisp: 0.3987,
+    nathawpacisl: 0.3367,
+    white: 0.4510,
+    multiple: 0.3505,
+    nonresident: 0.3737,
+    unknown: 0.4031,
+  },
+};
 
 type DataPoint = {
   key: string;
@@ -60,13 +88,20 @@ export default function RadarChart(props: {
   const width = Math.min(w, 400);
   const height = width;
 
+  const graduation = getGraduation(props.school);
   const data = categories.map((c) => ({
     key: c.key,
     label: c.label,
-    value: props.school.graduationBachelors.byRace[c.key],
+    value: graduation.byRace[c.key],
+  }));
+  const natAvg = nationalAverage[props.school.degreeLevel];
+  const natAvgData = data.map((d) => ({
+    key: d.key,
+    label: d.label,
+    value: natAvg[d.key],
   }));
 
-  const spokeLength = (width / 2) - 30;
+  const spokeLength = (width / 2) - 50;
   const angle = scaleOrdinal<string, number>()
     .domain(data.map((c) => c.key))
     .range(data.map((_, i) => i * ((2 * Math.PI) / data.length)));
@@ -96,6 +131,47 @@ export default function RadarChart(props: {
     label: c.label,
     value: 0.5,
   }));
+
+  const getLabelAlignTransform = (angle: number, value?: number) => {
+    const unitVector = getXY(angle, 1);
+    if (value === undefined || value < 0.6) {
+      return [
+        `translate(${unitVector.x * 50}%, ${unitVector.y * 50}%)`,
+        `translate(${unitVector.x * 8}px, ${unitVector.y * 8}px)`,
+      ].join(' ');
+    }
+    return [
+      `translate(${unitVector.x * -50}%, ${unitVector.y * -50}%)`,
+      `translate(${unitVector.x * -8}px, ${unitVector.y * -8}px)`,
+    ].join(' ');
+  };
+
+  const getNatAvgLabelTransform = () => {
+    const angleStep = (2 * Math.PI) / data.length;
+    const labelAngle = (2 * Math.PI) - (angleStep / 2);
+    const r1 = r(natAvgData[0].value);
+    const r2 = r(natAvgData[natAvgData.length - 1].value);
+    const labelR =  (r1 + r2) / 2;
+    const pos = getXY(labelAngle, labelR);
+    if (
+      data[0].value > natAvgData[0].value
+        || data[data.length - 1].value > natAvgData[natAvgData.length - 1].value
+    ) {
+      return [
+        `translate(${width / 2}px, ${height / 2}px)`,
+        `translateX(${pos.x}px)`,
+        `translateY(${pos.y}px)`,
+        "translate(-2px, 10px)",
+      ].join(' ');
+    }
+    return [
+      `translate(${width / 2}px, ${height / 2}px)`,
+      `translateX(${pos.x}px)`,
+      `translateY(${pos.y}px)`,
+      "translate(-50%, -100%)",
+      "translate(-8px, 0px)",
+    ].join(' ');
+  };
 
   return (
     <div
@@ -138,6 +214,12 @@ export default function RadarChart(props: {
               d={line(data) || ""}
               className={styles.dataRing}
             />
+
+            <path
+              d={line(natAvgData) || ""}
+              className={styles.natAvgRing}
+            />
+
             {data.map((d) => (
               <circle
                 key={d.key}
@@ -160,13 +242,45 @@ export default function RadarChart(props: {
               style={{
                 transform: [
                   `translate(${width / 2}px, ${height / 2}px)`,
-                  `translateX(${getXY(angle(d.key), width / 2).x}px)`,
-                  `translateY(${getXY(angle(d.key), height / 2).y}px)`,
+                  `translateX(${getXY(angle(d.key), spokeLength).x}px)`,
+                  `translateY(${getXY(angle(d.key), spokeLength).y}px)`,
                   `translate(-50%, -50%)`,
+                  getLabelAlignTransform(angle(d.key)),
                 ].join(' '),
               }}
             >
               {d.label}
+            </div>
+          ))}
+
+          <div
+            className={styles.natAvgLabel}
+            style={{
+              transform: getNatAvgLabelTransform(),
+            }}
+          >
+            <OutlineFilter>
+              Nat’l avg.
+            </OutlineFilter>
+          </div>
+
+          {data.map((d) => (
+            <div
+              key={d.key}
+              className={styles.dataLabel}
+              style={{
+                transform: [
+                  `translate(${width / 2}px, ${height / 2}px)`,
+                  `translateX(${getXY(angle(d.key), r(d.value)).x}px)`,
+                  `translateY(${getXY(angle(d.key), r(d.value)).y}px)`,
+                  `translate(-50%, -50%)`,
+                  getLabelAlignTransform(angle(d.key), d.value),
+                ].join(' '),
+              }}
+            >
+              <OutlineFilter>
+                {formatPercent(d.value)}
+              </OutlineFilter>
             </div>
           ))}
         </div>

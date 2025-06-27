@@ -22,11 +22,11 @@
 
 .netArea {
   fill: colors.$brand-pink;
-  fill-opacity: 0.3;
+  fill-opacity: 0.2;
 }
 
 .axisLine {
-  stroke: colors.$border-main;
+  stroke: colors.$bg-light;
 
   &.zero {
     stroke: colors.$text-main;
@@ -55,4 +55,11 @@
   left: 0;
   line-height: 1em;
   background: white;
+}
+
+.dataLabel {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: min-content;
 }
