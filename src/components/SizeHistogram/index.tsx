@@ -31,9 +31,6 @@ export default function SizeHistogram(props: {
   const chartHeight = 60;
   const height = chartHeight + margin.top + margin.bottom;
 
-  const chartHeight2 = 20;
-  const height2 = chartHeight2 + margin.top + margin.bottom;
-
   const {
     x,
     y,
@@ -160,51 +157,6 @@ export default function SizeHistogram(props: {
           </div>
         </div>
       </div>
-
-      {/*
-      <div
-        className={styles.plot}
-      >
-        <svg
-          className={styles.canvas}
-          width={width}
-          height={height2}
-          viewBox={`0 0 ${width} ${height2}`}
-        >
-          {schools.map((school) => (
-            <rect
-              key={school.id}
-              x={x(school.enrollment)}
-              y={margin.top}
-              width={2}
-              height={height2 - margin.top - margin.bottom}
-              fill="black"
-              fillOpacity="0.1"
-            />
-          ))}
-        </svg>
-
-        <div className={styles.annotation}>
-          <div
-            className={styles.label}
-            style={{
-              transform: `translateX(${x(lab1)}px)`,
-            }}
-          >
-            {lab1.toLocaleString()} students
-          </div>
-
-          <div
-            className={styles.label}
-            style={{
-              transform: `translateX(${x(lab2)}px) translateX(-100%)`,
-            }}
-          >
-            {lab2.toLocaleString()} students
-          </div>
-        </div>
-      </div>
-      */}
     </div>
   );
 }

@@ -45,17 +45,17 @@ export default function DemographicsSection(props: {
   };
 
   const majorityGender = Object.entries(school.enrollment.byGender)
-    .reduce((max, entry) => {
+    .reduce((max: [string, number] | undefined, entry: [string, number]) => {
       if (!max) return entry;
       if (entry[1] > max[1]) return entry;
       return max;
-    }, undefined);
+    }, undefined)!;
   const genderLabels = {
     men: "male",
     women: "female",
     unknown: "of unknown gender",
     other: "of a gender other than male or female",
-  };
+  } as Record<string, string>;
   const genderContext = {
     schoolName: school.name,
     genderNameMajority: genderLabels[majorityGender[0]],
@@ -63,11 +63,11 @@ export default function DemographicsSection(props: {
   };
 
   const majorityDemo = Object.entries(school.enrollment.byRace)
-    .reduce((max, entry) => {
+    .reduce((max: [string, number] | undefined, entry: [string, number]) => {
       if (!max) return entry;
       if (entry[1] > max[1]) return entry;
       return max;
-    }, undefined);
+    }, undefined)!;
   const demoLabels = {
     unknown: "of an unknown demographic background",
     multiple: "of multiple races",
@@ -78,7 +78,7 @@ export default function DemographicsSection(props: {
     asian: "Asian",
     amerindalasknat: "American Indians or Alaskan Natives",
     nonresident: "not U.S. residents",
-  };
+  } as Record<string, string>;
   const demoContext = {
     schoolName: school.name,
     demographicNameMajority: demoLabels[majorityDemo[0]],
