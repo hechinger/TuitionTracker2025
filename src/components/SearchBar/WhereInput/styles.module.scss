@@ -10,6 +10,24 @@
     margin-bottom: 8px;
   }
 
+  .inputWrapper {
+    display: flex;
+    gap: 8px;
+  }
+
+  .states {
+    display: flex;
+    gap: 8px;
+  }
+
+  .state {
+    background: none;
+    border: 1px solid colors.$border-main;
+    border-radius: 4px;
+    padding: 4px 6px;
+    cursor: pointer;
+  }
+
   .input {
     font-size: 18px;
     outline: none;

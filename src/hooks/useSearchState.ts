@@ -9,6 +9,7 @@ export type DegreeType = typeof degreeTypes[number];
 
 const SearchSchema = z.object({
   where: z.string().default(""),
+  states: z.array(z.string()).default([]),
   minPrice: z.number().default(0),
   maxPrice: z.number().optional(),
   schoolType: z.array(z.enum(schoolTypes)).default([]),
@@ -55,6 +56,19 @@ export function useSearchState({
     setSearch((old) => ({ ...old, ...parsed }));
   }, []);
 
+  const toggleState = useCallback((state: string) => {
+    setSearch((old) => {
+      const hasState = old.states.includes(state);
+      const rest = old.states.filter((s) => s !== state);
+      const newStates = hasState ? rest : [...rest, state];
+      return {
+        ...old,
+        where: "",
+        states: newStates,
+      };
+    });
+  }, []);
+
   const resetAdvanced = useCallback(() => {
     setSearch((old) => SearchSchema.parse({
       where: old.where,
@@ -63,6 +77,7 @@ export function useSearchState({
 
   return {
     search,
+    toggleState,
     resetAdvanced,
     updateSearch,
     searchQueryString,

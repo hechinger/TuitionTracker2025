@@ -11,10 +11,15 @@
 
   .placeholder {
     font-size: 18px;
-    padding: none;
+    padding: 0;
     background: none;
     outline: none;
     border: none;
     color: colors.$text-light;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
   }
 }

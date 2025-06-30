@@ -10,7 +10,6 @@ import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
 import { useSavedSchools } from "@/hooks/useSavedSchools";
 import { getCompareRoute } from "@/utils/routes";
-import Well from "@/components/Well";
 import { useSuggestions } from "./useSuggestions";
 import WhereInput from "./WhereInput";
 import MoreOptions from "./MoreOptions";
@@ -37,7 +36,13 @@ export default function SearchBar(props: {
   const [inputState, setInputState] = useState<string>();
 
   const { data: schools = [] } = useSchools();
-  const { search, resetAdvanced, updateSearch, searchQueryString } = useSearchState({
+  const {
+    search,
+    toggleState,
+    resetAdvanced,
+    updateSearch,
+    searchQueryString,
+  } = useSearchState({
     autoload: props.autoload,
   });
 
@@ -77,18 +82,21 @@ export default function SearchBar(props: {
             >
               <WhereInput
                 value={search.where}
+                states={search.states}
                 onChange={(value: string) => updateSearch("where", value)}
+                onRemoveState={toggleState}
                 onFocus={() => setInputState("where")}
                 schools={schools}
               />
             </div>
 
             <div
-              className={clsx({
+              className={clsx(styles.moreOptions, {
                 [styles.grayed]: inputState && inputState !== "more",
               })}
             >
               <MoreOptions
+                search={search}
                 onFocus={() => setInputState("more")}
               />
             </div>
@@ -101,6 +109,7 @@ export default function SearchBar(props: {
               <button
                 type="submit"
                 onClick={() => {
+                  setInputState("");
                   router.push(`/search?${searchQueryString}`);
                 }}
               >
@@ -108,10 +117,14 @@ export default function SearchBar(props: {
               </button>
             </div>
 
-            <Dropdown isOpen={!!inputState}>
+            <Dropdown
+              isOpen={!!inputState}
+              right={inputState === "more"}
+            >
               {inputState === "where" && (
                 <WhereSuggestions
                   suggestions={whereSuggestions}
+                  onSelectState={toggleState}
                 />
               )}
 

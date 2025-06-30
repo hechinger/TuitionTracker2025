@@ -16,6 +16,14 @@ const matchName = (opts: {
   return aliases.some((alias) => alias.includes(lowerName));
 };
 
+const matchStates = (opts: {
+  school: SchoolIndex;
+  states: SearchOptions["states"];
+}) => {
+  if (!opts.states || opts.states.length < 1) return true;
+  return opts.states.includes(opts.school.state);
+};
+
 const matchCost = (opts: {
   school: SchoolIndex;
   bracket?: IncomeBracketKey;
@@ -77,6 +85,7 @@ export function useFilteredSchools(opts: {
   return useMemo(() => {
     const schoolSet = schools.filter((school) => (
       matchName({ school, name: search.where })
+      && matchStates({ school, states: search.states })
       && matchCost({ school, bracket, minPrice: search.minPrice, maxPrice: search.maxPrice })
       && matchSchoolType({ school, schoolType: search.schoolType })
       && matchDegreeType({ school, degreeType: search.degreeType })

@@ -20,7 +20,7 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
         font-size: 20px;
 
         @include breakpoints.at-least("md") {
-          font-size: 32px;
+          font-size: 28px;
         }
       }
     }

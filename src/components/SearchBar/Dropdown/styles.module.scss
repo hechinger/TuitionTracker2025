@@ -13,4 +13,9 @@
   &:empty {
     display: none;
   }
+
+  &.right {
+    left: unset;
+    right: 0;
+  }
 }

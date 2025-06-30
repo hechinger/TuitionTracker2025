@@ -15,6 +15,7 @@ const followIcons = {
 
 export default function Suggestion(props: {
   suggestion: Suggestion;
+  onSelectState: (state: string) => void;
 }) {
   return (
     <div className={styles.suggestion}>
@@ -30,6 +31,7 @@ export default function Suggestion(props: {
           <button
             type="button"
             className={styles.button}
+            onClick={() => props.onSelectState(props.suggestion.value)}
           >
             {props.suggestion.label}
           </button>
