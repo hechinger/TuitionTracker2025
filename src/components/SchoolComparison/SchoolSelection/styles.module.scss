@@ -1,4 +1,5 @@
 @use "@/styles/colors.scss";
+@use "@/styles/breakpoints.scss";
 
 $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
 
@@ -9,10 +10,19 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
     .header {
       margin-bottom: 12px;
       display: flex;
+      gap: 12px;
       align-items: center;
       justify-content: space-between;
       padding-left: $side-padding;
       padding-right: $side-padding;
+
+      .title {
+        font-size: 20px;
+
+        @include breakpoints.at-least("md") {
+          font-size: 32px;
+        }
+      }
     }
 
     .copyButton {
@@ -41,6 +51,8 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding-left: $side-padding;
+      padding-right: $side-padding;
     }
 
     .clearButton {
@@ -52,8 +64,13 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
 
     .slots {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      column-gap: 12px;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(250px, 1fr);
+      grid-template-rows: auto;
+      column-gap: 1em;
+      padding-bottom: 12px;
+      padding-left: $side-padding;
+      padding-right: $side-padding;
     }
   }
 }

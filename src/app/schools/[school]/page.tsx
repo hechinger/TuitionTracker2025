@@ -8,6 +8,7 @@ import GraduationRateSection from "@/components/GraduationRateSection";
 import StudentRetentionSection from "@/components/StudentRetentionSection";
 import DemographicsSection from "@/components/DemographicsSection";
 import ContactUs from "@/components/ContactUs";
+import Recirculation from "@/components/Recirculation";
 
 export default async function School(props: {
   params: Promise<{ school: string }>;
@@ -27,6 +28,7 @@ export default async function School(props: {
       <ContactUs />
       <StudentRetentionSection schoolId={schoolId} />
       <DemographicsSection schoolId={schoolId} />
+      <Recirculation />
     </>
   );
 }

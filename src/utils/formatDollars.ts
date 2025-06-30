@@ -2,15 +2,17 @@ export function formatDollars(
   price: number,
   opts: {
     round?: boolean;
+    abbreviate?: boolean;
   } = {},
 ) {
   if (!price) return "$0";
 
   const {
     round = true,
+    abbreviate = false,
   } = opts;
 
-  return price.toLocaleString(
+  const string = price.toLocaleString(
     "en-US",
     {
       style: "currency",
@@ -18,4 +20,7 @@ export function formatDollars(
       maximumFractionDigits: round ? 0 : 2,
     },
   );
+
+  if (!abbreviate) return string;
+  return string.replace(/,000$/, "K");
 }

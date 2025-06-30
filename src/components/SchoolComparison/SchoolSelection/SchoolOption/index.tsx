@@ -2,11 +2,12 @@
 
 import { useDrag } from "react-dnd";
 import { dndRef } from "@/utils/dndRef";
-import SchoolCard from "@/components/SchoolCard";
 import type { SchoolIndex } from "@/types";
+import styles from "./styles.module.scss";
 
 export default function SchoolOption(props: {
   school: SchoolIndex;
+  clickSelect: (id: string) => void;
 }) {
   const [, drag] = useDrag(() => ({
     type: 'SchoolOption',
@@ -17,9 +18,20 @@ export default function SchoolOption(props: {
 
   return (
     <div ref={dndRef(drag)}>
-      <SchoolCard
-        school={props.school}
-      />
+      <div
+        className={styles.card}
+        onClick={() => props.clickSelect(props.school.id)}
+      >
+        <img
+          src={props.school.image}
+          alt={props.school.name}
+        />
+        <div className={styles.info}>
+          <div className={styles.name}>
+            {props.school.name}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

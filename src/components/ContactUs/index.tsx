@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 
 export default function ContactUs() {
   return (
-    <Well width="narrow">
+    <Well width="narrow" section>
       <div className={styles.wrapper}>
         <a
           href="https://hechingerreport.org/contact/"

@@ -2,7 +2,6 @@
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import Well from "@/components/Well";
 import ScrollArea from "@/components/ScrollArea";
 import type { SchoolIndex, SavedSchools } from "@/types";
 import Slot from "./Slot";
@@ -30,6 +29,12 @@ export default function SchoolSelection(props: {
     props.setCompareSchoolIds(newIds);
   };
 
+  const clickSelect = (id: string) => {
+    const compareIds = props.compareSchools.map((school) => school.id);
+    const newIds = [id, ...compareIds].slice(0, 3);
+    props.setCompareSchoolIds(newIds);
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles.schoolSelection}>
@@ -53,25 +58,26 @@ export default function SchoolSelection(props: {
                 <SchoolOption
                   key={school.id}
                   school={school}
+                  clickSelect={clickSelect}
                 />
               ))}
             </div>
           </ScrollArea>
         </div>
-        <Well>
-          <div className={styles.selection}>
-            <div className={styles.header}>
-              <h3 className={styles.subtitle}>
-                Compare schools
-              </h3>
-              <button
-                type="button"
-                className={styles.clearButton}
-                onClick={props.clearCompareIds}
-              >
-                Clear
-              </button>
-            </div>
+        <div className={styles.selection}>
+          <div className={styles.header}>
+            <h3 className={styles.subtitle}>
+              Compare schools
+            </h3>
+            <button
+              type="button"
+              className={styles.clearButton}
+              onClick={props.clearCompareIds}
+            >
+              Clear
+            </button>
+          </div>
+          <ScrollArea scroll="x">
             <div className={styles.slots}>
               {[0, 1, 2].map((index) => (
                 <Slot
@@ -81,8 +87,8 @@ export default function SchoolSelection(props: {
                 />
               ))}
             </div>
-          </div>
-        </Well>
+          </ScrollArea>
+        </div>
       </div>
     </DndProvider>
   );

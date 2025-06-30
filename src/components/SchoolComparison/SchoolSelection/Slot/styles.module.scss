@@ -9,6 +9,8 @@
     justify-content: center;
     align-items: center;
     min-height: 200px;
+    padding: 20px;
+    text-align: center;
   }
 
   &.over {
@@ -31,23 +33,23 @@
     .info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      padding: 12px;
+      gap: 12px;
+      padding: 12px 12px 20px;
 
       .name {
         font-weight: bold;
-        font-size: 20px;
+        font-size: 24px;
       }
 
-      .price {
-        display: flex;
-        gap: 6px;
-        align-items: center;
+      .fact {
+        .label {
+          font-weight: bold;
+          text-transform: uppercase;
+          color: colors.$text-light;
+        }
 
-        .number {
-          font-family: fonts.$numbers;
-          font-size: 40;
-          font-weight: light;
+        .value {
+          font-size: 20px;
         }
       }
     }

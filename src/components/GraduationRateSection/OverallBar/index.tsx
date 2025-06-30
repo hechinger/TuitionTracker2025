@@ -5,7 +5,7 @@ import { useResizeObserver } from "usehooks-ts";
 import { scaleLinear } from "d3-scale";
 import get from "lodash/get";
 import { formatPercent } from "@/utils/formatPercent";
-import { clamp } from "@/utils/clamp";
+import { getAlignmentTransform } from "@/utils/getAlignmentTransform";
 import { type SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -26,6 +26,17 @@ export default function OverallBar(props: {
   const gradRate = get(props.school, "graduationBachelors.total", 0);
   const label = formatPercent(gradRate);
   const natAvgLabel = formatPercent(nationalAverage);
+
+  const labelAlignment = getAlignmentTransform({
+    min: 0.2,
+    value: gradRate,
+    max: 0.8,
+  });
+  const natLabelAlignment = getAlignmentTransform({
+    min: 0.2,
+    value: nationalAverage,
+    max: 0.8,
+  });
 
   return (
     <div
@@ -64,14 +75,14 @@ export default function OverallBar(props: {
       <div className={styles.annotation}>
         <div
           className={styles.label}
-          style={{ transform: `translateX(${x(clamp(0.2, gradRate, 0.8))}px) translateX(-50%)` }}
+          style={{ transform: `translateX(${x(gradRate)}px) ${labelAlignment}` }}
         >
           {label} graduation rate
         </div>
 
         <div
           className={styles.nationalAvgLabel}
-          style={{ transform: `translateX(${x(clamp(0.2, nationalAverage, 0.8))}px) translateX(-50%)` }}
+          style={{ transform: `translateX(${x(nationalAverage)}px) ${natLabelAlignment}` }}
         >
           Nat’l avgerage: {natAvgLabel}
         </div>

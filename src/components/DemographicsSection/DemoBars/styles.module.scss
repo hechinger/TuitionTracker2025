@@ -9,7 +9,7 @@
 .barContainer {
   position: relative;
   height: 24px;
-  background: #ccc;
+  background: colors.$bg-light;
 
   .barHighlight {
     position: absolute;

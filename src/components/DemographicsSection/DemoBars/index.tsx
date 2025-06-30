@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import { type SchoolDetail } from "@/types";
 import { formatPercent } from "@/utils/formatPercent";
+import { isNotUndefined } from "@/utils/isNotUndefined";
 import styles from "./styles.module.scss";
 
 const demoLabels = {
@@ -23,10 +24,14 @@ export default function DemoBars(props: {
   const demos = props.school.enrollment.byRace;
 
   const values = Object.entries(demos)
-    .map(([demo, value]) => ({
-      demo,
-      value: value / props.school.enrollment.total,
-    }))
+    .map(([demo, value]) => {
+      if (!value) return undefined;
+      return {
+        demo,
+        value: value / props.school.enrollment.total,
+      };
+    })
+    .filter(isNotUndefined)
     .sort((a, b) => b.value - a.value);
 
 

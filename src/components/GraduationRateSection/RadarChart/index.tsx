@@ -7,6 +7,7 @@ import { lineRadial, curveLinearClosed } from "d3-shape";
 import OutlineFilter from "@/components/OutlineFilter";
 import { formatPercent } from "@/utils/formatPercent";
 import { getGraduation } from "@/utils/formatSchoolInfo";
+import { isNotUndefined } from "@/utils/isNotUndefined";
 import { type SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -89,11 +90,15 @@ export default function RadarChart(props: {
   const height = width;
 
   const graduation = getGraduation(props.school);
-  const data = categories.map((c) => ({
-    key: c.key,
-    label: c.label,
-    value: graduation.byRace[c.key],
-  }));
+  const data = categories.map((c) => {
+    const value = graduation.byRace[c.key];
+    if (typeof value !== "number") return undefined;
+    return {
+      key: c.key,
+      label: c.label,
+      value: graduation.byRace[c.key],
+    };
+  }).filter(isNotUndefined);
   const natAvg = nationalAverage[props.school.degreeLevel];
   const natAvgData = data.map((d) => ({
     key: d.key,

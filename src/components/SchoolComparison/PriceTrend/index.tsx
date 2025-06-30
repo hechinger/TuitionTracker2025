@@ -1,3 +1,4 @@
+import { max } from "d3-array";
 import PriceTrendChart from "@/components/PriceTrendChart";
 import Well from "@/components/Well";
 import { useSchool } from "@/hooks/useSchool";
@@ -7,6 +8,7 @@ import styles from "./styles.module.scss";
 
 function Chart(props: {
   id: string;
+  priceMax?: number;
 }) {
   const { data: school } = useSchool(props.id);
 
@@ -17,10 +19,15 @@ function Chart(props: {
   }
 
   return (
-    <PriceTrendChart
-      school={school}
-      max={100000}
-    />
+    <div className={styles.chartContainer}>
+      <h3>{school.name}</h3>
+      <PriceTrendChart
+        school={school}
+        max={props.priceMax}
+        legend={false}
+        lineLabels={false}
+      />
+    </div>
   );
 }
 
@@ -29,6 +36,8 @@ export default function PriceTrend(props: {
 }) {
   const schoolNames = props.schools.map((school) => school.name);
   const slots = [...Array(3)].map((_, i) => props.schools[i]);
+
+  const priceMax = max(slots, (d) => d ? d.stickerPrice.price : 0);
 
   return (
     <div className={styles.container}>
@@ -39,7 +48,7 @@ export default function PriceTrend(props: {
 
         {props.schools.length > 1 && (
           <p className={styles.graf}>
-            See how the historical price trends of {commaAnd(schoolNames)} compare.
+            See how the <span className={styles.sticker}>sticker price</span> and <span className={styles.net}>net price</span> trends of {commaAnd(schoolNames)} compare.
           </p>
         )}
 
@@ -56,6 +65,7 @@ export default function PriceTrend(props: {
             <Chart
               key={school.id}
               id={school.id}
+              priceMax={priceMax}
             />
           ) : (
             <div key={i} className={styles.placeholder} />

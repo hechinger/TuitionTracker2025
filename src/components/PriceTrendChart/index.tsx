@@ -11,21 +11,32 @@ import type { YearData, SchoolDetail } from "@/types";
 import Legend from "./Legend";
 import styles from "./styles.module.scss";
 
-const margin = { top: 20, right: 60, bottom: 20, left: 80 };
-
 export default function PriceTrendChart(props: {
   school: SchoolDetail | undefined;
   max?: number;
+  lineLabels?: boolean;
+  legend?: boolean;
 }) {
-  const { school } = props;
-
-  console.log(school);
+  const {
+    school,
+    lineLabels = true,
+    legend = true,
+  } = props;
 
   const { bracket = "average" } = useIncomeBracket();
 
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
   const height = 320;
+
+  const xTicks = 4;
+
+  const margin = {
+    top: 20,
+    right: lineLabels ? 60 : 20,
+    bottom: 20,
+    left: 40,
+  };
 
   const {
     x,
@@ -88,7 +99,16 @@ export default function PriceTrendChart(props: {
       getPath,
       getArea,
     };
-  }, [school, width, height, props.max]);
+  }, [
+    school,
+    width,
+    height,
+    props.max,
+    margin.top,
+    margin.right,
+    margin.bottom,
+    margin.left,
+  ]);
 
   return (
     <div className={styles.legendWrapper}>
@@ -136,11 +156,11 @@ export default function PriceTrendChart(props: {
                   className={clsx(styles.yLabel)}
                   style={{ transform: `translateY(${y(tick)}px) translateY(-50%)` }}
                 >
-                  {formatDollars(tick, { round: true })}
+                  {formatDollars(tick, { abbreviate: true })}
                 </div>
               ))}
 
-              {x.ticks(4).map((tick) => (
+              {x.ticks(xTicks).map((tick) => (
                 <div
                   key={tick}
                   className={clsx(styles.xLabel)}
@@ -150,28 +170,34 @@ export default function PriceTrendChart(props: {
                 </div>
               ))}
 
-              <div
-                className={styles.dataLabel}
-                style={{
-                  transform: `translateY(${y(school.stickerPrice.price)}px) translate(-${margin.right - 4}px, -18px)`,
-                }}
-              >
-                <strong>{formatDollars(school.stickerPrice.price)}</strong> sticker price
-              </div>
+              {lineLabels && (
+                <>
+                  <div
+                    className={styles.dataLabel}
+                    style={{
+                      transform: `translateY(${y(school.stickerPrice.price)}px) translate(-${margin.right - 4}px, -18px)`,
+                    }}
+                  >
+                    <strong>{formatDollars(school.stickerPrice.price)}</strong> sticker price
+                  </div>
 
-              <div
-                className={styles.dataLabel}
-                style={{
-                  transform: `translateY(${y(school.netPricesByBracket[bracket])}px) translate(-${margin.right - 4}px, -18px)`,
-                }}
-              >
-                <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong> net price
-              </div>
+                  <div
+                    className={styles.dataLabel}
+                    style={{
+                      transform: `translateY(${y(school.netPricesByBracket[bracket])}px) translate(-${margin.right - 4}px, -18px)`,
+                    }}
+                  >
+                    <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong> net price
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
       </div>
-      <Legend />
+      {legend && (
+        <Legend />
+      )}
     </div>
   );
 }

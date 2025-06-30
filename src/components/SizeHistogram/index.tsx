@@ -6,6 +6,8 @@ import { scaleLinear } from "d3-scale";
 import { max, bin } from "d3-array";
 import { line } from "d3-shape";
 import { useSchools } from "@/hooks/useSchools";
+import { getAlignmentTransform } from "@/utils/getAlignmentTransform";
+import type { SchoolControl, DegreeLevel } from "@/types";
 import styles from "./styles.module.scss";
 
 const margin = { top: 30, right: 10, bottom: 20, left: 10 };
@@ -13,7 +15,14 @@ const margin = { top: 30, right: 10, bottom: 20, left: 10 };
 export default function SizeHistogram(props: {
   size: number;
   title?: string;
+  schoolControl?: SchoolControl;
+  degreeLevel?: DegreeLevel;
 }) {
+  const {
+    schoolControl,
+    degreeLevel,
+  } = props;
+
   const { data: schools = [] } = useSchools();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -32,7 +41,13 @@ export default function SizeHistogram(props: {
     areaPath,
     points,
   } = useMemo(() => {
-    const sizes = schools.map((school) => school.enrollment);
+    const sizes = schools
+      .filter((school) => {
+        const isControl = !schoolControl || (schoolControl === school.schoolControl);
+        const isLevel = !degreeLevel || (degreeLevel === school.degreeLevel);
+        return isControl && isLevel;
+      })
+      .map((school) => school.enrollment);
 
     const binSize = 500;
     const binMax = max(sizes) || 0;
@@ -68,10 +83,15 @@ export default function SizeHistogram(props: {
       points,
       areaPath,
     };
-  }, [schools, width, height]);
+  }, [schools, width, height, schoolControl, degreeLevel]);
 
   const [lab1, lab2] = x.domain();
   const dataLabelPosition = props.size;
+  const dataLabelAlignment = getAlignmentTransform({
+    min: x.domain()[1] * 0.2,
+    value: dataLabelPosition,
+    max: x.domain()[1] * 0.8,
+  });
 
   return (
     <div>
@@ -133,7 +153,7 @@ export default function SizeHistogram(props: {
           <div
             className={styles.dataLabel}
             style={{
-              transform: `translateX(${x(dataLabelPosition)}px) translateX(-50%)`,
+              transform: `translateX(${x(dataLabelPosition)}px) ${dataLabelAlignment}`,
             }}
           >
             {props.size.toLocaleString()} students
@@ -141,6 +161,7 @@ export default function SizeHistogram(props: {
         </div>
       </div>
 
+      {/*
       <div
         className={styles.plot}
       >
@@ -183,6 +204,7 @@ export default function SizeHistogram(props: {
           </div>
         </div>
       </div>
+      */}
     </div>
   );
 }

@@ -1,4 +1,5 @@
-export function formatPercent(value: number) {
+export function formatPercent(value: number | undefined | null) {
+  if (typeof value !== "number") return "";
   const pct = value.toLocaleString(undefined, {
     style: "percent",
     maximumFractionDigits: 0,

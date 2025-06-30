@@ -1,6 +1,7 @@
 "use client";
 
 import { useSchool } from "@/hooks/useSchool";
+import { formatPercent } from "@/utils/formatPercent";
 import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
 import DonutChart from "@/components/DonutChart";
@@ -26,10 +27,7 @@ export default function StudentRetentionSection(props: {
 
   const retentionContext = {
     schoolName: school.name,
-    fullTimeRetentionRate: school.retention.fullTime.toLocaleString(undefined, {
-      style: "percent",
-      maximumFractionDigits: 0,
-    }),
+    fullTimeRetentionRate: formatPercent(school.retention.fullTime),
   };
 
   return (
@@ -46,21 +44,25 @@ export default function StudentRetentionSection(props: {
 
       {school && (
         <div className={styles.charts}>
-          <DonutChart
-            value={school.retention.fullTime}
-            label="retention"
-            title="Full-time students"
-            benchmark={nationalAverages.fullTime}
-            benchmarkLabel="Nat’l average"
-          />
+          {school.retention.fullTime && (
+            <DonutChart
+              value={school.retention.fullTime}
+              label="retention"
+              title="Full-time students"
+              benchmark={nationalAverages.fullTime}
+              benchmarkLabel="Nat’l average"
+            />
+          )}
 
-          <DonutChart
-            value={school.retention.partTime}
-            label="retention"
-            title="Part-time students"
-            benchmark={nationalAverages.partTime}
-            benchmarkLabel="Nat’l average"
-          />
+          {school.retention.partTime && (
+            <DonutChart
+              value={school.retention.partTime}
+              label="retention"
+              title="Part-time students"
+              benchmark={nationalAverages.partTime}
+              benchmarkLabel="Nat’l average"
+            />
+          )}
         </div>
       )}
     </Well>

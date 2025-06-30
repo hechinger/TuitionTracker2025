@@ -1,13 +1,18 @@
 @use "@/styles/colors.scss";
 @use "@/styles/fonts.scss";
+@use "@/styles/breakpoints.scss";
 
 .topper {
   position: relative;
   border: 1px solid colors.$border-main;
-  padding: 50px 40px;
+  padding: 50px 20px;
   max-width: 780px;
   margin: 40px auto;
   text-align: center;
+
+  @include breakpoints.at-least("md") {
+    padding: 50px 40px;
+  }
 
   .schoolImage {
     position: absolute;
@@ -21,7 +26,11 @@
   }
 
   .name {
-    font-size: 52px;
+    font-size: 32px;
+
+    @include breakpoints.at-least("md") {
+      font-size: 52px;
+    }
   }
 
   .info {
@@ -59,10 +68,15 @@
       }
 
       .priceNumber {
+        align-self: center;
         position: relative;
+        font-size: 28px;
         display: inline-block;
-        font-size: 40px;
         font-family: fonts.$numbers;
+
+        @include breakpoints.at-least("md") {
+          font-size: 40px;
+        }
 
         &::after {
           content: "";
@@ -102,7 +116,11 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 40px;
+    padding: 8px 20px;
     cursor: pointer;
+
+    @include breakpoints.at-least("md") {
+      padding: 8px 40px;
+    }
   }
 }
