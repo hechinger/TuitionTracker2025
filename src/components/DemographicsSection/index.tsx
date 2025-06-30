@@ -37,9 +37,11 @@ export default function DemographicsSection(props: {
 
   if (!school) return null;
 
+  console.log(school);
+
   const sizeContext = {
     schoolName: school.name,
-    enrollment: school.enrollment.total.toLocaleString(),
+    enrollment: school.enrollment?.total.toLocaleString(),
     sizePercentile: formatOrdinal(Math.round(sizePercentile * 100)),
     schoolType: `${school.schoolControl}, ${school.degreeLevel}`,
   };

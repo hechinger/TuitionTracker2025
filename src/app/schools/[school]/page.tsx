@@ -1,3 +1,4 @@
+import ErrorBoundary from "@/components/ErrorBoundary";
 import AdSlot from "@/components/AdSlot";
 import PageTopOverlap from "@/components/PageTopOverlap";
 import SearchBar from "@/components/SearchBar";
@@ -18,16 +19,39 @@ export default async function School(props: {
   return (
     <>
       <PageTopOverlap>
-        <SearchBar withNav />
+        <ErrorBoundary>
+          <SearchBar withNav />
+        </ErrorBoundary>
       </PageTopOverlap>
-      <SchoolTopper schoolId={schoolId} />
+
+      <ErrorBoundary>
+        <SchoolTopper schoolId={schoolId} />
+      </ErrorBoundary>
+
       <AdSlot />
-      <HistoricalPrices schoolId={schoolId} />
-      <SchoolDetails schoolId={schoolId} />
-      <GraduationRateSection schoolId={schoolId} />
+
+      <ErrorBoundary>
+        <HistoricalPrices schoolId={schoolId} />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <SchoolDetails schoolId={schoolId} />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <GraduationRateSection schoolId={schoolId} />
+      </ErrorBoundary>
+
       <ContactUs />
-      <StudentRetentionSection schoolId={schoolId} />
-      <DemographicsSection schoolId={schoolId} />
+
+      <ErrorBoundary>
+        <StudentRetentionSection schoolId={schoolId} />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <DemographicsSection schoolId={schoolId} />
+      </ErrorBoundary>
+
       <Recirculation />
     </>
   );

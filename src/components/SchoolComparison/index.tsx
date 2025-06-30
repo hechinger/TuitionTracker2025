@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorBoundary from "@/components/ErrorBoundary";
 import ContactUs from "@/components/ContactUs";
 import Well from "@/components/Well";
 import { useComparisonSchools } from "./useComparisonSchools";
@@ -25,23 +26,36 @@ export default function SchoolComparison() {
           Compare your favorite schools
         </h1>
       </Well>
-      <SchoolSelection
-        savedSchools={savedSchools}
-        optionSchools={optionSchools}
-        compareSchools={compareSchools}
-        setCompareSchoolIds={setCompareIds}
-        clearCompareIds={clearCompareIds}
-      />
-      <PriceTrend
-        schools={compareSchools}
-      />
-      <GraduationRates
-        schools={compareSchools}
-      />
+
+      <ErrorBoundary>
+        <SchoolSelection
+          savedSchools={savedSchools}
+          optionSchools={optionSchools}
+          compareSchools={compareSchools}
+          setCompareSchoolIds={setCompareIds}
+          clearCompareIds={clearCompareIds}
+        />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <PriceTrend
+          schools={compareSchools}
+        />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <GraduationRates
+          schools={compareSchools}
+        />
+      </ErrorBoundary>
+
       <ContactUs />
-      <SchoolSizes
-        schools={compareSchools}
-      />
+
+      <ErrorBoundary>
+        <SchoolSizes
+          schools={compareSchools}
+        />
+      </ErrorBoundary>
     </div>
   );
 }
