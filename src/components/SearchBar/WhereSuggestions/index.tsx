@@ -35,7 +35,7 @@ export default function WhereSuggestions(props: {
         </div>
       )}
 
-      {states.length > 0 && (
+      {schools.length > 0 && (
         <div className={styles.section}>
           <div className={styles.title}>
             Schools
