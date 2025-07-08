@@ -9,12 +9,13 @@ import {
   CaretDownIcon,
 } from "@phosphor-icons/react";
 import {
-  formatSchoolControl,
-  formatDegreeLevel,
   getGraduation,
 } from "@/utils/formatSchoolInfo";
+import { formatPercent } from "@/utils/formatPercent";
 import Well from "@/components/Well";
+import Robotext from "@/components/Robotext";
 import { useSchool } from "@/hooks/useSchool";
+import { useContent } from "@/hooks/useContent";
 import styles from "./styles.module.scss";
 
 export default function SchoolDetails(props: {
@@ -24,21 +25,15 @@ export default function SchoolDetails(props: {
     data: school,
   } = useSchool(props.schoolId);
   const [isOpen, setIsOpen] = useState(false);
+  const content = useContent();
 
   if (!school) return null;
 
   const place = `${school.city}, ${school.state}`;
-  const retentionRate = school.retention.fullTime.toLocaleString(undefined, {
-    style: "percent",
-    maximumFractionDigits: 0,
-  });
-  const gradRate = getGraduation(school).total.toLocaleString(undefined, {
-    style: "percent",
-    maximumFractionDigits: 0,
-  });
+  const acceptanceRate = formatPercent(school.stats.percentAdmitted);
+  const gradRate = formatPercent(getGraduation(school).total);
 
-  const schoolControl = formatSchoolControl(school.schoolControl);
-  const degreeLevel = formatDegreeLevel(school.degreeLevel);
+  const { schoolControl, degreeLevel } = school;
 
   return (
     <Well width="text">
@@ -46,35 +41,54 @@ export default function SchoolDetails(props: {
         <div className={styles.icon}>
           <GraduationCapIcon />
         </div>
-        <h2>School Details</h2>
+        <h2>
+          {content("SchoolPage.SchoolDetails.title")}
+        </h2>
 
         <div className={styles.facts}>
           <div className={styles.fact}>
             <MapPinIcon />
-            <span>
-              Located in {place}
-            </span>
+            <Robotext
+              as="span"
+              template={content("SchoolPage.SchoolDetails.location")}
+              context={{
+                LOCATION: place,
+              }}
+            />
           </div>
 
           <div className={styles.fact}>
             <TrophyIcon />
-            <span>
-              {retentionRate} retention rate
-            </span>
+            <Robotext
+              as="span"
+              template={content("SchoolPage.SchoolDetails.acceptanceRate")}
+              context={{
+                ACCEPTANCE_RATE: acceptanceRate,
+              }}
+            />
           </div>
 
           <div className={styles.fact}>
             <BuildingApartmentIcon />
-            <span>
-              {`${schoolControl}, ${degreeLevel} school`}
-            </span>
+            <Robotext
+              as="span"
+              template={content("SchoolPage.SchoolDetails.schoolType")}
+              context={{
+                SCHOOL_CONTROL: content(`GeneralPurpose.schoolControl.${schoolControl}`),
+                DEGREE_LEVEL: content(`GeneralPurpose.degreeLevel.${degreeLevel}`),
+              }}
+            />
           </div>
 
           <div className={styles.fact}>
             <GraduationCapIcon />
-            <span>
-              {gradRate} graduation rate
-            </span>
+            <Robotext
+              as="span"
+              template={content("SchoolPage.SchoolDetails.graduationRate")}
+              context={{
+                GRADUATION_RATE: gradRate,
+              }}
+            />
           </div>
         </div>
 
@@ -87,15 +101,9 @@ export default function SchoolDetails(props: {
           </button>
 
           {isOpen && (
-            <p className={styles.text}>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque
-              faucibus ex sapien vitae pellentesque sem placerat. In id
-              cursus mi pretium tellus duis convallis. Tempus leo eu aenean
-              sed diam urna tempor. Pulvinar vivamus fringilla lacus nec
-              metus bibendum egestas. Iaculis massa nisl malesuada lacinia
-              integer nunc posuere. Ut hendrerit semper vel class aptent
-              taciti sociosqu.
-            </p>
+            <Robotext
+              template={content("SchoolPage.SchoolDetails.aboutTheData")}
+            />
           )}
         </div>
       </div>

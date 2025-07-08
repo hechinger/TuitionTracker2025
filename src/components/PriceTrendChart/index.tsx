@@ -7,6 +7,7 @@ import { line, area } from "d3-shape";
 import get from "lodash/get";
 import { formatDollars } from "@/utils/formatDollars";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
+import { useContent } from "@/hooks/useContent";
 import type { YearData, SchoolDetail } from "@/types";
 import Legend from "./Legend";
 import styles from "./styles.module.scss";
@@ -23,6 +24,7 @@ export default function PriceTrendChart(props: {
     legend = true,
   } = props;
 
+  const content = useContent();
   const { bracket = "average" } = useIncomeBracket();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -178,7 +180,9 @@ export default function PriceTrendChart(props: {
                       transform: `translateY(${y(school.stickerPrice.price)}px) translate(-${margin.right - 4}px, -18px)`,
                     }}
                   >
-                    <strong>{formatDollars(school.stickerPrice.price)}</strong> sticker price
+                    <strong>{formatDollars(school.stickerPrice.price)}</strong>
+                    {" "}
+                    {content("SchoolPage.Prices.stickerLabel")}
                   </div>
 
                   <div
@@ -187,7 +191,9 @@ export default function PriceTrendChart(props: {
                       transform: `translateY(${y(school.netPricesByBracket[bracket])}px) translate(-${margin.right - 4}px, -18px)`,
                     }}
                   >
-                    <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong> net price
+                    <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong>
+                    {" "}
+                    {content("SchoolPage.Prices.netPriceLabel")}
                   </div>
                 </>
               )}

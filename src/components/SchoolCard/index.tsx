@@ -6,6 +6,7 @@ import { StarIcon } from "@phosphor-icons/react";
 import { getSchoolRoute } from "@/utils/routes";
 import { formatDollars } from "@/utils/formatDollars";
 import { useSavedSchools } from "@/hooks/useSavedSchools";
+import SchoolImage from "@/components/SchoolImage";
 import styles from "./styles.module.scss";
 
 export default function SchoolCard(props: {
@@ -34,9 +35,9 @@ export default function SchoolCard(props: {
       </div>
 
       <Link href={getSchoolRoute(props.school)}>
-        <img
-          src={props.school.image}
-          alt={props.school.name}
+        <SchoolImage
+          school={props.school}
+          withFallback
         />
 
         <div className={styles.info}>

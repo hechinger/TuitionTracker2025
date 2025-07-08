@@ -18,8 +18,5 @@ export function formatDegreeLevel(level: DegreeLevel) {
 }
 
 export function getGraduation(school: SchoolDetail) {
-  if (school.degreeLevel === "2-year") {
-    return school.graduationAssociates;
-  }
-  return school.graduationBachelors;
+  return school.graduation;
 }

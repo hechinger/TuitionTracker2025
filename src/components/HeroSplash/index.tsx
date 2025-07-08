@@ -1,34 +1,40 @@
+"use client";
+
 import a11y from "@/styles/accessibility.module.scss";
-import logo from "./logo.png";
-import partner from "./partner.png";
+import { useContent } from "@/hooks/useContent";
+import AppLogo from "@/components/AppLogo";
 import styles from "./styles.module.scss";
 
 export default function HeroSplash() {
+  const content = useContent();
+
+  const sponsorImage = content("HeroSplash.sponsor.image");
+
   return (
     <div className={styles.splash}>
       <h1 className={a11y.srOnly}>
         Tuition Tracker
       </h1>
-      <img
-        src={logo.src}
-        className={styles.logo}
-        alt="Tuition Tracker logo"
-      />
+      <div className={styles.logo}>
+        <AppLogo />
+      </div>
 
       <p className={styles.subtitle}>
-        Revealing the true cost of college
+        {content("HeroSplash.subtitle")}
       </p>
 
-      <div className={styles.sponsor}>
-        <p className={styles.sponsorText}>
-          In partnership with
-        </p>
-        <img
-          src={partner.src}
-          className={styles.sponsorLogo}
-          alt="Big Charitable Group logo"
-        />
-      </div>
+      {sponsorImage && (
+        <div className={styles.sponsor}>
+          <p className={styles.sponsorText}>
+            {content("HeroSplash.sponsor.text")}
+          </p>
+          <img
+            src={content("HeroSplash.sponsor.image")}
+            className={styles.sponsorLogo}
+            alt={content("HeroSplash.sponsor.imageAlt")}
+          />
+        </div>
+      )}
     </div>
   );
 }

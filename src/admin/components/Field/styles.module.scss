@@ -1,0 +1,26 @@
+@use "@/styles/colors.scss";
+
+.section {
+  &.section1 {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid colors.$text-light;
+  }
+}
+
+.label {
+  margin: 0.2em 0;
+}
+
+.localeLabel {
+  text-transform: uppercase;
+  color: colors.$text-light;
+}
+
+.stringInput {
+  display: block;
+  width: 100%;
+  border: 1px solid colors.$border-main;
+  margin: 4px 0 8px;
+  padding: 4px;
+}

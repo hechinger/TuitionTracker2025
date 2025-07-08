@@ -1,4 +1,3 @@
-import DataProvider from "@/components/DataProvider";
 import type { Metadata } from "next";
 import BrandTopper from "@/components/BrandTopper";
 import PageContent from "@/components/PageContent";
@@ -32,13 +31,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <DataProvider>
-          <BrandTopper />
-          <PageContent>
-            {children}
-          </PageContent>
-          <BrandFooter />
-        </DataProvider>
+        <BrandTopper />
+        <PageContent>
+          {children}
+        </PageContent>
+        <BrandFooter />
       </body>
     </html>
   );

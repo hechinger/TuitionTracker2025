@@ -1,0 +1,658 @@
+require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
+const pg = require("pg");
+const chunk = require("lodash/chunk");
+const lodashGet = require("lodash/get");
+
+const dbUrl = process.env.DATABASE_URL;
+
+const validSchoolsFile = path.join(
+  path.dirname(__dirname),
+  "src",
+  "data",
+  "ipeds",
+  "valid_schools.json",
+);
+const schools = JSON.parse(fs.readFileSync(validSchoolsFile));
+
+const get = (obj, path, defaultValue) => {
+  if (typeof path === "function") {
+    const v = path(obj);
+    if (typeof v === "undefined") return defaultValue;
+    return v;
+  }
+  return lodashGet(obj, path, defaultValue);
+};
+
+const getValueIdSet = (nRows, nCols) => {
+  return [...Array(nRows)].map((_, row) => {
+    const base = (row * nCols) + 1;
+    const ids = [...Array(nCols)].map((_, col) => `$${base + col}`);
+    return `(${ids.join(", ")})`;
+  }).join(", ");
+};
+
+const main = async () => {
+  // DB connection
+  const db = new pg.Client({
+    connectionString: dbUrl,
+  });
+  await db.connect();
+
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS schools (
+        db_id SERIAL PRIMARY KEY,
+        id VARCHAR(10) UNIQUE NOT NULL,
+        slug VARCHAR(255) UNIQUE NOT NULL,
+        image VARCHAR(255),
+        name VARCHAR(255) NOT NULL,
+        alias TEXT,
+        city VARCHAR(255),
+        state VARCHAR(255),
+        zip VARCHAR(255),
+        longitude VARCHAR(255),
+        latitude VARCHAR(255),
+        hbcu BOOLEAN,
+        tribal_college BOOLEAN,
+        sector VARCHAR(10),
+        school_control VARCHAR(255),
+        degree_level VARCHAR(255),
+        admission_rate REAL,
+        enrollment_total INT,
+        enrollment_gender_men INT,
+        enrollment_gender_women INT,
+        enrollment_gender_unknown INT,
+        enrollment_gender_other INT,
+        enrollment_race_unknown INT,
+        enrollment_race_multiple INT,
+        enrollment_race_white INT,
+        enrollment_race_hisp INT,
+        enrollment_race_nathawpacisl INT,
+        enrollment_race_black INT,
+        enrollment_race_asian INT,
+        enrollment_race_amerindalasknat INT,
+        enrollment_race_nonresident INT,
+        graduation_total REAL,
+        graduation_race_unknown REAL,
+        graduation_race_multiple REAL,
+        graduation_race_white REAL,
+        graduation_race_hisp REAL,
+        graduation_race_nathawpacisl REAL,
+        graduation_race_black REAL,
+        graduation_race_asian REAL,
+        graduation_race_amerindalasknat REAL,
+        graduation_race_nonresident REAL,
+        retention_full_time REAL,
+        retention_part_time REAL,
+        percent_sticker REAL
+      );
+    `);
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS prices (
+        db_id SERIAL PRIMARY KEY,
+        school_id VARCHAR(10) NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+        year VARCHAR(10) NOT NULL,
+        start_year INT,
+        sticker_price_in_state DOUBLE PRECISION,
+        sticker_price_out_state DOUBLE PRECISION,
+        sticker_price_type VARCHAR(255),
+        net_price_average DOUBLE PRECISION,
+        net_price_average_min REAL,
+        net_price_average_max REAL,
+        net_price_bracket0 DOUBLE PRECISION,
+        net_price_bracket0_min REAL,
+        net_price_bracket0_max REAL,
+        net_price_bracket1 DOUBLE PRECISION,
+        net_price_bracket1_min REAL,
+        net_price_bracket1_max REAL,
+        net_price_bracket2 DOUBLE PRECISION,
+        net_price_bracket2_min REAL,
+        net_price_bracket2_max REAL,
+        net_price_bracket3 DOUBLE PRECISION,
+        net_price_bracket3_min REAL,
+        net_price_bracket3_max REAL,
+        net_price_bracket4 DOUBLE PRECISION,
+        net_price_bracket4_min REAL,
+        net_price_bracket4_max REAL
+      );
+    `);
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS content (
+        db_id SERIAL PRIMARY KEY,
+        locale VARCHAR(255),
+        component VARCHAR(255) NOT NULL,
+        path VARCHAR(255) NOT NULL,
+        value TEXT
+      );
+    `);
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS recirculation_articles (
+        db_id SERIAL PRIMARY KEY,
+        page VARCHAR(255) NOT NULL,
+        url TEXT NOT NULL,
+        headline TEXT NOT NULL,
+        image TEXT NOT NULL,
+        image_alt TEXT
+      );
+    `);
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS recommended_schools (
+        db_id SERIAL PRIMARY KEY,
+        page_order INT NOT NULL,
+        title TEXT NOT NULL,
+        title_spanish TEXT NOT NULL,
+        school_ids JSON
+      );
+    `);
+
+    const schoolChunks = chunk(schools, 100);
+    await schoolChunks.reduce(async (promise, ss) => {
+      await promise;
+
+      const schoolColumns = {
+        id: "id", 
+        slug: (d) => `${d.slug}-${d.id}`, 
+        image: "image", 
+        name: "name", 
+        alias: "alias", 
+        city: "city", 
+        state: "state", 
+        zip: "zip", 
+        longitude: (d) => `${d.longitude}`,
+        latitude: (d) => `${d.latitude}`, 
+        hbcu: "hbcu", 
+        tribal_college: "tribalCollege", 
+        sector: "sector", 
+        school_control: "schoolControl", 
+        degree_level: "degreeLevel", 
+        admission_rate: "admissionRate", 
+        enrollmen_total: "enrollment.total", 
+        enrollment_gender_men: "enrollment.byGender.men", 
+        enrollment_gender_women: "enrollment.byGender.women", 
+        enrollment_gender_unknown: "enrollment.byGender.unknown", 
+        enrollment_gender_other: "enrollment.byGender.other", 
+        enrollment_race_unknown: "enrollment.byRace.unknown", 
+        enrollment_race_multiple: "enrollment.byRace.multiple", 
+        enrollment_race_white: "enrollment.byRace.white", 
+        enrollment_race_hisp: "enrollment.byRace.hisp", 
+        enrollment_race_nathawpacisl: "enrollment.byRace.nathawpacisl", 
+        enrollment_race_black: "enrollment.byRace.black", 
+        enrollment_race_asian: "enrollment.byRace.asian", 
+        enrollment_race_amerindalasknat: "enrollment.byRace.amerindalasknat", 
+        enrollment_race_nonresident: "enrollment.byRace.nonresident", 
+        graduation_total: "graduation.total", 
+        graduation_race_unknown: "graduation.byRace.unknown", 
+        graduation_race_multiple: "graduation.byRace.multiple", 
+        graduation_race_white: "graduation.byRace.white", 
+        graduation_race_hisp: "graduation.byRace.hisp", 
+        graduation_race_nathawpacisl: "graduation.byRace.nathawpacisl", 
+        graduation_race_black: "graduation.byRace.black", 
+        graduation_race_asian: "graduation.byRace.asian", 
+        graduation_race_amerindalasknat: "graduation.byRace.amerindalasknat", 
+        graduation_race_nonresident: "graduation.byRace.nonresident", 
+        retention_full_time: "retention.fullTime", 
+        retention_part_time: "retention.partTime", 
+        percent_sticker: "percentSticker", 
+      };
+
+      const priceColumns = {
+        school_id: "school.id", 
+        year: "year", 
+        start_year: "startYear", 
+        sticker_price_in_state: "stickerPrice.price", 
+        sticker_price_out_state: "stickerPrice.priceOutState", 
+        sticker_price_type: "stickerPrice.type", 
+        net_price_average: "netPricesByBracket.average.price", 
+        net_price_average_min: "netPricesByBracket.average.min", 
+        net_price_average_max: "netPricesByBracket.average.max", 
+        net_price_bracket0: "netPricesByBracket.0_30000.price", 
+        net_price_bracket0_min: "netPricesByBracket.0_30000.min", 
+        net_price_bracket0_max: "netPricesByBracket.0_30000.max", 
+        net_price_bracket1: "netPricesByBracket.30001_48000.price", 
+        net_price_bracket1_min: "netPricesByBracket.30001_48000.min", 
+        net_price_bracket1_max: "netPricesByBracket.30001_48000.max", 
+        net_price_bracket2: "netPricesByBracket.48001_75000.price", 
+        net_price_bracket2_min: "netPricesByBracket.48001_75000.min", 
+        net_price_bracket2_max: "netPricesByBracket.48001_75000.max", 
+        net_price_bracket3: "netPricesByBracket.75001_110000.price", 
+        net_price_bracket3_min: "netPricesByBracket.75001_110000.min", 
+        net_price_bracket3_max: "netPricesByBracket.75001_110000.max", 
+        net_price_bracket4: "netPricesByBracket.110001.price", 
+        net_price_bracket4_min: "netPricesByBracket.110001.min", 
+        net_price_bracket4_max: "netPricesByBracket.110001.max", 
+      };
+
+      // Update schools table
+      if (false) {
+        const values = [];
+        let valueId = 0;
+        const valueIds = [];
+
+        ss.forEach((school) => {
+          const schoolValues = Object.values(schoolColumns).map((c) => get(school, c, null));
+          values.push(schoolValues);
+          valueIds.push(schoolValues.map(() => {
+            valueId += 1;
+            return `$${valueId}`;
+          }));
+        });
+
+        const valueIdSets = valueIds.map((v) => v.join(", ")).map((v) => `(${v})`).join(", ");
+        const query = {
+          text: `INSERT INTO schools (${Object.keys(schoolColumns).join(", ")}) VALUES ${valueIdSets} ON CONFLICT DO NOTHING;`,
+          values: values.flat(),
+        };
+
+        await db.query(query);
+      }
+
+      // Update prices table
+      if (false) {
+        const values = [];
+        let valueId = 0;
+        const valueIds = [];
+
+        ss.forEach(({ years, ...school }) => {
+          years.forEach((year) => {
+            const obj = { ...year, school };
+            const priceValues = Object.values(priceColumns).map((c) => get(obj, c, null));
+            values.push(priceValues);
+            valueIds.push(priceValues.map(() => {
+              valueId += 1;
+              return `$${valueId}`;
+            }));
+          });
+        });
+
+        const valueIdSets = valueIds.map((v) => v.join(", ")).map((v) => `(${v})`).join(", ");
+        const query = {
+          text: `INSERT INTO prices (${Object.keys(priceColumns).join(", ")}) VALUES ${valueIdSets} ON CONFLICT DO NOTHING;`,
+          values: values.flat(),
+        };
+
+        await db.query(query);
+      }
+
+      if (true) {
+        const txt = (s) => ({ en: s, es: s });
+
+        const content = {
+          GeneralPurpose: {
+            schoolControl:{
+              public: txt("Public"),
+              private: txt("Private"),
+              "for-profit": txt("For-profit"),
+            },
+            degreeLevel: {
+              "2-year": txt("2-year"),
+              "4-year": txt("4-year"),
+            },
+            hbcu: txt("HBCU"),
+            tribalCollege: txt("Tribal college"),
+            incomeSelection: {
+              average: txt("any income"),
+              "0_30000": txt("<$30K income"),
+              "30001_48000": txt("$30K-$48K income"),
+              "48001_75000": txt("$48K-$75K income"),
+              "75001_110000": txt("$75K-$110K income"),
+              "110001": txt(">$110K income"),
+            },
+            demographicCategories: {
+              amerindalasknat: txt("American Indian/Alaska Native"),
+              asian: txt("Asian"),
+              black: txt("Black"),
+              hisp: txt("Hispanic"),
+              nathawpacisl: txt("Native Hawaiian/Pacific Islander"),
+              white: txt("White"),
+              multiple: txt("Multiple races"),
+              unknown: txt("Unknown race"),
+              nonresident: txt("Nonresident"),
+            },
+          },
+          AdSlot: {
+            title: txt("Advertisement"),
+          },
+          HeroSplash: {
+            subtitle: txt("Revealing the true cost of college"),
+            sponsor: {
+              text: txt("In partnership with"),
+              image: "image-url",
+              imageAlt: txt("Big Charitable Group logo"),
+            },
+          },
+          SearchBar: {
+            where: {
+              title: txt("Where"),
+              placeholder: txt("Find a school or pick a state"),
+              states: txt("States"),
+              schools: txt("Schools"),
+            },
+            more: {
+              title: txt("Total cost and more"),
+              placeholder: txt("More search options"),
+            },
+            advanced: {
+              cost: {
+                title: txt("What it will cost"),
+                instructions: txt("Optionally select your hosuehold income to get a better price estimate"),
+                anyIncome: txt("Any"),
+                histogramTitle: txt("Net price for {INCOME} income"),
+                minimum: txt("Minimum"),
+                maximum: txt("Maximum"),
+              },
+              schoolType: {
+                title: txt("School type"),
+              },
+              degreeType: {
+                title: txt("Degree type"),
+                anyType: txt("Any type"),
+              },
+              other: {
+                title: txt("Other school attributes"),
+                tribalCollege: txt("Tribal college"),
+                hbcu: txt("Historically black (HBCU)"),
+              },
+              controls: {
+                clear: txt("Clear all"),
+                search: txt("Search"),
+              },
+            },
+          },
+          Newsletter: {
+            title: txt("Subscribe to our newsletter"),
+            blurb: txt("Keep up with the latest on higher education."),
+            emailPlaceholder: txt("Email address"),
+            submitButton: txt("Submit"),
+            campaignId: "",
+          },
+          ContactUs: {
+            title: txt("Have a question?"),
+            blurb: txt("Send us a message if you can’t find what you’re looking for or if something doesn’t seem right."),
+            url: "https://hechingerreport.org/contact/",
+          },
+          Recirculation: {
+            title: txt("Read more"),
+          },
+          About: {
+            title: txt("About"),
+            copy: txt("<p>Lorem ipsum.</p>"),
+          },
+          DownloadData: {
+            title: txt("Download the data"),
+            copy: txt("<p>Lorem ipsum.</p>"),
+          },
+          SearchResults: {
+            schoolsFound: txt("{FOUND} schools found out of {TOTAL_SCHOOLS}"),
+            sortBy: {
+              title: txt("Sort by"),
+              name: txt("Name"),
+              priceAscending: txt("Price $ - $$$"),
+              priceDescending: txt("Price $$$ - $"),
+            },
+          },
+          SchoolComparison: {
+            title: txt("Compare your favorite schools"),
+            savedSchools: {
+              title: txt("Your saved schools"),
+              copyLink: txt("Copy link to saved schools"),
+            },
+            compareSchools: {
+              title: txt("Compare schools"),
+              clear: txt("Clear"),
+              card: {
+                typeTitle: txt("Type"),
+                stickerPriceTitle: txt("Sticker price"),
+                netPriceTitle: txt("Average net price"),
+              },
+              dragPrompt: txt("Click or drag a school here to compare"),
+            },
+            priceTrend: {
+              title: txt("Historical price trend"),
+              fallbackText: txt("Select schools above to see how their prices compare over time."),
+              comparisonText: txt("See how the sticker price and net price trends of {SCHOOLS} compare."),
+            },
+            graduationRate: {
+              title: txt("Graduation Rates"),
+              fallbackText: txt("Select schools above to see how their graduation rates compare."),
+              comparisonText: txt("Graduation rate can be a good indicator of how likely students are to complete their degree. See how the graduation rates of {SCHOOLS} compare."),
+              graphLabel: txt("graduation rate"),
+            },
+            schoolSizes: {
+              title: txt("School Sizes"),
+              fallbackText: txt("Select schools above to see how their sizes compare."),
+              comparisonText: txt("School size can have a large impact on a student’s college experience. See how the sizes of {SCHOOLS} compare."),
+              students: txt("students"),
+            },
+          },
+          SchoolPage: {
+            SchoolTopper: {
+              schoolInfo: txt("{SCHOOL_CONTROL} {DEGREE_LEVEL} school"),
+              stickerPriceLabel: txt("projected sticker price"),
+              netPriceLabel: txt("projected average net price for"),
+              saveButton: {
+                saveThisSchool: txt("Save this school"),
+                saved: txt("Saved"),
+              },
+            },
+            Prices: {
+              priceTrendTemplate: txt("<p>This year at <strong>{SCHOOL_NAME}</strong>, we project that {STUDENT_TYPE} will pay <span class=\"highlight\">{NET_PRICE}</span>, while the advertised sticker price is {STICKER_PRICE}. That’s a difference of {PRICE_DIFFERENCE}.</p>"),
+              priceTrendChartTitle: txt("Prices at {SCHOOL_NAME} over time for {INCOME}"),
+              outOfStateStickerLabel: txt("out-of-state sticker price"),
+              inStateStickerLabel: txt("in-state sticker price"),
+              inStateNetPriceLabel: txt("in-state net price"),
+              stickerLabel: txt("sticker price"),
+              netPriceLabel: txt("net price"),
+              upperEstimateLabel: txt("Upper net price estimation"),
+              estimateLabel: txt("Projected net price"),
+              lowerEstimateLabel: txt("Lower net price estimation"),
+              incomeBracketTemplate: txt("<p>How much a student has to pay usually depends on their family's household income. At <strong>{SCHOOL_NAME}</strong> this year, {MAX_BRACKET_STUDENTS} will pay around {MAX_BRACKET_PRICE}, while {MIN_BRACKET_STUDENTS} will pay around {MIN_BRACKET_PRICE}. That's a difference of {PRICE_DIFFERENCE}.</p>"),
+              incomeBracketChartTitle: txt("Net price by income bracket, {SCHOOL_YEAR} school year"),
+              incomeBracketChartAxisLabel: txt("Family income bracket"),
+            },
+            SchoolDetails: {
+              title: txt("School details"),
+              location: txt("Located in {LOCATION}"),
+              schoolType: txt("{SCHOOL_CONTROL} {DEGREE_LEVEL} school"),
+              acceptanceRate: txt("{ACCEPTANCE_RATE} acceptance rate"),
+              graduationRate: txt("{GRADUATION_RATE} graduation rate"),
+              aboutTheData: txt("Lore ipsum dolor sec amet..."),
+            },
+            GraduationRates: {
+              title: txt("Graduation Rates"),
+              overallTemplate: {
+                template: txt("<p>A school’s graduation rate can help capture how likely a student is to complete their degree. At <strong>{SCHOOL_NAME}</strong>, roughly <span class=\"highlight\">{GRADUATION_RATE}</span> of students achieve their {DEGREE_TYPE} within {DEGREE_YEARS} of enrolling.</p>"),
+                degreeTypes: {
+                  "2-year": txt("associate’s degree"),
+                  "4-year": txt("bachelor’s degree"),
+                },
+                degreeYearsCompletionLimit: {
+                  "2-year": txt("four years"),
+                  "4-year": txt("six years"),
+                },
+              },
+              overallBarLabel: txt("{GRADUATION_RATE} overall grad rate"),
+              nationalAverageBarLabel: txt("Nat’l average: {NATIONAL_AVERAGE}"),
+              demographicTemplate: txt("<p>Students of different demographic backgrounds often graduate at different rates, so it can be helpful to look beyond the overall graduation rate. This chart shows how students of different demographic backgrounds fare completing their degrees at <strong>{SCHOOL_NAME}</strong>.</p>"),
+            },
+            StudentRetention: {
+              title: txt("Student Retention"),
+              fullTimeStudents: txt("Full-time students"),
+              partTimeStudents: txt("Part-time students"),
+              chartLabel: txt("retention"),
+              nationalAverageLabel: txt("Nat’l average: {NATIONAL_AVERAGE}"),
+              template: txt("<p>Student retention, or how frequently enrolled students return to continue their degree after the first year or two, is another helpful indicator of how successful students at a school tend to be. At <strong>{SCHOOL_NAME}</strong>, about <span class=\"highlight\">{FULL_TIME_RETENTION_RATE}</span> of full-time students return to continue their degree.</p>"),
+            },
+            StudentDemographics: {
+              title: txt("Student Demographics"),
+              size: {
+                template: txt("<p>The size and makeup of a school’s student body can have a large impact on a student’s experience. <strong>{SCHOOL_NAME}</strong> has {ENROLLMENT} students, which puts it in the <strong>{SIZE_PERCENTILE} percentile</strong> of {SCHOOL_TYPE} schools.</p>"),
+                students: txt("students"),
+              },
+              gender: {
+                template: txt("<p>Different schools attract students from different backgrounds. At <strong>{SCHOOL_NAME}</strong>, about <strong>{GENDER_PERCENT_MAX}</strong> of students are {GENDER_NAME_MAX}.</p>"),
+                genderTextNames: {
+                  men: txt("male"),
+                  women: txt("female"),
+                  unknown: txt("of unknown gender"),
+                  other: txt("of a gender other than male or female"),
+                },
+                genderChartLabels: {
+                  men: txt("male"),
+                  women: txt("female"),
+                  other: txt("other"),
+                },
+              },
+              race: {
+                template: txt("<p>The demographic makeup of a school’s student body also plays a big role in its campus culture. At <strong>{SCHOOL_NAME}</strong>, about <strong>{DEMOGRAPHIC_PERCENT_MAX}</strong> of students are {DEMOGRAPHIC_NAME_MAX}.</p>"),
+                demographicTextNames: {
+                  unknown: txt("of an unknown demographic background"),
+                  multiple: txt("of multiple races"),
+                  white: txt("white"),
+                  hisp: txt("hispanic"),
+                  nathawpacisl: txt("Native Hawaiian or Pacific Islanders"),
+                  black: txt("black"),
+                  asian: txt("Asian"),
+                  amerindalasknat: txt("American Indians or Alaskan Natives"),
+                  nonresident: txt("not U.S. residents"),
+                },
+              },
+            },
+          },
+        };
+        const contentRows = [];
+        Object.entries(content).forEach(([component, info]) => {
+          const decompose = (component, path, value) => {
+            if (
+              typeof value === "object"
+              && "en" in value
+              && "es" in value
+              && Object.keys(value).length === 2
+            ) {
+              contentRows.push({
+                locale: "en",
+                component,
+                path,
+                value: value.en,
+              });
+              contentRows.push({
+                locale: "es",
+                component,
+                path,
+                value: value.es,
+              });
+              return;
+            }
+
+            if (typeof value === "string") {
+              contentRows.push({
+                locale: null,
+                component,
+                path,
+                value,
+              });
+              return;
+            }
+
+            const pref = path ? `${path}.` : "";
+            Object.entries(value).forEach(([k, v]) => {
+              decompose(component, `${pref}${k}`, v);
+            });
+          };
+          decompose(component, "", info);
+        });
+
+        const valueIdSets = getValueIdSet(contentRows.length, 4);
+        const values = contentRows.map((r) => [r.locale, r.component, r.path, r.value]).flat();
+        const query = {
+          text: `INSERT INTO content (locale, component, path, value) VALUES ${valueIdSets};`,
+          values,
+        };
+
+        await db.query(query);
+      }
+
+      if (false) {
+        const recirc = [
+          {
+            page: "default",
+            url: "https://hechingerreport.org/apprenticeships-for-high-schoolers-are-touted-as-the-next-big-thing-one-state-leads-the-way/",
+            headline: "Apprenticeships for high schoolers are touted as the next big thing. One state leads the way",
+            image: "https://i0.wp.com/hechingerreport.org/wp-content/uploads/2025/07/forte-INdiploma-9.jpg?fit=1200%2C1334&ssl=1",
+          },
+          {
+            page: "default",
+            url: "https://hechingerreport.org/proof-points-delay-release-naep-science/",
+            headline: "Another Education Department delay: release of NAEP science scores",
+            image: "https://i0.wp.com/hechingerreport.org/wp-content/uploads/2025/07/barshay_science_1-scaled.jpg?fit=1200%2C1707&ssl=1",
+          },
+          {
+            page: "default",
+            url: "http://hechingerreport.org/how-theater-can-teach-kids-about-climate-change/",
+            headline: "How theater can teach kids about climate change",
+            image: "https://hechingerreport.org/wp-content/uploads/2025/07/climate-newsletter-1-scaled.jpg",
+          },
+        ];
+
+        const valueIdSets = getValueIdSet(recirc.length, 4);
+        const values = recirc.map((r) => [r.page, r.url, r.headline, r.image]).flat();
+        const query = {
+          text: `INSERT INTO recirculation_articles (page, url, headline, image) VALUES ${valueIdSets};`,
+          values,
+        };
+
+        await db.query(query);
+      }
+
+      if (false) {
+        const sections = [
+          {
+            pageOrder: 0,
+            title: "Big State Schools",
+            titleSpanish: "Big State Schools",
+            schoolIds: [
+              "100724", // Alabama State University
+              "134097", // Florida State University
+              "134130", // University of Florida
+              "187985", // University of New Mexico-Main Campus
+              "236939", // Washington State University
+            ],
+          },
+          {
+            pageOrder: 1,
+            title: "Liberal Arts Schools",
+            titleSpanish: "Liberal Arts Schools",
+            schoolIds: [
+              "166027", // Harvard University
+              "186131", // Princeton University
+              "243744", // Stanford University
+              "130794", // Yale University
+              "182670", // Dartmouth College
+            ],
+          },
+        ];
+
+        const getValueIdSet = (i) => `($${i}, $${i + 1}, $${i + 2}, $${i + 3})`;
+        const valueIdSets = sections.map((_, i) => getValueIdSet((i * 4) + 1)).join(", ");
+        const values = sections.map((r) => [r.pageOrder, r.title, r.titleSpanish, JSON.stringify(r.schoolIds)]).flat();
+        const query = {
+          text: `INSERT INTO recommended_schools (page_order, title, title_spanish, school_ids) VALUES ${valueIdSets};`,
+          values,
+        };
+
+        await db.query(query);
+      }
+    }, Promise.resolve());
+  } catch (error) {
+    console.error(error);
+  } finally {
+    db.end();
+  }
+};
+
+main();

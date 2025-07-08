@@ -1,0 +1,36 @@
+@use "@/styles/colors.scss";
+@use "@/styles/fonts.scss";
+
+.nav {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(colors.$brand-yellow, 0.9);
+  backdrop-filter: blur(2px);
+  font-weight: bold;
+  padding: 12px 20px;
+  z-index: 10;
+
+  .link {
+    border: 1px solid colors.$text-main;
+    padding: 4px 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: colors.$brand-yellow;
+  }
+
+  .num {
+    background: colors.$brand-yellow-dark;
+    border-radius: 50%;
+    display: flex;
+    width: 22px;
+    height: 22px;
+    justify-content: center;
+    align-items: center;
+    font-family: fonts.$numbers;
+  }
+}

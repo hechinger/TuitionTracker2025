@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { scaleLinear, scaleOrdinal } from "d3-scale";
 import { lineRadial, curveLinearClosed } from "d3-shape";
+import { useContent } from "@/hooks/useContent";
 import OutlineFilter from "@/components/OutlineFilter";
 import { formatPercent } from "@/utils/formatPercent";
 import { getGraduation } from "@/utils/formatSchoolInfo";
@@ -14,39 +15,30 @@ import styles from "./styles.module.scss";
 const categories = [
   {
     key: "amerindalasknat",
-    label: "American Indian/Alaska Native",
   },
   {
     key: "asian",
-    label: "Asian",
   },
   {
     key: "black",
-    label: "Black",
   },
   {
     key: "hisp",
-    label: "Hispanic",
   },
   {
     key: "nathawpacisl",
-    label: "Native Hawaiian/Pacific Islander",
   },
   {
     key: "white",
-    label: "White",
   },
   {
     key: "multiple",
-    label: "Multiple races",
   },
   // {
   //   key: "nonresident",
-  //   label: "Nonresident",
   // },
   {
     key: "unknown",
-    label: "Unknown race",
   },
 ] as const;
 
@@ -77,13 +69,14 @@ const nationalAverage = {
 
 type DataPoint = {
   key: string;
-  label: string;
+  label?: string;
   value: number;
 };
 
 export default function RadarChart(props: {
   school: SchoolDetail;
 }) {
+  const content = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const { width: w = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
   const width = Math.min(w, 400);
@@ -95,7 +88,7 @@ export default function RadarChart(props: {
     if (typeof value !== "number") return undefined;
     return {
       key: c.key,
-      label: c.label,
+      label: content(`GeneralPurpose.demographicCategories.${c.key}`),
       value: graduation.byRace[c.key],
     };
   }).filter(isNotUndefined);

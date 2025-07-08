@@ -4,6 +4,7 @@ import { useRef } from "react";
 import clsx from "clsx";
 import { useResizeObserver } from "usehooks-ts";
 import { scaleLinear } from "d3-scale";
+import { useContent } from "@/hooks/useContent";
 import { formatPercent } from "@/utils/formatPercent";
 import { type SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
@@ -11,6 +12,7 @@ import styles from "./styles.module.scss";
 export default function GenderBars(props: {
   school: SchoolDetail;
 }) {
+  const content = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
   const { byGender, total } = props.school.enrollment;
@@ -94,14 +96,18 @@ export default function GenderBars(props: {
           className={styles.label}
           style={{ transform: `translateX(${x(0)}px)` }}
         >
-          {formatPercent(female)} female
+          {formatPercent(female)}
+          {" "}
+          {content("SchoolPage.StudentDemographics.gender.genderChartLabels.women")}
         </div>
 
         <div
           className={styles.label}
           style={{ transform: `translateX(${x(1)}px) translateX(-100%)` }}
         >
-          {formatPercent(male)} male
+          {formatPercent(male)}
+          {" "}
+          {content("SchoolPage.StudentDemographics.gender.genderChartLabels.men")}
         </div>
 
         {other > 0 && (
@@ -109,7 +115,9 @@ export default function GenderBars(props: {
             className={styles.otherLabel}
             style={{ transform: `translateX(${x(female + (other / 2))}px) translateX(-50%)` }}
           >
-            {formatPercent(other)} other
+            {formatPercent(other)}
+            {" "}
+            {content("SchoolPage.StudentDemographics.gender.genderChartLabels.other")}
           </div>
         )}
       </div>

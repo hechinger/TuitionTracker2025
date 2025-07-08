@@ -23,7 +23,13 @@ const fetchAndUnzipIpeds = async ({ file, baseUrl, dataDir }) => {
     }
 
     const zip = new AdmZip(zipFile);
-    const [unzippedFile] = zip.getEntries().map((z) => path.join(dataDir, z.name));
+    const [unzippedFile] = zip.getEntries()
+      .map((z) => path.join(dataDir, z.name))
+      .sort((a, b) => {
+        const aVal = a.includes("_rv") ? 1 : 0;
+        const bVal = b.includes("_rv") ? 1 : 0;
+        return bVal - aVal;
+      });
     zip.extractAllTo(dataDir, true);
 
     return unzippedFile;

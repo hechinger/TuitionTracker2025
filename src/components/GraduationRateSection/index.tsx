@@ -1,6 +1,7 @@
 "use client";
 
 import { useSchool } from "@/hooks/useSchool";
+import { useContent } from "@/hooks/useContent";
 import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
 import { formatPercent } from "@/utils/formatPercent";
@@ -9,41 +10,33 @@ import OverallBar from "./OverallBar";
 import RadarChart from "./RadarChart";
 import styles from "./styles.module.scss";
 
-const overallTemplate = `
-  <p>
-    A school’s graduation rate can help capture how likely a student is to complete their degree. At <strong>{schoolName}</strong>, roughly <span class="highlight">{graduationRate}</span> of students achieve their {degreeType} within {degreeYears} of enrolling.
-  </p>
-`;
-
-const demoTemplate = `
-  <p>
-    Students of different demographic backgrounds often graduate at different rates, so it can be helpful to look beyond the overall graduation rate. This chart shows how students of different demographic backgrounds fare completing their degrees at <strong>{schoolName}</strong>.
-  </p>
-`;
-
 export default function GraduationRateSection(props: {
   schoolId: string;
 }) {
   const { data: school } = useSchool(props.schoolId);
+  const content = useContent();
 
   if (!school) return null;
 
+  const overallTemplate = content("SchoolPage.GraduationRates.overallTemplate.template");
+  const demoTemplate = content("SchoolPage.GraduationRates.demographicTemplate");
+
   const grad = getGraduation(school);
   const overallContext = {
-    schoolName: school.name,
-    graduationRate: formatPercent(grad.total),
-    degreeType: (school.degreeLevel === "2-year") ? "associate’s degree" : "bachelor’s degree",
-    degreeYears: (school.degreeLevel === "2-year") ? "four years" : "six years",
+    SCHOOL_NAME: school.name,
+    GRADUATION_RATE: formatPercent(grad.total),
+    DEGREE_TYPE: content(`SchoolPage.GraduationRates.overallTemplate.degreeTypes.${school.degreeLevel}`),
+    DEGREE_YEARS: content(`SchoolPage.GraduationRates.overallTemplate.degreeYearsCompletionLimit.${school.degreeLevel}`),
   };
 
   const demoContext = {
-    schoolName: school.name,
+    SCHOOL_NAME: school.name,
   };
 
   return (
     <Well width="text" section>
       <h2 className={styles.sectionTitle}>
-        Graduation Rate
+        {content("SchoolPage.GraduationRates.title")}
       </h2>
 
       {school && (

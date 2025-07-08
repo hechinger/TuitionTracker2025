@@ -1,6 +1,6 @@
-// import data from "@/data/schools_index.json";
+import { getSchoolsIndex } from "@/db/schools";
 
 export async function GET() {
-  // return Response.json(data);
-  return Response.json({ message: "hello" });
+  const schools = await getSchoolsIndex();
+  return Response.json(schools);
 }

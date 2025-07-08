@@ -311,31 +311,65 @@ const datasetConfig = {
       file: "IC{YEAR}_AY",
       years: 11,
       parseSchoolRows: (years) => {
-        const getStickerPriceYear = (year, yearNumber) => {
-          const chg2ay3 = parseInt(year.CHG2AY3, 10) || 0;
-          const chg3ay3 = parseInt(year.CHG3AY3, 10) || 0;
-          const chg4ay3 = parseInt(year.CHG4AY3, 10) || 0;
-          const chg5ay3 = parseInt(year.CHG5AY3, 10) || 0;
-          const chg6ay3 = parseInt(year.CHG6AY3, 10) || 0;
-          const chg7ay3 = parseInt(year.CHG7AY3, 10) || 0;
-          const chg8ay3 = parseInt(year.CHG8AY3, 10) || 0;
+        let numOnCampus = 0;
+        let numOffCampus = 0;
 
-          const inStateOnCampus = chg2ay3 + chg4ay3 + chg5ay3 + chg6ay3;
-          const inStateOffCampus = chg2ay3 + chg4ay3 + chg7ay3 + chg8ay3;
-          const outStateOnCampus = chg3ay3 + chg4ay3 + chg5ay3 + chg6ay3;
-          const outStateOffCampus = chg3ay3 + chg4ay3 + chg7ay3 + chg8ay3;
+        const yearData = years.map(([year], i) => {
+          const yearNumber = baseYear - i;
+
+          const chg2ay3 = parseInt(year.CHG2AY3, 10) || null;
+          const chg3ay3 = parseInt(year.CHG3AY3, 10) || null;
+          const chg4ay3 = parseInt(year.CHG4AY3, 10) || null;
+          const chg5ay3 = parseInt(year.CHG5AY3, 10) || null;
+          const chg6ay3 = parseInt(year.CHG6AY3, 10) || null;
+          const chg7ay3 = parseInt(year.CHG7AY3, 10) || null;
+          const chg8ay3 = parseInt(year.CHG8AY3, 10) || null;
+
+          const sumNull = (...ns) => ns.reduce((a, b) => {
+            if (!a && a !== 0) return null;
+            if (!b && b !== 0) return null;
+            return a + b;
+          }, 0);
+
+          const inStateOnCampus = sumNull(chg2ay3, chg4ay3, chg5ay3, chg6ay3);
+          const inStateOffCampus = sumNull(chg2ay3, chg4ay3, chg7ay3, chg8ay3);
+          const outStateOnCampus = sumNull(chg3ay3, chg4ay3, chg5ay3, chg6ay3);
+          const outStateOffCampus = sumNull(chg3ay3, chg4ay3, chg7ay3, chg8ay3);
+
+          if (inStateOnCampus) {
+            numOnCampus += 1;
+          }
+
+          if (inStateOffCampus) {
+            numOffCampus += 1;
+          }
 
           return {
             year: yearNumber,
             prices: {
-              price: inStateOnCampus || inStateOffCampus,
-              priceOutState: outStateOnCampus || outStateOffCampus,
-              type: inStateOnCampus ? "on-campus" : "off-campus",
+              inStateOnCampus,
+              inStateOffCampus,
+              outStateOnCampus,
+              outStateOffCampus,
             },
           };
-        };
+        });
+
+        const type = (numOnCampus >= numOffCampus) ? "on-campus" : "off-campus";
+
         return {
-          stickerPriceYears: years.map(([year], i) => getStickerPriceYear(year, baseYear - i)),
+          stickerPriceYears: yearData.map((year) => ({
+            ...year,
+            prices: {
+              type,
+              price: (type === "on-campus") ? year.prices.inStateOnCampus : year.prices.inStateOffCampus,
+              priceOutState: (type === "on-campus") ? year.prices.outStateOnCampus : year.prices.outStateOffCampus,
+              inStateOnCampus: year.prices.inStateOnCampus,
+              inStateOffCampus: year.prices.inStateOffCampus,
+              outStateOnCampus: year.prices.outStateOnCampus,
+              outStateOffCampus: year.prices.outStateOffCampus,
+            },
+          })),
         };
       },
     },
@@ -347,6 +381,20 @@ const datasetConfig = {
         const percentSticker = (100 - mostRecentYear.UAGRNTP) / 100;
 
         const getNetPriceYear = (year, yearNumber) => {
+          const npist2 = year.NPIST2;
+          const npis412 = year.NPIS412;
+          const npis422 = year.NPIS422;
+          const npis432 = year.NPIS432;
+          const npis442 = year.NPIS442;
+          const npis452 = year.NPIS452;
+
+          const npgrn2 = year.NPGRN2;
+          const npt412 = year.NPT412;
+          const npt422 = year.NPT422;
+          const npt432 = year.NPT432;
+          const npt442 = year.NPT442;
+          const npt452 = year.NPT452;
+
           return {
             year: yearNumber,
             prices: {
@@ -356,13 +404,25 @@ const datasetConfig = {
               "48001_75000": year.NPIS432 || year.NPT432,
               "75001_110000": year.NPIS442 || year.NPT442,
               "110001": year.NPIS452 || year.NPT452,
+              npist2,
+              npis412,
+              npis422,
+              npis432,
+              npis442,
+              npis452,
+              npgrn2,
+              npt412,
+              npt422,
+              npt432,
+              npt442,
+              npt452,
             },
           };
         };
 
         return {
           percentSticker,
-          netPriceYears: years.map(([year], i) => getNetPriceYear(year, baseYear - i)),
+          netPriceYears: years.map(([year], i) => getNetPriceYear(year, baseYear - 1 - i)),
         };
       },
     },
@@ -406,7 +466,7 @@ const datasetConfig = {
 
       const years = stickerPriceYears.map((stickerYear, i) => {
         const yearNum = baseYear - i;
-        const netYear = netPriceYears[i];
+        const netYear = netPriceYears[i - 1];
 
         const stickerPrice = stickerYear.prices;
         const getNetPrice = (bracket) => {
@@ -417,7 +477,7 @@ const datasetConfig = {
           }
 
           const netPrice = netYear.prices[bracket];
-          const discount = netPrice / stickerPrice.price;
+          const discount = netPrice / (stickerPrice.inStateOnCampus || stickerPrice.inStateOffCampus);
           const { min, max } = minMaxDiscounts[bracket];
 
           if (min === undefined || discount < min) {
@@ -430,13 +490,15 @@ const datasetConfig = {
 
           return {
             price: netPrice,
+            discount,
           };
         };
 
         return {
-          year: `${(yearNum - 1).toString().slice(2)}-${yearNum.toString().slice(2)}`,
-          startYear: yearNum - 1,
+          year: `${(yearNum).toString().slice(2)}-${(yearNum + 1).toString().slice(2)}`,
+          startYear: yearNum,
           stickerPrice,
+          originalNetPrices: netYear,
           netPricesByBracket: {
             average: getNetPrice("average"),
             "0_30000": getNetPrice("0_30000"),
@@ -466,14 +528,59 @@ const datasetConfig = {
         );
 
         const grow = (n) => ((!n && n !== 0) ? null : (n * growth));
-        [...Array(2)].forEach(() => {
+
+        years[0].netPricesByBracket = {
+          average: {
+            // price: grow(years[1].netPricesByBracket.average.price),
+            price: years[1].netPricesByBracket.average.discount * years[0].stickerPrice.price,
+            min: minMaxDiscounts.average.min,
+            max: minMaxDiscounts.average.max,
+          },
+          "0_30000": {
+            // price: grow(years[1].netPricesByBracket["0_30000"].price),
+            price: years[1].netPricesByBracket["0_30000"].discount * years[0].stickerPrice.price,
+            min: minMaxDiscounts["0_30000"].min,
+            max: minMaxDiscounts["0_30000"].max,
+          },
+          "30001_48000": {
+            // price: grow(years[1].netPricesByBracket["30001_48000"].price),
+            price: years[1].netPricesByBracket["30001_48000"].discount * years[0].stickerPrice.price,
+            min: minMaxDiscounts["30001_48000"].min,
+            max: minMaxDiscounts["30001_48000"].max,
+          },
+          "48001_75000": {
+            // price: grow(years[1].netPricesByBracket["48001_75000"].price),
+            price: years[1].netPricesByBracket["48001_75000"].discount * years[0].stickerPrice.price,
+            min: minMaxDiscounts["48001_75000"].min,
+            max: minMaxDiscounts["48001_75000"].max,
+          },
+          "75001_110000": {
+            // price: grow(years[1].netPricesByBracket["75001_110000"].price),
+            price: years[1].netPricesByBracket["75001_110000"].discount * years[0].stickerPrice.price,
+            min: minMaxDiscounts["75001_110000"].min,
+            max: minMaxDiscounts["75001_110000"].max,
+          },
+          "110001": {
+            // price: grow(years[1].netPricesByBracket["110001"].price),
+            price: years[1].netPricesByBracket["110001"].discount * years[0].stickerPrice.price,
+            min: minMaxDiscounts["110001"].min,
+            max: minMaxDiscounts["110001"].max,
+          },
+        };
+
+        [...Array(2)].forEach((_, i) => {
+          const newYear = baseYear + 1 + i;
           years.unshift({
-            year: `${baseYear.toString().slice(2)}-${(baseYear + 1).toString().slice(2)}`,
-            startYear: baseYear,
+            year: `${newYear.toString().slice(2)}-${(newYear + 1).toString().slice(2)}`,
+            startYear: newYear,
             stickerPrice: {
               price: years[0].stickerPrice.price * growth,
               priceOutState: years[0].stickerPrice.priceOutState * growthOutState,
               type: mostRecentYear.stickerPrice.type,
+              growth,
+              base: years[0].stickerPrice.price,
+              growthOutState,
+              baseOutState: years[0].stickerPrice.priceOutState,
             },
             netPricesByBracket: {
               average: {
@@ -530,13 +637,13 @@ const datasetConfig = {
 const main = async (config) => {
   fs.mkdirSync(ipedsDir, { recursive: true });
 
-  const dataset = await parseIpedsDataset(config, {
-    dataDir: ipedsDir,
-  });
-  // const dataset = {
-  //   errors: [],
-  //   dataset: JSON.parse(fs.readFileSync(path.join(ipedsDir, "dataset.json"))),
-  // };
+  // const dataset = await parseIpedsDataset(config, {
+  //   dataDir: ipedsDir,
+  // });
+  const dataset = {
+    errors: [],
+    dataset: JSON.parse(fs.readFileSync(path.join(ipedsDir, "dataset.json"))),
+  };
 
   const schools = Object.values(dataset.dataset).filter((s) => s.years.length === 13);
 
@@ -618,13 +725,77 @@ const main = async (config) => {
   console.log(`Missing old schools: ${missingOldSchools.size}`);
   console.log([...missingOldSchools].map((id) => oldSchoolIdToName.get(id)));
 
-  console.log(JSON.stringify(dataset.dataset[[...missingOldSchools][0]], null, 2));
+  // const oldSchoolsById = Object.fromEntries(
+  //   oldSchools.map((s) => [s.unitid, s]),
+  // );
+  // const compare = (newSchool, i, total) => {
+  //   const oldSchool = oldSchoolsById[newSchool.id];
+
+  //   if (!oldSchool) return false;
+
+  //   console.log(`School: ${newSchool.name} (${newSchool.id}) [${i + 1} / ${total}]`);
+
+  //   const campusType = newSchool.years[0].stickerPrice.type;
+  //   const oldYears = Object.fromEntries(oldSchool.details.yearly_data.map((y) => [
+  //     y.year,
+  //     {
+  //       price: campusType === "on-campus" ? y.price_instate_oncampus : y.price_instate_offcampus_nofamily,
+  //       price_0_30000: y.avg_net_price_0_30000_titleiv_privateforprofit,
+  //       price_30001_48000: y.avg_net_price_30001_48000_titleiv_privateforprofit,
+  //       price_48001_75000: y.avg_net_price_48001_75000_titleiv_privateforprofit,
+  //       price_75001_110000: y.avg_net_price_75001_110000_titleiv_privateforprofit,
+  //       price_110001: y.avg_net_price_110001_titleiv_privateforprofit,
+  //     },
+  //   ]));
+
+  //   let hasMismatch = false;
+  //   newSchool.years.forEach((year) => {
+  //     const oldYear = oldYears[year.year];
+  //     const y = {
+  //       price: year.stickerPrice.price,
+  //       price_0_30000: year.netPricesByBracket["0_30000"].price,
+  //       price_30001_48000: year.netPricesByBracket["30001_48000"].price,
+  //       price_48001_75000: year.netPricesByBracket["48001_75000"].price,
+  //       price_75001_110000: year.netPricesByBracket["75001_110000"].price,
+  //       price_110001: year.netPricesByBracket["110001"].price,
+  //     };
+  //     Object.entries(y).forEach(([key, value]) => {
+  //       const v = Math.round(value * 100);
+  //       const vo = Math.round(oldYear[key] * 100);
+  //       if (v !== vo) {
+  //         hasMismatch = true;
+  //         console.log(`  [MISMATCH] ${year.year} ${key} -- old: ${oldYear[key]}, new: ${value}`);
+  //       }
+  //     });
+  //   });
+
+  //   return !hasMismatch;
+  // };
+
+  // const allSchools = Object.values(dataset.dataset).sort((a, b) => a.name.localeCompare(b.name));
+  // const matchingIds = [];
+  // const totalMatch = allSchools.reduce((totalMatch, school, i, ss) => {
+  //   const match = compare(school, i, ss.length);
+  //   if (match) {
+  //     matchingIds.push(school.id);
+  //   }
+  //   return totalMatch + (match ? 1 : 0);
+  // }, 0);
+  // console.log(`Matching schools: ${totalMatch} / ${allSchools.length} (${Math.round((totalMatch / allSchools.length) * 100)}%)`);
+  // fs.writeFileSync("matching_ids.json", JSON.stringify(matchingIds));
+
+  //console.log(JSON.stringify(dataset.dataset[[...missingOldSchools][0]], null, 2));
+  //const toCompare = dataset.dataset["197744"];
+  //console.log(JSON.stringify(toCompare, null, 2));
 
   // const [id] = Object.keys(dataset.dataset);
   // dataset.dataset[id].years.forEach((y) => console.log(y));
 
   const datasetFile = path.join(ipedsDir, "dataset.json");
   fs.writeFileSync(datasetFile, JSON.stringify(dataset.dataset, null, 2));
+
+  const validSchoolsFile = path.join(ipedsDir, "valid_schools.json");
+  fs.writeFileSync(validSchoolsFile, JSON.stringify(validSchools, null, 2));
 }
 
 main(datasetConfig);

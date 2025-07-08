@@ -1,12 +1,14 @@
-// import { type NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
+import { getSchoolsDetail } from "@/db/schools";
 
 export async function GET(
-  // _: NextRequest,
-  // { params }: { params: Promise<{ id: string }> },
+  _: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  // const { id } = await params;
-  // const { default: schoolData } = await import(`@/data/split/school_${id}.json`);
+  const { id } = await params;
+  const [school] = await getSchoolsDetail({
+    schoolIds: [id],
+  });
 
-  // return Response.json(schoolData);
-  return Response.json({ message: "hello" });
+  return Response.json(school);
 }

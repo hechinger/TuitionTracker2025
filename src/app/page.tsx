@@ -1,3 +1,7 @@
+import { getContent } from "@/db/content";
+import { getRecirculationArticles } from "@/db/recirculationArticles";
+import { getRecommendedSchools } from "@/db/recommendedSchools";
+import DataProvider from "@/components/DataProvider";
 import AdSlot from "@/components/AdSlot";
 import PageTopOverlap from "@/components/PageTopOverlap";
 import HeroSplash from "@/components/HeroSplash";
@@ -7,50 +11,47 @@ import Newsletter from "@/components/Newsletter";
 import ContactUs from "@/components/ContactUs";
 import Recirculation from "@/components/Recirculation";
 import LandingPageTextSection from "@/components/LandingPageTextSection";
+import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
-const stateSchools = [
-  "100724", // Alabama State University
-  "134097", // Florida State University
-  "134130", // University of Florida
-  "187985", // University of New Mexico-Main Campus
-  "236939", // Washington State University
-];
+export default async function Home() {
+  const [
+    content,
+    articles,
+    schoolSections,
+  ] = await Promise.all([
+    getContent(),
+    getRecirculationArticles({ page: "landing" }),
+    getRecommendedSchools(),
+  ]);
 
-const liberalArtsSchools = [
-  "166027", // Harvard University
-  "186131", // Princeton University
-  "243744", // Stanford University
-  "130794", // Yale University
-  "182670", // Dartmouth College
-];
-
-export default function Home() {
   return (
-    <>
+    <DataProvider content={content}>
       <PageTopOverlap>
         <HeroSplash />
       </PageTopOverlap>
-      <SearchBar highlight />
-      <RecommendedSchools
-        title="Big State Schools"
-        schoolIds={stateSchools}
+      <SearchBar
+        highlight
       />
-      <RecommendedSchools
-        title="Liberal Arts Schools"
-        schoolIds={liberalArtsSchools}
-      />
+      {schoolSections.map((section) => (
+        <RecommendedSchools
+          key={section.key}
+          title={section.title.english}
+          schoolIds={section.schoolIds}
+        />
+      ))}
       <AdSlot />
       <Newsletter />
       <LandingPageTextSection
-        titleKey="landingPageAboutTitle"
-        textKey="landingPageAboutText"
+        titleKey="About.title"
+        textKey="About.copy"
       />
       <ContactUs />
-      <Recirculation />
+      <Recirculation articles={articles} />
       <LandingPageTextSection
-        titleKey="landingPageDownloadDataTitle"
-        textKey="landingPageDownloadDataText"
+        titleKey="DownloadData.title"
+        textKey="DownloadData.copy"
       />
-    </>
+      <SavedSchoolsNav />
+    </DataProvider>
   );
 }

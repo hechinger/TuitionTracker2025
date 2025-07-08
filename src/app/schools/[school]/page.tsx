@@ -1,3 +1,5 @@
+import { getContent } from "@/db/content";
+import DataProvider from "@/components/DataProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AdSlot from "@/components/AdSlot";
 import PageTopOverlap from "@/components/PageTopOverlap";
@@ -10,14 +12,23 @@ import StudentRetentionSection from "@/components/StudentRetentionSection";
 import DemographicsSection from "@/components/DemographicsSection";
 import ContactUs from "@/components/ContactUs";
 import Recirculation from "@/components/Recirculation";
+import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
 export default async function School(props: {
   params: Promise<{ school: string }>;
 }) {
-  const { school } = await props.params;
+  const [
+    { school },
+    content,
+  ] = await Promise.all([
+    props.params,
+    getContent(),
+  ]);
+
   const schoolId = `${school.split('-').at(-1)}`;
+
   return (
-    <>
+    <DataProvider content={content}>
       <PageTopOverlap>
         <ErrorBoundary>
           <SearchBar withNav />
@@ -53,6 +64,7 @@ export default async function School(props: {
       </ErrorBoundary>
 
       <Recirculation />
-    </>
+      <SavedSchoolsNav />
+    </DataProvider>
   );
 }
