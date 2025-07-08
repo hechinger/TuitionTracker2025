@@ -6,7 +6,6 @@ import PageTopOverlap from "@/components/PageTopOverlap";
 import SearchBar from "@/components/SearchBar";
 import SchoolComparison from "@/components/SchoolComparison";
 import Recirculation from "@/components/Recirculation";
-import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
 export default function SavedSchools() {
   return (
@@ -19,7 +18,6 @@ export default function SavedSchools() {
           </PageTopOverlap>
           <SchoolComparison />
           <Recirculation />
-          <SavedSchoolsNav />
         </DataProvider>
       </PageContent>
       <BrandFooter />
