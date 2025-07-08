@@ -11,11 +11,12 @@ const fallbacks = {
 export default function SchoolImage(props: {
   school: SchoolIndex | SchoolDetail;
   withFallback?: boolean;
+  className?: string;
 }) {
   const {
     school,
     withFallback = false,
-    ...rest
+    className,
   } = props;
 
   const fallback = fallbacks[school.schoolControl];
@@ -25,7 +26,7 @@ export default function SchoolImage(props: {
 
   return (
     <img
-      {...rest}
+      className={className}
       src={img || fallback}
       alt={school.name}
     />

@@ -1,5 +1,5 @@
 import S from "string";
-import type { AdminField, AdminState } from "@/types/admin";
+import type { AdminField } from "@/types/admin";
 
 const section = (s: Record<string, AdminField>) => {
   const fields = Object.entries(s).map(([key, field]) => ({

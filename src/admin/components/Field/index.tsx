@@ -1,21 +1,21 @@
 "use client";
 
-import { useId, useState, useMemo } from "react";
-import get from "lodash/get";
+// import { useId, useState, useMemo } from "react";
+// import get from "lodash/get";
 import clsx from "clsx";
 import Editor from "react-simple-wysiwyg";
-import type { AdminField, AdminState } from "@/types/admin";
+import type { AdminField } from "@/types/admin";
 import {
   isStringField,
   isCopyField,
   isRichCopyField,
   isFileField,
-  isSchoolIdField,
-  isSequence,
+  // isSchoolIdField,
+  // isSequence,
   isSection,
   getStateValueWithEdits,
 } from "@/admin/utils/fields";
-import { useSchools } from "@/hooks/useSchools";
+// import { useSchools } from "@/hooks/useSchools";
 import styles from "./styles.module.scss";
 
 const locales = [
@@ -48,79 +48,79 @@ const Label = (props: {
   );
 };
 
-const SchoolIdInput = (props: {
-  label: string;
-  value: string | undefined;
-  level?: number;
-  onChange: (value: string) => void;
-}) => {
-  const {
-    label,
-    value,
-    level,
-    onChange,
-  } = props;
-
-  const [state, setState] = useState("");
-
-  const id = `SchoolIdInput--${useId()}`;
-
-  const { data: schools = [] } = useSchools();
-  const {
-    names,
-    nameToId,
-    idToName,
-  } = useMemo(() => {
-    const names = [] as string[];
-    const nameToId = new Map<string, string>();
-    const idToName = new Map<string, string>();
-    schools.forEach((school) => {
-      names.push(school.name);
-      nameToId.set(school.name, school.id);
-      idToName.set(school.id, school.name);
-    });
-    return {
-      names,
-      nameToId,
-      idToName,
-    };
-  }, [schools]);
-
-  const search = value ? value.toLowerCase() : "";
-  const options = (() => {
-    if (search.length < 3) return [];
-    return names.filter((name) => name.toLowerCase().includes(search));
-  })();
-
-  return (
-    <label className={styles.schoolIdField}>
-      <Label level={level} className={styles.label}>
-        {label}
-      </Label>
-
-      <input
-        id={id}
-        className={styles.schoolIdInput}
-        value={state}
-        onChange={(e) => {
-          const v = e.target.value;
-          const id = nameToId.get(v);
-          setState(v);
-          if (id) {
-            onChange(id);
-          }
-        }}
-        onBlur={() => setState(idToName.get(value || "") || "")}
-      />
-
-      <datalist id={`${id}--datalist`}>
-        {options.slice(0, 50).map((option) => (
-          <option key={option} value={option}></option>
-        ))}
-      </datalist>
-    </label>
-  );
-};
+// const SchoolIdInput = (props: {
+//   label: string;
+//   value: string | undefined;
+//   level?: number;
+//   onChange: (value: string) => void;
+// }) => {
+//   const {
+//     label,
+//     value,
+//     level,
+//     onChange,
+//   } = props;
+// 
+//   const [state, setState] = useState("");
+// 
+//   const id = `SchoolIdInput--${useId()}`;
+// 
+//   const { data: schools = [] } = useSchools();
+//   const {
+//     names,
+//     nameToId,
+//     idToName,
+//   } = useMemo(() => {
+//     const names = [] as string[];
+//     const nameToId = new Map<string, string>();
+//     const idToName = new Map<string, string>();
+//     schools.forEach((school) => {
+//       names.push(school.name);
+//       nameToId.set(school.name, school.id);
+//       idToName.set(school.id, school.name);
+//     });
+//     return {
+//       names,
+//       nameToId,
+//       idToName,
+//     };
+//   }, [schools]);
+// 
+//   const search = value ? value.toLowerCase() : "";
+//   const options = (() => {
+//     if (search.length < 3) return [];
+//     return names.filter((name) => name.toLowerCase().includes(search));
+//   })();
+// 
+//   return (
+//     <label className={styles.schoolIdField}>
+//       <Label level={level} className={styles.label}>
+//         {label}
+//       </Label>
+// 
+//       <input
+//         id={id}
+//         className={styles.schoolIdInput}
+//         value={state}
+//         onChange={(e) => {
+//           const v = e.target.value;
+//           const id = nameToId.get(v);
+//           setState(v);
+//           if (id) {
+//             onChange(id);
+//           }
+//         }}
+//         onBlur={() => setState(idToName.get(value || "") || "")}
+//       />
+// 
+//       <datalist id={`${id}--datalist`}>
+//         {options.slice(0, 50).map((option) => (
+//           <option key={option} value={option}></option>
+//         ))}
+//       </datalist>
+//     </label>
+//   );
+// };
 
 export default function Field(props: {
   field: AdminField;
@@ -235,70 +235,70 @@ export default function Field(props: {
     );
   }
 
-  if (isSchoolIdField(field)) {
-    return null;
+  // if (isSchoolIdField(field)) {
+  //   return null;
 
-    return (
-      <SchoolIdInput
-        label={field.label}
-        value={getStateValue(state, path)}
-        onChange={(v: string) => onChange(path, v)}
-      />
-    );
-  }
+  //   return (
+  //     <SchoolIdInput
+  //       label={field.label}
+  //       value={getStateValue(state, path)}
+  //       onChange={(v: string) => onChange(path, v)}
+  //     />
+  //   );
+  // }
 
-  if (isSequence(field)) {
-    return null;
+  // if (isSequence(field)) {
+  //   return null;
 
-    const elements = get(state, path, []) as (string | AdminState)[];
+  //   const elements = get(state, path, []) as (string | AdminState)[];
 
-    const addSlot = () => {
-      onChange(path, [...elements, field.defaultValue]);
-    };
+  //   const addSlot = () => {
+  //     onChange(path, [...elements, field.defaultValue]);
+  //   };
 
-    const removeSlot = (i: number) => {
-      const newElements = elements.slice();
-      newElements.splice(i, 1);
-      onChange(path, newElements);
-    };
+  //   const removeSlot = (i: number) => {
+  //     const newElements = elements.slice();
+  //     newElements.splice(i, 1);
+  //     onChange(path, newElements);
+  //   };
 
-    return (
-      <div className={styles.sequence}>
-        <Label level={level} className={styles.sequenceLabel}>
-          {field.label}
-        </Label>
+  //   return (
+  //     <div className={styles.sequence}>
+  //       <Label level={level} className={styles.sequenceLabel}>
+  //         {field.label}
+  //       </Label>
 
-        {elements.map((_, i) => (
-          <div key={i}>
-            <Field
-              field={field.element}
-              path={`${path}.${i}`}
-              state={state}
-              level={level + 1}
-              onChange={onChange}
-            />
-            <button
-              type="button"
-              className={styles.sequenceRemoveButton}
-              onClick={() => removeSlot(i)}
-            >
-              Remove
-            </button>
-          </div>
-        ))}
+  //       {elements.map((_, i) => (
+  //         <div key={i}>
+  //           <Field
+  //             field={field.element}
+  //             path={`${path}.${i}`}
+  //             state={state}
+  //             level={level + 1}
+  //             onChange={onChange}
+  //           />
+  //           <button
+  //             type="button"
+  //             className={styles.sequenceRemoveButton}
+  //             onClick={() => removeSlot(i)}
+  //           >
+  //             Remove
+  //           </button>
+  //         </div>
+  //       ))}
 
-        <div>
-          <button
-            type="button"
-            className={styles.sequenceRemoveButton}
-            onClick={addSlot}
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    );
-  }
+  //       <div>
+  //         <button
+  //           type="button"
+  //           className={styles.sequenceRemoveButton}
+  //           onClick={addSlot}
+  //         >
+  //           Add
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (isSection(field)) {
     return (
