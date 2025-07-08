@@ -1,4 +1,7 @@
 import { getContent } from "@/db/content";
+import BrandTopper from "@/components/BrandTopper";
+import PageContent from "@/components/PageContent";
+import BrandFooter from "@/components/BrandFooter";
 import DataProvider from "@/components/DataProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AdSlot from "@/components/AdSlot";
@@ -28,43 +31,49 @@ export default async function School(props: {
   const schoolId = `${school.split('-').at(-1)}`;
 
   return (
-    <DataProvider content={content}>
-      <PageTopOverlap>
-        <ErrorBoundary>
-          <SearchBar withNav />
-        </ErrorBoundary>
-      </PageTopOverlap>
+    <>
+      <BrandTopper />
+      <PageContent>
+        <DataProvider content={content}>
+          <PageTopOverlap>
+            <ErrorBoundary>
+              <SearchBar withNav />
+            </ErrorBoundary>
+          </PageTopOverlap>
 
-      <ErrorBoundary>
-        <SchoolTopper schoolId={schoolId} />
-      </ErrorBoundary>
+          <ErrorBoundary>
+            <SchoolTopper schoolId={schoolId} />
+          </ErrorBoundary>
 
-      <AdSlot />
+          <AdSlot />
 
-      <ErrorBoundary>
-        <HistoricalPrices schoolId={schoolId} />
-      </ErrorBoundary>
+          <ErrorBoundary>
+            <HistoricalPrices schoolId={schoolId} />
+          </ErrorBoundary>
 
-      <ErrorBoundary>
-        <SchoolDetails schoolId={schoolId} />
-      </ErrorBoundary>
+          <ErrorBoundary>
+            <SchoolDetails schoolId={schoolId} />
+          </ErrorBoundary>
 
-      <ErrorBoundary>
-        <GraduationRateSection schoolId={schoolId} />
-      </ErrorBoundary>
+          <ErrorBoundary>
+            <GraduationRateSection schoolId={schoolId} />
+          </ErrorBoundary>
 
-      <ContactUs />
+          <ContactUs />
 
-      <ErrorBoundary>
-        <StudentRetentionSection schoolId={schoolId} />
-      </ErrorBoundary>
+          <ErrorBoundary>
+            <StudentRetentionSection schoolId={schoolId} />
+          </ErrorBoundary>
 
-      <ErrorBoundary>
-        <DemographicsSection schoolId={schoolId} />
-      </ErrorBoundary>
+          <ErrorBoundary>
+            <DemographicsSection schoolId={schoolId} />
+          </ErrorBoundary>
 
-      <Recirculation />
-      <SavedSchoolsNav />
-    </DataProvider>
+          <Recirculation />
+          <SavedSchoolsNav />
+        </DataProvider>
+      </PageContent>
+      <BrandFooter />
+    </>
   );
 }

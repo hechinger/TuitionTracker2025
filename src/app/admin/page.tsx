@@ -2,8 +2,8 @@ import {
   ClerkProvider,
   SignedIn,
   SignedOut,
-  SignIn,
   SignOutButton,
+  RedirectToSignIn,
 } from "@clerk/nextjs";
 import { getContentForAdmin } from "@/db/content";
 import DataProvider from "@/components/DataProvider";
@@ -24,23 +24,14 @@ export default async function Admin() {
         </PageTopOverlap>
         <Well width="text">
           <SignedIn>
-            <SignOutButton>
+            <SignOutButton redirectUrl="/admin">
               <button>Sign out</button>
             </SignOutButton>
             <Dashboard content={content} />
           </SignedIn>
 
           <SignedOut>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <SignIn
-                withSignUp={false}
-              />
-            </div>
+            <RedirectToSignIn />
           </SignedOut>
         </Well>
       </DataProvider>

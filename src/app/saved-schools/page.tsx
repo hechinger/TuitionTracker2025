@@ -1,3 +1,6 @@
+import BrandTopper from "@/components/BrandTopper";
+import PageContent from "@/components/PageContent";
+import BrandFooter from "@/components/BrandFooter";
 import DataProvider from "@/components/DataProvider";
 import PageTopOverlap from "@/components/PageTopOverlap";
 import SearchBar from "@/components/SearchBar";
@@ -7,13 +10,19 @@ import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
 export default function SavedSchools() {
   return (
-    <DataProvider>
-      <PageTopOverlap>
-        <SearchBar withNav />
-      </PageTopOverlap>
-      <SchoolComparison />
-      <Recirculation />
-      <SavedSchoolsNav />
-    </DataProvider>
+    <>
+      <BrandTopper />
+      <PageContent>
+        <DataProvider>
+          <PageTopOverlap>
+            <SearchBar withNav />
+          </PageTopOverlap>
+          <SchoolComparison />
+          <Recirculation />
+          <SavedSchoolsNav />
+        </DataProvider>
+      </PageContent>
+      <BrandFooter />
+    </>
   );
 }

@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import BrandTopper from "@/components/BrandTopper";
-import PageContent from "@/components/PageContent";
-import BrandFooter from "@/components/BrandFooter";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -31,11 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <BrandTopper />
-        <PageContent>
-          {children}
-        </PageContent>
-        <BrandFooter />
+        {children}
       </body>
     </html>
   );
