@@ -159,12 +159,6 @@ export default function Field(props: {
   }
 
   if (isCopyField(field)) {
-    console.log({
-      field,
-      value_en: getStateValue(state, [path, "en"]),
-      path,
-      state,
-    });
     return (
       <div className={styles.copy}>
         <Label level={level} className={styles.label}>
