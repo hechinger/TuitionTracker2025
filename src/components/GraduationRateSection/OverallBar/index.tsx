@@ -4,8 +4,11 @@ import { useRef } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { scaleLinear } from "d3-scale";
 import get from "lodash/get";
+import { useContent } from "@/hooks/useContent";
 import { formatPercent } from "@/utils/formatPercent";
 import { getAlignmentTransform } from "@/utils/getAlignmentTransform";
+import { getGraduation } from "@/utils/formatSchoolInfo";
+import Robotext from "@/components/Robotext";
 import { type SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -15,6 +18,7 @@ const nationalAverage = 0.6; // FIXME
 export default function OverallBar(props: {
   school: SchoolDetail;
 }) {
+  const content = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
   const height = 80;
@@ -23,7 +27,7 @@ export default function OverallBar(props: {
     .domain([0, 1])
     .range([margin.left, width - margin.right]);
 
-  const gradRate = get(props.school, "graduationBachelors.total", 0);
+  const gradRate = get(getGraduation(props.school), "total", 0);
   const label = formatPercent(gradRate);
   const natAvgLabel = formatPercent(nationalAverage);
 
@@ -77,14 +81,26 @@ export default function OverallBar(props: {
           className={styles.label}
           style={{ transform: `translateX(${x(gradRate)}px) ${labelAlignment}` }}
         >
-          {label} graduation rate
+          <Robotext
+            as="span"
+            template={content("SchoolPage.GraduationRates.overallBarLabel")}
+            context={{
+              GRADUATION_RATE: label,
+            }}
+          />
         </div>
 
         <div
           className={styles.nationalAvgLabel}
           style={{ transform: `translateX(${x(nationalAverage)}px) ${natLabelAlignment}` }}
         >
-          Nat’l avgerage: {natAvgLabel}
+          <Robotext
+            as="span"
+            template={content("SchoolPage.GraduationRates.nationalAverageBarLabel")}
+            context={{
+              NATIONAL_AVERAGE: natAvgLabel,
+            }}
+          />
         </div>
       </div>
     </div>

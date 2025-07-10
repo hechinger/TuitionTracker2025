@@ -13,6 +13,13 @@
   display: block;
 }
 
+.stickerOutStateLine {
+  stroke: colors.$text-main;
+  stroke-width: 2px;
+  stroke-dasharray: 6px 2px;
+  fill: none;
+}
+
 .stickerLine {
   stroke: colors.$brand-blue;
   stroke-width: 2px;
@@ -66,6 +73,6 @@
   position: absolute;
   top: 0;
   left: 100%;
-  width: min-content;
+  width: 80px;
   line-height: 1em;
 }

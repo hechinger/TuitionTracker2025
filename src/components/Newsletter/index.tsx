@@ -1,25 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { useContent } from "@/hooks/useContent";
 import Well from "@/components/Well";
 import styles from "./styles.module.scss";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
+  const content = useContent();
 
   return (
     <Well width="text">
       <div className={styles.newsletter}>
-        <h2>Subscribe to our newsletter</h2>
+        <h2>
+          {content("Newsletter.title")}
+        </h2>
+
         <p>
-          Send us a message if you can’t find what you’re looking for or if something doesn’t seem right.
+          {content("Newsletter.blurb")}
         </p>
 
         <div className={styles.form}>
           <input
             className={styles.input}
             value={email}
-            placeholder="Email address"
+            placeholder={content("Newsletter.emailPlaceholder")}
             onChange={(e) => setEmail(e.target.value)}
           />
 
@@ -27,7 +32,7 @@ export default function Newsletter() {
             type="button"
             className={styles.submit}
           >
-            Submit
+            {content("Newsletter.submitButton")}
           </button>
         </div>
       </div>

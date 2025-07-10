@@ -2,13 +2,15 @@
 
 import { GraduationCapIcon, MapPinIcon, StarIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { useContent } from "@/hooks/useContent";
 import { useSchool } from "@/hooks/useSchool";
 import { useSavedSchools } from "@/hooks/useSavedSchools";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { formatDollars } from "@/utils/formatDollars";
-import { formatSchoolControl, formatDegreeLevel } from "@/utils/formatSchoolInfo";
+import Robotext from "@/components/Robotext";
 import IncomeBracketSelect from "@/components/IncomeBracketSelect";
 import Well from "@/components/Well";
+import SchoolImage from "@/components/SchoolImage";
 import styles from "./styles.module.scss";
 
 export default function SchoolTopper(props: {
@@ -18,6 +20,8 @@ export default function SchoolTopper(props: {
     data: school,
   } = useSchool(props.schoolId);
 
+  const content = useContent();
+
   const savedSchools = useSavedSchools();
   const { bracket = "average" } = useIncomeBracket();
 
@@ -25,16 +29,18 @@ export default function SchoolTopper(props: {
 
   const isSaved = savedSchools.schoolIsSaved(school.id);
 
-  const schoolControl = formatSchoolControl(school.schoolControl);
-  const degreeLevel = formatDegreeLevel(school.degreeLevel);
+  const { schoolControl, degreeLevel } = school;
+
+  const buttonLabel = isSaved
+    ? content("SchoolPage.SchoolTopper.saveButton.saved")
+    : content("SchoolPage.SchoolTopper.saveButton.saveThisSchool");
 
   return (
     <Well>
       <div className={styles.topper}>
-        <img
+        <SchoolImage
           className={styles.schoolImage}
-          src={school.image}
-          alt={school.name}
+          school={school}
         />
 
         <h1 className={styles.name}>
@@ -51,9 +57,14 @@ export default function SchoolTopper(props: {
 
           <div className={styles.infoItem}>
             <GraduationCapIcon />
-            <span>
-              {`${schoolControl} ${degreeLevel}`}
-            </span>
+            <Robotext
+              as="span"
+              template={content("SchoolPage.SchoolTopper.schoolInfo")}
+              context={{
+                SCHOOL_CONTROL: content(`GeneralPurpose.schoolControl.${schoolControl}`),
+                DEGREE_LEVEL: content(`GeneralPurpose.degreeLevel.${degreeLevel}`),
+              }}
+            />
           </div>
         </div>
 
@@ -63,7 +74,7 @@ export default function SchoolTopper(props: {
               {formatDollars(school.stickerPrice.price)}
             </span>
             <span className={styles.priceLabel}>
-              projected sticker price
+              {content("SchoolPage.SchoolTopper.stickerPriceLabel")}
             </span>
           </div>
 
@@ -72,7 +83,7 @@ export default function SchoolTopper(props: {
               {formatDollars(school.netPricesByBracket[bracket])}
             </span>
             <span className={styles.priceLabel}>
-              projected average net price for
+              {content("SchoolPage.SchoolTopper.netPriceLabel")}
             </span>
             <IncomeBracketSelect className={styles.select} />
           </div>
@@ -87,7 +98,7 @@ export default function SchoolTopper(props: {
         >
           <StarIcon weight={isSaved ? "fill" : "regular"} />
           <span>
-            {isSaved ? "Saved" : "Save this school"}
+            {buttonLabel}
           </span>
         </button>
       </div>

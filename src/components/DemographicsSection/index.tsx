@@ -2,6 +2,7 @@
 
 import { useSchool } from "@/hooks/useSchool";
 import { useSizePercentile } from "@/hooks/useSizePercentile";
+import { useContent } from "@/hooks/useContent";
 import { formatOrdinal } from "@/utils/formatOrdinal";
 import { formatPercent } from "@/utils/formatPercent";
 import Well from "@/components/Well";
@@ -11,39 +12,20 @@ import GenderBars from "./GenderBars";
 import DemoBars from "./DemoBars";
 import styles from "./styles.module.scss";
 
-const sizeTemplate = `
-  <p>
-    The size and makeup of a school’s student body can have a large impact on a student’s experience. <strong>{schoolName}</strong> has {enrollment} students, which puts it in the <strong>{sizePercentile} percentile</strong> of {schoolType} schools.
-  </p>
-`;
-
-const genderTemplate = `
-  <p>
-    Different schools attract students from different backgrounds. At <strong>{schoolName}</strong>, about <strong>{genderPercentMajority}</strong> of students are {genderNameMajority}.
-  </p>
-`;
-
-const demoTemplate = `
-  <p>
-    The demographic makeup of a school’s student body also plays a big role in its campus culture. At <strong>{schoolName}</strong>, about <strong>{demographicPercentMajority}</strong> of students are {demographicNameMajority}.
-  </p>
-`;
-
 export default function DemographicsSection(props: {
   schoolId: string;
 }) {
+  const content = useContent();
   const { data: school } = useSchool(props.schoolId);
   const sizePercentile = useSizePercentile(school?.enrollment.total || 0);
 
   if (!school) return null;
 
-  console.log(school);
-
   const sizeContext = {
-    schoolName: school.name,
-    enrollment: school.enrollment?.total.toLocaleString(),
-    sizePercentile: formatOrdinal(Math.round(sizePercentile * 100)),
-    schoolType: `${school.schoolControl}, ${school.degreeLevel}`,
+    SCHOOL_NAME: school.name,
+    ENROLLMENT: school.enrollment?.total.toLocaleString(),
+    SIZE_PERCENTILE: formatOrdinal(Math.round(sizePercentile * 100)),
+    SCHOOL_TYPE: `${school.schoolControl}, ${school.degreeLevel}`, // FIXME
   };
 
   const majorityGender = Object.entries(school.enrollment.byGender)
@@ -53,15 +35,15 @@ export default function DemographicsSection(props: {
       return max;
     }, undefined)!;
   const genderLabels = {
-    men: "male",
-    women: "female",
-    unknown: "of unknown gender",
-    other: "of a gender other than male or female",
+    men: content("SchoolPage.StudentDemographics.gender.genderTextNames.men"),
+    women: content("SchoolPage.StudentDemographics.gender.genderTextNames.women"),
+    unknown: content("SchoolPage.StudentDemographics.gender.genderTextNames.unknown"),
+    other: content("SchoolPage.StudentDemographics.gender.genderTextNames.other"),
   } as Record<string, string>;
   const genderContext = {
-    schoolName: school.name,
-    genderNameMajority: genderLabels[majorityGender[0]],
-    genderPercentMajority: formatPercent(majorityGender[1] / school.enrollment.total),
+    SCHOOL_NAME: school.name,
+    GENDER_NAME_MAX: genderLabels[majorityGender[0]],
+    GENDER_PERCENT_MAX: formatPercent(majorityGender[1] / school.enrollment.total),
   };
 
   const majorityDemo = Object.entries(school.enrollment.byRace)
@@ -71,32 +53,32 @@ export default function DemographicsSection(props: {
       return max;
     }, undefined)!;
   const demoLabels = {
-    unknown: "of an unknown demographic background",
-    multiple: "of multiple races",
-    white: "white",
-    hisp: "hispanic",
-    nathawpacisl: "Native Hawaiian or Pacific Islanders",
-    black: "black",
-    asian: "Asian",
-    amerindalasknat: "American Indians or Alaskan Natives",
-    nonresident: "not U.S. residents",
+    unknown: content("SchoolPage.StudentDemographics.race.demographicTextNames.unknown"),
+    multiple: content("SchoolPage.StudentDemographics.race.demographicTextNames.multiple"),
+    white: content("SchoolPage.StudentDemographics.race.demographicTextNames.white"),
+    hisp: content("SchoolPage.StudentDemographics.race.demographicTextNames.hisp"),
+    nathawpacisl: content("SchoolPage.StudentDemographics.race.demographicTextNames.nathawpacisl"),
+    black: content("SchoolPage.StudentDemographics.race.demographicTextNames.black"),
+    asian: content("SchoolPage.StudentDemographics.race.demographicTextNames.asian"),
+    amerindalasknat: content("SchoolPage.StudentDemographics.race.demographicTextNames.amerindalasknat"),
+    nonresident: content("SchoolPage.StudentDemographics.race.demographicTextNames.nonresident"),
   } as Record<string, string>;
   const demoContext = {
-    schoolName: school.name,
-    demographicNameMajority: demoLabels[majorityDemo[0]],
-    demographicPercentMajority: formatPercent(majorityDemo[1] / school.enrollment.total),
+    SCHOOL_NAME: school.name,
+    DEMOGRAPHIC_NAME_MAX: demoLabels[majorityDemo[0]],
+    DEMOGRAPHIC_PERCENT_MAX: formatPercent(majorityDemo[1] / school.enrollment.total),
   };
 
   return (
     <Well width="text" section>
       <h2 className={styles.sectionTitle}>
-        Student Demographics
+        {content("SchoolPage.StudentDemographics.title")}
       </h2>
 
       {school && (
         <>
           <Robotext
-            template={sizeTemplate}
+            template={content("SchoolPage.StudentDemographics.size.template")}
             context={sizeContext}
           />
 
@@ -109,7 +91,7 @@ export default function DemographicsSection(props: {
           </div>
 
           <Robotext
-            template={genderTemplate}
+            template={content("SchoolPage.StudentDemographics.gender.template")}
             context={genderContext}
           />
 
@@ -118,7 +100,7 @@ export default function DemographicsSection(props: {
           </div>
 
           <Robotext
-            template={demoTemplate}
+            template={content("SchoolPage.StudentDemographics.race.template")}
             context={demoContext}
           />
 

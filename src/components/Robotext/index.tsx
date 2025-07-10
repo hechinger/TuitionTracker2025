@@ -3,14 +3,18 @@ import { roboText } from "@/utils/roboText";
 import styles from "./styles.module.scss";
 
 export default function Robotext(props: {
-  template: string;
-  context?: Record<string, string>;
+  as?: React.ElementType;
+  template: string | undefined;
+  context?: Record<string, string | undefined>;
   highlightColor?: "pink" | "blue";
+  className?: string;
 }) {
   const {
+    as: Tag = "div",
     template,
     context,
     highlightColor = "",
+    className,
   } = props;
 
   const html = roboText({
@@ -19,8 +23,8 @@ export default function Robotext(props: {
   });
 
   return (
-    <div
-      className={clsx(styles.text, styles[highlightColor])}
+    <Tag
+      className={clsx(styles.text, styles[highlightColor], className)}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

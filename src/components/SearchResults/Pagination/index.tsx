@@ -14,12 +14,14 @@ export default function Pagination(props: {
     totalPages,
   } = props;
 
+  if (totalPages < 2) return null;
+
   const start = Math.max(1, page - 2);
   const end = Math.min(totalPages - 2, page + 3);
   const includeStartEllipsis = start > 1;
   const includeEndEllipsis = totalPages > end + 1;
 
-  const pageButtons = [...Array(end - start)].map((_, i) => start + i);
+  const pageButtons = [...Array(Math.max(0, end - start))].map((_, i) => start + i);
 
   return (
     <div className={styles.pagination}>

@@ -4,23 +4,13 @@ import clsx from "clsx";
 import { type SchoolDetail } from "@/types";
 import { formatPercent } from "@/utils/formatPercent";
 import { isNotUndefined } from "@/utils/isNotUndefined";
+import { useContent } from "@/hooks/useContent";
 import styles from "./styles.module.scss";
-
-const demoLabels = {
-  unknown: "Unknown",
-  multiple: "Multiple races",
-  white: "White",
-  hisp: "Hispanic",
-  nathawpacisl: "Native Hawaiian/Pacific Islander",
-  black: "Black",
-  asian: "Asian",
-  amerindalasknat: "American Indian/Alaska Native",
-  nonresident: "Nonresident",
-} as Record<string, string>;
 
 export default function DemoBars(props: {
   school: SchoolDetail;
 }) {
+  const content = useContent();
   const demos = props.school.enrollment.byRace;
 
   const values = Object.entries(demos)
@@ -43,7 +33,9 @@ export default function DemoBars(props: {
     <div className={styles.bars}>
       {values.map((d) => (
         <div key={d.demo}>
-          <h3>{demoLabels[d.demo]}</h3>
+          <h3>
+            {content(`GeneralPurpose.demographicCategories.${d.demo}`)}
+          </h3>
           <div
             className={styles.barContainer}
             style={getStyles(d.value)}

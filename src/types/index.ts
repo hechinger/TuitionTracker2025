@@ -40,6 +40,7 @@ export type SchoolIndex = {
   stickerPrice: {
     type: StickerPriceType;
     price: number;
+    priceOutState?: number;
   },
   netPricesByBracket: {
     average: number;
@@ -57,6 +58,7 @@ export type YearData = {
   stickerPrice: {
     type: StickerPriceType;
     price: number;
+    priceOutState?: number;
   },
   netPricesByBracket: {
     average: {
@@ -94,6 +96,7 @@ export type YearData = {
 
 export type SchoolDetail = {
   id: string;
+  slug: string;
   name: string;
   alias: string;
   city: string;
@@ -109,6 +112,7 @@ export type SchoolDetail = {
   stickerPrice: {
     type: string;
     price: number;
+    priceOutState?: number;
   };
   image: string;
   netPricesByBracket: {
@@ -143,8 +147,7 @@ export type SchoolDetail = {
     fullTime: number;
     partTime: number;
   },
-  graduationBachelors: Graduation;
-  graduationAssociates: Graduation;
+  graduation: Graduation;
   years: YearData[];
 };
 
@@ -163,5 +166,5 @@ export type RecirculationArticle = {
   url: string;
   headline: string;
   image: string;
-  imageAlt: string;
+  imageAlt?: string | null;
 };

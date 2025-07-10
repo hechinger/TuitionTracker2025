@@ -1,8 +1,4 @@
-import DataProvider from "@/components/DataProvider";
 import type { Metadata } from "next";
-import BrandTopper from "@/components/BrandTopper";
-import PageContent from "@/components/PageContent";
-import BrandFooter from "@/components/BrandFooter";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -32,13 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <DataProvider>
-          <BrandTopper />
-          <PageContent>
-            {children}
-          </PageContent>
-          <BrandFooter />
-        </DataProvider>
+        {children}
       </body>
     </html>
   );

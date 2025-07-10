@@ -8,6 +8,8 @@ import { formatDollars } from "@/utils/formatDollars";
 import { scaleLinear, scaleBand } from "d3-scale";
 import { max } from "d3-array";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
+import { useContent } from "@/hooks/useContent";
+import Robotext from "@/components/Robotext";
 import styles from "./styles.module.scss";
 
 const margin = { top: 20, right: 0, bottom: 25, left: 0 };
@@ -30,6 +32,7 @@ export default function IncomeBracketBarChart(props: {
   schoolId: string;
 }) {
   const { bracket: incomeBracket = "average" } = useIncomeBracket();
+  const content = useContent();
 
   const { data: school } = useSchool(props.schoolId);
   const ref = useRef<HTMLDivElement>(null);
@@ -67,7 +70,12 @@ export default function IncomeBracketBarChart(props: {
     <div className={styles.container}>
       {school && (
         <h2 className={styles.chartTitle}>
-          Income Brackets at {school.name}
+          <Robotext
+            template={content("SchoolPage.Prices.incomeBracketChartTitle")}
+            context={{
+              SCHOOL_YEAR: "24-25", // FIXME
+            }}
+          />
         </h2>
       )}
       <div ref={ref}>

@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import clsx from "clsx";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import ClickAwayListener from "react-click-away-listener";
 import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
-import { useSavedSchools } from "@/hooks/useSavedSchools";
-import { getCompareRoute } from "@/utils/routes";
+import AppLogo from "@/components/AppLogo";
 import { useSuggestions } from "./useSuggestions";
 import WhereInput from "./WhereInput";
 import MoreOptions from "./MoreOptions";
@@ -27,12 +25,6 @@ export default function SearchBar(props: {
   autoload: false,
   highlight: false,
 }) {
-  const router = useRouter();
-  const savedSchools = useSavedSchools();
-
-  const numSaved = savedSchools.schools.length;
-  const numSavedText = numSaved > 0 ? `(${numSaved})` : "";
-
   const [inputState, setInputState] = useState<string>();
 
   const { data: schools = [] } = useSchools();
@@ -42,6 +34,7 @@ export default function SearchBar(props: {
     resetAdvanced,
     updateSearch,
     searchQueryString,
+    runSearch,
   } = useSearchState({
     autoload: props.autoload,
   });
@@ -51,20 +44,18 @@ export default function SearchBar(props: {
     schools: schools,
   });
 
+  const doSearch = () => {
+    setInputState("");
+    runSearch();
+  };
+
   return (
     <div className={clsx(styles.wrapper, { [styles.highlight]: props.highlight })}>
       <div>
         {props.withNav && (
           <div className={styles.nav}>
             <Link href="/" className={styles.brand}>
-              Tuition Tracker
-            </Link>
-
-            <Link
-              href={getCompareRoute()}
-              className={styles.savedSchools}
-            >
-              Your schools {numSavedText}
+              <AppLogo />
             </Link>
           </div>
         )}
@@ -108,10 +99,7 @@ export default function SearchBar(props: {
             >
               <button
                 type="submit"
-                onClick={() => {
-                  setInputState("");
-                  router.push(`/search?${searchQueryString}`);
-                }}
+                onClick={doSearch}
               >
                 <MagnifyingGlassIcon size="32" />
               </button>
@@ -135,6 +123,7 @@ export default function SearchBar(props: {
                   resetAdvanced={resetAdvanced}
                   updateSearch={updateSearch}
                   searchQueryString={searchQueryString}
+                  runSearch={doSearch}
                 />
               )}
             </Dropdown>

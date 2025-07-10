@@ -1,6 +1,7 @@
 "use client";
 
 import { minIndex, maxIndex } from "d3-array";
+import { useContent } from "@/hooks/useContent";
 import { useSchool } from "@/hooks/useSchool";
 import { formatDollars } from "@/utils/formatDollars";
 import Well from "@/components/Well";
@@ -10,19 +11,8 @@ import IncomeBracketBarChart from "@/components/IncomeBracketBarChart";
 import IncomeBracketSelect from "@/components/IncomeBracketSelect";
 import styles from "./styles.module.scss";
 
-const historicTemplate = `
-  <p>
-    This year at <strong>{schoolName}</strong>, we project that {studentType} will pay <span class="highlight">{netPrice}</span>, while the advertised sticker price is {stickerPrice}. That’s a difference of {priceDifference}.
-  </p>
-`;
-
-const bracketTemplate = `
-  <p>
-    How much a student has to pay usually depends on their family's household income. At <strong>{schoolName}</strong> this year, {maxBracketStudents} will pay around {maxBracketPrice}, while {minBracketStudents} will pay around {minBracketPrice}. That's a difference of {priceDifference}.
-  </p>
-`;
-
 const bracketStudents = {
+  average: "students",
   "0_30000": "students with incomes below $30K",
   "30001_48000": "students with incomes between $30K and $48K",
   "48001_75000": "students with incomes between $48K and $75K",
@@ -37,16 +27,19 @@ export default function HistoricalPrices(props: {
     data: school,
   } = useSchool(props.schoolId);
 
+  const content = useContent();
+
   if (!school) return null;
 
   const sticker = school.stickerPrice.price;
   const net = school.netPricesByBracket.average;
+  const historicTemplate = content("SchoolPage.Prices.priceTrendTemplate");
   const historicContext = {
-    schoolName: school.name,
-    studentType: "students",
-    stickerPrice: formatDollars(sticker),
-    netPrice: formatDollars(net),
-    priceDifference: formatDollars(sticker - net),
+    SCHOOL_NAME: school.name,
+    STUDENT_TYPE: "students",
+    STICKER_PRICE: formatDollars(sticker),
+    NET_PRICE: formatDollars(net),
+    PRICE_DIFFERENCE: formatDollars(sticker - net),
   };
 
   const brackets = Object.entries(school.netPricesByBracket)
@@ -60,14 +53,15 @@ export default function HistoricalPrices(props: {
   const maxBracketName = bracketStudents[maxBracket[0] as keyof typeof bracketStudents];
   const maxBracketPrice = maxBracket[1];
 
+  const bracketTemplate = content("SchoolPage.Prices.incomeBracketTemplate");
   const bracketContext = {
-    schoolName: school.name,
-    studentType: "students",
-    minBracketPrice: formatDollars(minBracketPrice),
-    maxBracketPrice: formatDollars(maxBracketPrice),
-    priceDifference: formatDollars(maxBracketPrice - minBracketPrice),
-    minBracketStudents: minBracketName,
-    maxBracketStudents: maxBracketName,
+    SCHOOL_NAME: school.name,
+    STUDENT_TYPE: "students",
+    MIN_BRACKET_PRICE: formatDollars(minBracketPrice),
+    MAX_BRACKET_PRICE: formatDollars(maxBracketPrice),
+    PRICE_DIFFERENCE: formatDollars(maxBracketPrice - minBracketPrice),
+    MIN_BRACKET_STUDENTS: minBracketName,
+    MAX_BRACKET_STUDENTS: maxBracketName,
   };
   
   return (
@@ -81,7 +75,13 @@ export default function HistoricalPrices(props: {
       <div className={styles.chart}>
         {school && (
           <h2 className={styles.chartTitle}>
-            Prices at {school.name} over time for
+            <Robotext
+              as="span"
+              template={content("SchoolPage.Prices.priceTrendChartTitle")}
+              context={{
+                SCHOOL_NAME: school.name,
+              }}
+            />
             {' '}
             <IncomeBracketSelect />
           </h2>

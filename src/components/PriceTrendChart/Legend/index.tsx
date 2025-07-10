@@ -1,7 +1,10 @@
 import { area } from "d3-shape";
+import { useContent } from "@/hooks/useContent";
 import styles from "./styles.module.scss";
 
 export default function Legend() {
+  const content = useContent();
+
   const width = 120;
   const height = 60;
 
@@ -49,9 +52,17 @@ export default function Legend() {
       </div>
 
       <div className={styles.labels}>
-        <div className={styles.estimation}>Upper net price estimation</div>
-        <div className={styles.projection}>Projected net price</div>
-        <div className={styles.estimation}>Lower net price estimation</div>
+        <div className={styles.estimation}>
+          {content("SchoolPage.Prices.upperEstimateLabel")}
+        </div>
+
+        <div className={styles.projection}>
+          {content("SchoolPage.Prices.estimateLabel")}
+        </div>
+
+        <div className={styles.estimation}>
+          {content("SchoolPage.Prices.lowerEstimateLabel")}
+        </div>
       </div>
     </div>
   );

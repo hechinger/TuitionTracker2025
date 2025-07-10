@@ -7,6 +7,7 @@ import { line, area } from "d3-shape";
 import get from "lodash/get";
 import { formatDollars } from "@/utils/formatDollars";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
+import { useContent } from "@/hooks/useContent";
 import type { YearData, SchoolDetail } from "@/types";
 import Legend from "./Legend";
 import styles from "./styles.module.scss";
@@ -23,6 +24,7 @@ export default function PriceTrendChart(props: {
     legend = true,
   } = props;
 
+  const content = useContent();
   const { bracket = "average" } = useIncomeBracket();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -33,10 +35,22 @@ export default function PriceTrendChart(props: {
 
   const margin = {
     top: 20,
-    right: lineLabels ? 60 : 20,
+    right: lineLabels ? 82 : 20,
     bottom: 20,
     left: 40,
   };
+
+  const outStatePrice = school?.stickerPrice.priceOutState;
+  const withOutState = (
+    school?.schoolControl === "public"
+    && !!outStatePrice
+  );
+  const stickerPriceLabel = withOutState
+    ? "SchoolPage.Prices.inStateStickerLabel"
+    : "SchoolPage.Prices.stickerLabel";
+  const netPriceLabel = withOutState
+    ? "SchoolPage.Prices.inStateNetPriceLabel"
+    : "SchoolPage.Prices.netPriceLabel";
 
   const {
     x,
@@ -53,8 +67,17 @@ export default function PriceTrendChart(props: {
       };
     }
 
+    const getMaxPrice = (year: YearData) => {
+      const maxPrice = max([
+        (withOutState && year.stickerPrice.priceOutState) || 0,
+        year.stickerPrice.price,
+        ...Object.values(year.netPricesByBracket).map((b) => b.price || 0),
+      ]);
+      return maxPrice || 0;
+    };
+
     const years = school.years.map((year) => year.startYear);
-    const prices = school.years.map((year) => year.stickerPrice.price);
+    const prices = school.years.map((year) => getMaxPrice(year));
 
     const x = scaleLinear()
       .domain(extent(years) as [number, number])
@@ -76,7 +99,7 @@ export default function PriceTrendChart(props: {
         .x((d) => x(d.startYear))
         .y0((d) => {
           const price = get(d, key);
-          if (price.min === undefined) return y(price.price);
+          if (!price.min) return y(price.price);
           return y(Math.min(
             price.min * d.stickerPrice.price,
             price.price,
@@ -84,11 +107,15 @@ export default function PriceTrendChart(props: {
         })
         .y1((d) => {
           const price = get(d, key);
-          if (price.max === undefined) return y(price.price);
+          if (!price.max) return y(price.price);
           return y(Math.max(
             price.max * d.stickerPrice.price,
             price.price,
           ));
+        })
+        .defined((d) => {
+          const price = get(d, key);
+          return typeof price.price === "number";
         });
       return path(school.years) || "";
     };
@@ -101,6 +128,7 @@ export default function PriceTrendChart(props: {
     };
   }, [
     school,
+    withOutState,
     width,
     height,
     props.max,
@@ -133,6 +161,13 @@ export default function PriceTrendChart(props: {
                   />
                 ))}
               </g>
+
+              {withOutState && (
+                <path
+                  d={getPath("stickerPrice.priceOutState")}
+                  className={styles.stickerOutStateLine}
+                />
+              )}
 
               <path
                 d={getPath("stickerPrice.price")}
@@ -172,13 +207,28 @@ export default function PriceTrendChart(props: {
 
               {lineLabels && (
                 <>
+                  {withOutState && (
+                    <div
+                      className={styles.dataLabel}
+                      style={{
+                        transform: `translateY(${y(outStatePrice)}px) translate(-${margin.right - 4}px, -18px)`,
+                      }}
+                    >
+                      <strong>{formatDollars(outStatePrice)}</strong>
+                      <br />
+                      {content("SchoolPage.Prices.outOfStateStickerLabel")}
+                    </div>
+                  )}
+
                   <div
                     className={styles.dataLabel}
                     style={{
                       transform: `translateY(${y(school.stickerPrice.price)}px) translate(-${margin.right - 4}px, -18px)`,
                     }}
                   >
-                    <strong>{formatDollars(school.stickerPrice.price)}</strong> sticker price
+                    <strong>{formatDollars(school.stickerPrice.price)}</strong>
+                    <br />
+                    {content(stickerPriceLabel)}
                   </div>
 
                   <div
@@ -187,7 +237,9 @@ export default function PriceTrendChart(props: {
                       transform: `translateY(${y(school.netPricesByBracket[bracket])}px) translate(-${margin.right - 4}px, -18px)`,
                     }}
                   >
-                    <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong> net price
+                    <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong>
+                    <br />
+                    {content(netPriceLabel)}
                   </div>
                 </>
               )}

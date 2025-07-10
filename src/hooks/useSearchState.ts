@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 export const schoolTypes = ["public", "private", "for-profit"] as const;
 export const degreeTypes = ["any", "4-year", "2-year"] as const;
@@ -26,6 +27,9 @@ export function useSearchState({
   autoload = false,
   param = "search",
 }) {
+  const router = useRouter();
+
+  const [cacheClear, setCacheClear] = useState({});
   const [search, setSearch] = useState(SearchSchema.parse({}));
 
   useEffect(() => {
@@ -41,7 +45,7 @@ export function useSearchState({
       console.error("Error loading search state from URL query parameters");
       console.error(error);
     }
-  }, [param, autoload]);
+  }, [param, autoload, cacheClear]);
 
   const searchQueryString = useMemo(() => {
     const query = new URLSearchParams();
@@ -75,11 +79,17 @@ export function useSearchState({
     }));
   }, []);
 
+  const runSearch = useCallback(() => {
+    setCacheClear({});
+    router.push(`/search?${searchQueryString}`);
+  }, [searchQueryString, router]);
+
   return {
     search,
     toggleState,
     resetAdvanced,
     updateSearch,
     searchQueryString,
+    runSearch,
   };
 }

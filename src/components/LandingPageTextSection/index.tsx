@@ -1,22 +1,24 @@
 "use client";
 
 import Well from "@/components/Well";
-import { ContentKey, useContent } from "@/hooks/useContent";
+import { useContent } from "@/hooks/useContent";
 import styles from "./styles.module.scss";
 
 export default function LandingPageTextSection(props: {
-  titleKey: ContentKey;
-  textKey: ContentKey;
+  titleKey: string;
+  textKey: string;
   children?: React.ReactNode;
 }) {
-  const title = useContent(props.titleKey);
-  const text = useContent(props.textKey);
+  const content = useContent();
+
+  const title = content(props.titleKey);
+  const html = content(props.textKey) || "";
 
   return (
     <div className={styles.textSection}>
       <Well width="text">
         <h2>{title}</h2> 
-        <div dangerouslySetInnerHTML={{ __html: text }} />
+        <div dangerouslySetInnerHTML={{ __html: html }} />
         {props.children}
       </Well>
     </div>

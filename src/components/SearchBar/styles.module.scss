@@ -11,19 +11,12 @@
 .nav {
   margin: 0 auto 20px auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   max-width: 890px;
 
   .brand {
-    font-weight: 900;
-    font-size: 20px;
-  }
-
-  .savedSchools {
-    background: colors.$bg-dark;
-    color: white;
-    padding: 4px 8px;
+    width: 200px;
   }
 }
 
