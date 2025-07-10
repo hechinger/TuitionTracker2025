@@ -19,14 +19,14 @@ const localeLabels = {
 export default function Field(props: {
   locale: keyof typeof localeLabels;
   field: AdminField;
-  value: string;
-  onChange: (path: string, value: string) => void;
+  value?: string;
+  onChange?: (path: string, value: string) => void;
 }) {
   const {
     locale,
     field,
     value,
-    onChange,
+    onChange = () => {},
   } = props;
 
   if (isStringField(field)) {
@@ -57,7 +57,7 @@ export default function Field(props: {
     return (
       <div className={styles.richCopy}>
         <div className={styles.label}>
-          {`${field.label} (${localeLabels[locale]})`}
+          {`${field.title} (${localeLabels[locale]})`}
         </div>
 
         <Editor

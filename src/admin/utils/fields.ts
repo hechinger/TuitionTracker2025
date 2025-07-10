@@ -4,9 +4,6 @@ import type {
   AdminCopyField,
   AdminRichCopyField,
   AdminFileField,
-  AdminSchoolIdField,
-  AdminSequence,
-  AdminSection,
   AdminState,
 } from "@/types/admin";
 import get from "lodash/get";
@@ -25,18 +22,6 @@ export function isRichCopyField(field: AdminField): field is AdminRichCopyField 
 
 export function isFileField(field: AdminField): field is AdminFileField {
   return field.type === "file";
-}
-
-export function isSchoolIdField(field: AdminField): field is AdminSchoolIdField {
-  return field.type === "schoolId";
-}
-
-export function isSequence(field: AdminField): field is AdminSequence {
-  return field.type === "array";
-}
-
-export function isSection(field: AdminField): field is AdminSection {
-  return field.type === "section";
 }
 
 export function getStateValue(state: AdminState, path: string[]) {

@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useState, useMemo } from "react";
-import set from "lodash/set";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import {
   SignedIn,
@@ -46,24 +45,24 @@ export default function Dashboard(props: {
   const [tab, setTab] = useState<typeof tabs[number]>(tabs[0]);
   const [locale, setLocale] = useState<"en" | "es">("en");
   const [submittingState, setSubmittingState] = useState("ready");
-  const [edits, setEdits] = useState(new Map<string, string>());
-  const state = useMemo(() => {
-    const s = {};
-    content.forEach((c) => {
-      const p = `${c.component}.${c.path}`;
-      const k = c.locale ? [p, c.locale] : [p];
-      set(s, k, c.value);
-    });
-    return s;
-  }, [content]);
+  const [edits, /* setEdits */] = useState(new Map<string, string>());
+  // const state = useMemo(() => {
+  //   const s = {};
+  //   content.forEach((c) => {
+  //     const p = `${c.component}.${c.path}`;
+  //     const k = c.locale ? [p, c.locale] : [p];
+  //     set(s, k, c.value);
+  //   });
+  //   return s;
+  // }, [content]);
 
-  const onChange = useCallback((path: string[], value: string) => {
-    setEdits((old) => {
-      const newEdits = new Map(old);
-      newEdits.set(JSON.stringify(path), value);
-      return newEdits;
-    });
-  }, []);
+  // const onChange = useCallback((path: string[], value: string) => {
+  //   setEdits((old) => {
+  //     const newEdits = new Map(old);
+  //     newEdits.set(JSON.stringify(path), value);
+  //     return newEdits;
+  //   });
+  // }, []);
 
   const submitChanges = useCallback(async () => {
     setSubmittingState("submitting");

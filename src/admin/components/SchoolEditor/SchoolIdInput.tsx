@@ -5,12 +5,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { useSchools } from "@/hooks/useSchools";
 
-export default function SchoolIdInput(props: {
-  label: string;
-  value: string | undefined;
-  level?: number;
-  onChange: (value: string) => void;
-}) {
+export default function SchoolIdInput() {
   const { data: schools = [] } = useSchools();
   const {
     names,
