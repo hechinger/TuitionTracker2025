@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import clsx from "clsx";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
@@ -26,8 +25,6 @@ export default function SearchBar(props: {
   autoload: false,
   highlight: false,
 }) {
-  const router = useRouter();
-
   const [inputState, setInputState] = useState<string>();
 
   const { data: schools = [] } = useSchools();
@@ -37,6 +34,7 @@ export default function SearchBar(props: {
     resetAdvanced,
     updateSearch,
     searchQueryString,
+    runSearch,
   } = useSearchState({
     autoload: props.autoload,
   });
@@ -45,6 +43,11 @@ export default function SearchBar(props: {
     value: search.where,
     schools: schools,
   });
+
+  const doSearch = () => {
+    setInputState("");
+    runSearch();
+  };
 
   return (
     <div className={clsx(styles.wrapper, { [styles.highlight]: props.highlight })}>
@@ -96,10 +99,7 @@ export default function SearchBar(props: {
             >
               <button
                 type="submit"
-                onClick={() => {
-                  setInputState("");
-                  router.push(`/search?${searchQueryString}`);
-                }}
+                onClick={doSearch}
               >
                 <MagnifyingGlassIcon size="32" />
               </button>
@@ -123,6 +123,7 @@ export default function SearchBar(props: {
                   resetAdvanced={resetAdvanced}
                   updateSearch={updateSearch}
                   searchQueryString={searchQueryString}
+                  runSearch={doSearch}
                 />
               )}
             </Dropdown>

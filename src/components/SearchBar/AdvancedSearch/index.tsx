@@ -1,7 +1,6 @@
 "use client";
 
 import { useId, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { BuildingApartmentIcon, CertificateIcon, CurrencyCircleDollarIcon } from "@phosphor-icons/react";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import type { IncomeBracketKey, SchoolIndex } from "@/types";
@@ -75,9 +74,8 @@ export default function AdvancedSearch(props: {
   resetAdvanced: () => void;
   updateSearch: UpdateSearch;
   searchQueryString: string;
+  runSearch: () => void;
 }) {
-  const router = useRouter();
-
   const id = useId();
 
   const { search, resetAdvanced, updateSearch } = props;
@@ -242,9 +240,7 @@ export default function AdvancedSearch(props: {
         <button
           type="submit"
           className={styles.searchButton}
-          onClick={() => {
-            router.push(`/search?${props.searchQueryString}`);
-          }}
+          onClick={props.runSearch}
         >
           Search
         </button>
