@@ -137,7 +137,7 @@ const schoolSchema = z.object({
     startYear: z.number(),
     stickerPrice: z.object({
       price: z.number(),
-      priceOutState: z.number(),
+      priceOutState: z.nullable(z.number()),
       type: z.enum(["on-campus", "off-campus"]),
     }),
     netPricesByBracket: z.object({
@@ -147,27 +147,27 @@ const schoolSchema = z.object({
         // max: z.number().optional(),
       }),
       "0_30000": z.object({
-        price: z.number(),
+        price: z.nullable(z.number()),
         // min: z.number().optional(),
         // max: z.number().optional(),
       }),
       "30001_48000": z.object({
-        price: z.number(),
+        price: z.nullable(z.number()),
         // min: z.number().optional(),
         // max: z.number().optional(),
       }),
       "48001_75000": z.object({
-        price: z.number(),
+        price: z.nullable(z.number()),
         // min: z.number().optional(),
         // max: z.number().optional(),
       }),
       "75001_110000": z.object({
-        price: z.number(),
+        price: z.nullable(z.number()),
         // min: z.number().optional(),
         // max: z.number().optional(),
       }),
       "110001": z.object({
-        price: z.number(),
+        price: z.nullable(z.number()),
         // min: z.number().optional(),
         // max: z.number().optional(),
       }),
@@ -182,9 +182,10 @@ const datasetConfig = {
     {
       file: "HD{YEAR}",
       parseSchoolRows: ([[data]], { registerError }) => {
+        const id = `${get(data, "UNITID")}`;
         const schoolData = {
-          id: `${get(data, "UNITID")}`,
-          slug: kebabCase(get(data, "INSTNM")),
+          id,
+          slug: `${kebabCase(get(data, "INSTNM"))}-${id}`,
           image: null,
           name: get(data, "INSTNM"),
           alias: get(data, "IALIAS"),
@@ -193,8 +194,8 @@ const datasetConfig = {
           zip: `${get(data, "ZIP")}`,
           longitude: get(data, "LONGITUD"),
           latitude: get(data, "LATITUDE"),
-          hbcu: `${get(data, "HBCU")}` === "2",
-          tribalCollege: `${get(data, "TRIBAL")}` === "2",
+          hbcu: `${get(data, "HBCU")}` === "1",
+          tribalCollege: `${get(data, "TRIBAL")}` === "1",
           sector: `${get(data, "SECTOR")}`,
           schoolControl: (() => {
             const control = `${get(data, "CONTROL")}`;
@@ -319,7 +320,7 @@ const datasetConfig = {
 
           const chg2ay3 = parseInt(year.CHG2AY3, 10) || null;
           const chg3ay3 = parseInt(year.CHG3AY3, 10) || null;
-          const chg4ay3 = parseInt(year.CHG4AY3, 10) || null;
+          const chg4ay3 = parseInt(year.CHG4AY3, 10) || 0;
           const chg5ay3 = parseInt(year.CHG5AY3, 10) || null;
           const chg6ay3 = parseInt(year.CHG6AY3, 10) || null;
           const chg7ay3 = parseInt(year.CHG7AY3, 10) || null;
@@ -381,20 +382,6 @@ const datasetConfig = {
         const percentSticker = (100 - mostRecentYear.UAGRNTP) / 100;
 
         const getNetPriceYear = (year, yearNumber) => {
-          const npist2 = year.NPIST2;
-          const npis412 = year.NPIS412;
-          const npis422 = year.NPIS422;
-          const npis432 = year.NPIS432;
-          const npis442 = year.NPIS442;
-          const npis452 = year.NPIS452;
-
-          const npgrn2 = year.NPGRN2;
-          const npt412 = year.NPT412;
-          const npt422 = year.NPT422;
-          const npt432 = year.NPT432;
-          const npt442 = year.NPT442;
-          const npt452 = year.NPT452;
-
           return {
             year: yearNumber,
             prices: {
@@ -404,18 +391,6 @@ const datasetConfig = {
               "48001_75000": year.NPIS432 || year.NPT432,
               "75001_110000": year.NPIS442 || year.NPT442,
               "110001": year.NPIS452 || year.NPT452,
-              npist2,
-              npis412,
-              npis422,
-              npis432,
-              npis442,
-              npis452,
-              npgrn2,
-              npt412,
-              npt422,
-              npt432,
-              npt442,
-              npt452,
             },
           };
         };
@@ -498,7 +473,6 @@ const datasetConfig = {
           year: `${(yearNum).toString().slice(2)}-${(yearNum + 1).toString().slice(2)}`,
           startYear: yearNum,
           stickerPrice,
-          originalNetPrices: netYear,
           netPricesByBracket: {
             average: getNetPrice("average"),
             "0_30000": getNetPrice("0_30000"),
@@ -577,10 +551,6 @@ const datasetConfig = {
               price: years[0].stickerPrice.price * growth,
               priceOutState: years[0].stickerPrice.priceOutState * growthOutState,
               type: mostRecentYear.stickerPrice.type,
-              growth,
-              base: years[0].stickerPrice.price,
-              growthOutState,
-              baseOutState: years[0].stickerPrice.priceOutState,
             },
             netPricesByBracket: {
               average: {
@@ -637,23 +607,31 @@ const datasetConfig = {
 const main = async (config) => {
   fs.mkdirSync(ipedsDir, { recursive: true });
 
-  // const dataset = await parseIpedsDataset(config, {
-  //   dataDir: ipedsDir,
-  // });
-  const dataset = {
-    errors: [],
-    dataset: JSON.parse(fs.readFileSync(path.join(ipedsDir, "dataset.json"))),
-  };
+  const dataset = await parseIpedsDataset(config, {
+    dataDir: ipedsDir,
+  });
+  // const dataset = {
+  //   errors: [],
+  //   dataset: JSON.parse(fs.readFileSync(path.join(ipedsDir, "dataset.json"))),
+  // };
 
-  const schools = Object.values(dataset.dataset).filter((s) => s.years.length === 13);
+  const allSchools = Object.values(dataset.dataset);
+  const schools = allSchools.filter((s) => s.years.length > 10);
 
   const validationErrors = [];
   const validationErrorsByPath = new Map();
+
+  const invalidSchools = [];
 
   const validSchools = schools.filter((school) => {
     const result = schoolSchema.safeParse(school);
 
     if (!result.success) {
+      invalidSchools.push({
+        school,
+        error: result.error,
+      });
+
       validationErrors.push(result.error);
       result.error.issues.forEach((issue) => {
         const p = issue.path.join(".");
@@ -695,7 +673,8 @@ const main = async (config) => {
 
   console.log(`Parsing errors: ${dataset.errors.length}`);
   console.log(`Validation errors: ${validationErrors.length}`);
-  console.log(`Schools: ${schools.length}`);
+  console.log(`All schools: ${allSchools.length}`);
+  console.log(`Schools with 13 years: ${schools.length}`);
   console.log(`Valid schools: ${validSchools.length}`);
 
   const shortNames = [];
@@ -796,6 +775,31 @@ const main = async (config) => {
 
   const validSchoolsFile = path.join(ipedsDir, "valid_schools.json");
   fs.writeFileSync(validSchoolsFile, JSON.stringify(validSchools, null, 2));
+
+  // invalidSchools.forEach((school) => {
+  //   if (!oldSchoolIds.has(school.school.id)) return;
+  //   const invalidSchoolFile = path.join("invalid_schools", `${school.school.id}.json`);
+  //   fs.writeFileSync(invalidSchoolFile, JSON.stringify(school, null, 2));
+  // });
+
+  // const countPositive = (xs) => xs.reduce((sum, x) => (typeof x === "number" && x > 0 ? sum + 1 : sum), 0);
+
+  // fs.writeFileSync("all_schools.json", JSON.stringify(allSchools, null, 2));
+  // const stats = allSchools.map((school) => ({
+  //   id: school.id,
+  //   name: school.name,
+  //   years: school.years.length,
+  //   sticker: countPositive(school.years.map((y) => y.stickerPrice.price)),
+  //   net_average: countPositive(school.years.map((y) => y.netPricesByBracket.average.price)),
+  //   net_0_30: countPositive(school.years.map((y) => y.netPricesByBracket["0_30000"].price)),
+  //   net_30_48: countPositive(school.years.map((y) => y.netPricesByBracket["30001_48000"].price)),
+  //   net_48_75: countPositive(school.years.map((y) => y.netPricesByBracket["48001_75000"].price)),
+  //   net_75_110: countPositive(school.years.map((y) => y.netPricesByBracket["75001_110000"].price)),
+  //   net_110: countPositive(school.years.map((y) => y.netPricesByBracket["110001"].price)),
+  // }));
+  // fs.writeFileSync("stats.json", JSON.stringify(stats));
+
+  // console.log(allSchools.filter((s) => s.years.length !== 13).map((s) => `${s.name} (${s.years.length})`));
 }
 
 main(datasetConfig);

@@ -40,6 +40,7 @@ export default function SizeHistogram(props: {
   } = useMemo(() => {
     const sizes = schools
       .filter((school) => {
+        if (!school.enrollment) return false;
         const isControl = !schoolControl || (schoolControl === school.schoolControl);
         const isLevel = !degreeLevel || (degreeLevel === school.degreeLevel);
         return isControl && isLevel;

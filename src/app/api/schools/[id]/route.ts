@@ -9,6 +9,5 @@ export async function GET(
   const [school] = await getSchoolsDetail({
     schoolIds: [id],
   });
-
   return Response.json(school);
 }

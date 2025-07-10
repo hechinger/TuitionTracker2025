@@ -82,6 +82,9 @@ export default function RadarChart(props: {
   const width = Math.min(w, 400);
   const height = width;
 
+  const minLabelValue = 0.1;
+  const labelValue = (value: number) => Math.max(minLabelValue, value);
+
   const graduation = getGraduation(props.school);
   const data = categories.map((c) => {
     const value = graduation.byRace[c.key];
@@ -269,10 +272,10 @@ export default function RadarChart(props: {
               style={{
                 transform: [
                   `translate(${width / 2}px, ${height / 2}px)`,
-                  `translateX(${getXY(angle(d.key), r(d.value)).x}px)`,
-                  `translateY(${getXY(angle(d.key), r(d.value)).y}px)`,
+                  `translateX(${getXY(angle(d.key), r(labelValue(d.value))).x}px)`,
+                  `translateY(${getXY(angle(d.key), r(labelValue(d.value))).y}px)`,
                   `translate(-50%, -50%)`,
-                  getLabelAlignTransform(angle(d.key), d.value),
+                  getLabelAlignTransform(angle(d.key), labelValue(d.value)),
                 ].join(' '),
               }}
             >

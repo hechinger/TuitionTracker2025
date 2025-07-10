@@ -2,14 +2,17 @@ import {
   ClerkProvider,
   SignedIn,
   SignedOut,
-  SignOutButton,
   RedirectToSignIn,
 } from "@clerk/nextjs";
 import { getContentForAdmin } from "@/db/content";
 import DataProvider from "@/components/DataProvider";
-import PageTopOverlap from "@/components/PageTopOverlap";
-import Well from "@/components/Well";
 import Dashboard from "@/admin/components/Dashboard";
+
+// Font styles for MUI
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 export default async function Admin() {
   const content = await getContentForAdmin();
@@ -17,23 +20,13 @@ export default async function Admin() {
   return (
     <ClerkProvider>
       <DataProvider>
-        <PageTopOverlap>
-          <Well width="text">
-            <h1>Tuition Tracker Admin</h1>
-          </Well>
-        </PageTopOverlap>
-        <Well width="text">
-          <SignedIn>
-            <SignOutButton redirectUrl="/admin">
-              <button>Sign out</button>
-            </SignOutButton>
-            <Dashboard content={content} />
-          </SignedIn>
+        <SignedIn>
+          <Dashboard content={content} />
+        </SignedIn>
 
-          <SignedOut>
-            <RedirectToSignIn />
-          </SignedOut>
-        </Well>
+        <SignedOut>
+          <RedirectToSignIn />
+        </SignedOut>
       </DataProvider>
     </ClerkProvider>
   );

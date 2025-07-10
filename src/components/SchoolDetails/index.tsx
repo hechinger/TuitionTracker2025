@@ -101,9 +101,11 @@ export default function SchoolDetails(props: {
           </button>
 
           {isOpen && (
-            <Robotext
-              template={content("SchoolPage.SchoolDetails.aboutTheData")}
-            />
+            <div className={styles.aboutText}>
+              <Robotext
+                template={content("SchoolPage.SchoolDetails.aboutTheData")}
+              />
+            </div>
           )}
         </div>
       </div>

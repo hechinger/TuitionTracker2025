@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
+import { useSearchParams } from "next/navigation";
 
 export const schoolTypes = ["public", "private", "for-profit"] as const;
 export const degreeTypes = ["any", "4-year", "2-year"] as const;
@@ -27,6 +28,7 @@ export function useSearchState({
   param = "search",
 }) {
   const [search, setSearch] = useState(SearchSchema.parse({}));
+  const q = `${useSearchParams()}`;
 
   useEffect(() => {
     if (!autoload) return;
@@ -41,7 +43,7 @@ export function useSearchState({
       console.error("Error loading search state from URL query parameters");
       console.error(error);
     }
-  }, [param, autoload]);
+  }, [param, autoload, q]);
 
   const searchQueryString = useMemo(() => {
     const query = new URLSearchParams();

@@ -40,6 +40,7 @@ export type SchoolIndex = {
   stickerPrice: {
     type: StickerPriceType;
     price: number;
+    priceOutState?: number;
   },
   netPricesByBracket: {
     average: number;
@@ -57,6 +58,7 @@ export type YearData = {
   stickerPrice: {
     type: StickerPriceType;
     price: number;
+    priceOutState?: number;
   },
   netPricesByBracket: {
     average: {
@@ -110,6 +112,7 @@ export type SchoolDetail = {
   stickerPrice: {
     type: string;
     price: number;
+    priceOutState?: number;
   };
   image: string;
   netPricesByBracket: {
