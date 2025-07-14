@@ -8,6 +8,7 @@ export default function Robotext(props: {
   context?: Record<string, string | undefined>;
   highlightColor?: "pink" | "blue";
   className?: string;
+  variant?: "graf";
 }) {
   const {
     as: Tag = "div",
@@ -15,6 +16,7 @@ export default function Robotext(props: {
     context,
     highlightColor = "",
     className,
+    variant = "",
   } = props;
 
   const html = roboText({
@@ -24,7 +26,7 @@ export default function Robotext(props: {
 
   return (
     <Tag
-      className={clsx(styles.text, styles[highlightColor], className)}
+      className={clsx(styles.text, styles[highlightColor], styles[variant], className)}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

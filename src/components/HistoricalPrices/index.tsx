@@ -70,6 +70,7 @@ export default function HistoricalPrices(props: {
         template={historicTemplate}
         context={historicContext}
         highlightColor="pink"
+        variant="graf"
       />
 
       <div className={styles.chart}>
@@ -96,6 +97,7 @@ export default function HistoricalPrices(props: {
         template={bracketTemplate}
         context={bracketContext}
         highlightColor="pink"
+        variant="graf"
       />
 
       <IncomeBracketBarChart

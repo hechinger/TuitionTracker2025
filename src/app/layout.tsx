@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import "./globals.scss";
 
 export const metadata: Metadata = {
-  title: "Tuition Tracker",
+  title: "Tuition Tracker - True University Costs per Income Bracket",
   description: "True University Costs per Income Bracket",
-  keywords: ["college tuition", "college costs", "how much will college cost"],
   openGraph: {
     title: "Tuition Tracker",
     description: "True University Costs per Income Bracket",

@@ -36,6 +36,7 @@ export default function StudentRetentionSection(props: {
         context={retentionContext}
         template={content("SchoolPage.StudentRetention.template")}
         highlightColor="blue"
+        variant="graf"
       />
 
       {school && (

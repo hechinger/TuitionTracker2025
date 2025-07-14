@@ -1,5 +1,5 @@
 import Well from "@/components/Well";
-import logo from './logo.png';
+import logo from './logo.gif';
 import styles from './styles.module.scss';
 
 const menuLinks = [

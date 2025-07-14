@@ -80,6 +80,7 @@ export default function DemographicsSection(props: {
           <Robotext
             template={content("SchoolPage.StudentDemographics.size.template")}
             context={sizeContext}
+            variant="graf"
           />
 
           <div className={styles.chart}>
@@ -93,6 +94,7 @@ export default function DemographicsSection(props: {
           <Robotext
             template={content("SchoolPage.StudentDemographics.gender.template")}
             context={genderContext}
+            variant="graf"
           />
 
           <div className={styles.chart}>
@@ -102,6 +104,7 @@ export default function DemographicsSection(props: {
           <Robotext
             template={content("SchoolPage.StudentDemographics.race.template")}
             context={demoContext}
+            variant="graf"
           />
 
           <div className={styles.chart}>
