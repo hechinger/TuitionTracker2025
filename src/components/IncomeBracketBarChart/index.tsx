@@ -10,6 +10,7 @@ import { max } from "d3-array";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { useContent } from "@/hooks/useContent";
 import Robotext from "@/components/Robotext";
+import a11y from "@/styles/accessibility.module.scss";
 import styles from "./styles.module.scss";
 
 const margin = { top: 20, right: 0, bottom: 25, left: 0 };
@@ -146,6 +147,27 @@ export default function IncomeBracketBarChart(props: {
           </div>
         )}
       </div>
+
+      {school && maxYearData && (
+        <div className={a11y.srOnly}>
+          <table>
+            <thead>
+              <tr>
+                <th>Income bracket</th>
+                <th>Projected net price at {school.name}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {brackets.map((bracket) => (
+                <tr key={bracket}>
+                  <td>{bracketLabels[bracket]}</td>
+                  <td>{formatDollars(maxYearData.netPricesByBracket[bracket].price || 0, { round: true })}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

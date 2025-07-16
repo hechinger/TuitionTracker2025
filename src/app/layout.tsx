@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.scss";
 
 export const metadata: Metadata = {
-  title: "Tuition Tracker",
-  description: "True University Costs per Income Bracket",
-  keywords: ["college tuition", "college costs", "how much will college cost"],
+  title: "Tuition Tracker - True University Costs per Income Bracket",
   openGraph: {
     title: "Tuition Tracker",
     description: "True University Costs per Income Bracket",
@@ -27,6 +26,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-2DBQW0NLND"
+        />
+        <Script id="gtag-loader">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-P7263Q9H');`}
+        </Script>
+        <Script
+          async
+          src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+        />
+        <Script id="gpt-loader">
+          {`
+            window.googletag = window.googletag || {cmd: []};
+            googletag.cmd.push(function() {
+              googletag.defineSlot('/6160094/tuition-tracker-top-001', [728, 90], 'div-gpt-ad-1732288624207-0').addService(googletag.pubads());
+              googletag.pubads().enableSingleRequest();
+              googletag.enableServices();
+            });
+          `}
+        </Script>
+      </head>
       <body>
         {children}
       </body>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useCallback } from "react";
-import { BuildingApartmentIcon, CertificateIcon, CurrencyCircleDollarIcon } from "@phosphor-icons/react";
+import { BuildingApartmentIcon, CertificateIcon, CurrencyCircleDollarIcon, GraduationCapIcon } from "@phosphor-icons/react";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import type { IncomeBracketKey, SchoolIndex } from "@/types";
 import type { SearchOptions, UpdateSearch } from "@/hooks/useSearchState";
@@ -83,16 +83,12 @@ export default function AdvancedSearch(props: {
   const incomeBracket = useIncomeBracket();
 
   const updateSchoolType = useCallback((
-    value: SearchOptions["schoolType"][number],
+    value: SearchOptions["schoolType"][number] | undefined,
     flag: boolean,
   ) => {
-    const old = search.schoolType || [];
-    const rest = old.filter((t) => t !== value);
-    if (flag) {
-      rest.push(value);
-    }
-    updateSearch("schoolType", rest);
-  }, [search, updateSearch]);
+    const newValue = (flag && value) ? [value] : [];
+    updateSearch("schoolType", newValue);
+  }, [updateSearch]);
 
   return (
     <div>
@@ -164,12 +160,29 @@ export default function AdvancedSearch(props: {
           <h3>School type</h3>
 
           <div className={styles.schoolTypes}>
+            <label>
+              <input
+                type="radio"
+                name={`school-type-${id}`}
+                value=""
+                className={styles.schoolTypeButton}
+                checked={search.schoolType.length === 0}
+                onChange={(e) => updateSchoolType(undefined, e.target.checked)}
+              />
+              <div className={styles.schoolTypeIcon}>
+               <GraduationCapIcon size="48" />
+              </div>
+              <span>Any</span>
+            </label>
+
             {schoolTypes.map((schoolType) => (
               <label
                 key={schoolType.value}
               >
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name={`school-type-${id}`}
+                  value={schoolType.value}
                   className={styles.schoolTypeButton}
                   checked={search.schoolType.includes(schoolType.value)}
                   onChange={(e) => updateSchoolType(schoolType.value, e.target.checked)}
@@ -212,6 +225,7 @@ export default function AdvancedSearch(props: {
             <label>
               <input
                 type="checkbox"
+                checked={!!search.tribalCollege}
                 onChange={(e) => updateSearch("tribalCollege", e.target.checked)}
               />
               <span>Tribal college</span>
@@ -220,6 +234,7 @@ export default function AdvancedSearch(props: {
             <label>
               <input
                 type="checkbox"
+                checked={!!search.hbcu}
                 onChange={(e) => updateSearch("hbcu", e.target.checked)}
               />
               <span>Historically black (HBCU)</span>

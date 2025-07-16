@@ -1,11 +1,21 @@
-$side-padding: calc((100vw - 890px) / 2);
+$scroll-hint-width: 32px;
 
 .recommendedSection {
+  position: relative;
   margin: 40px 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: $scroll-hint-width;
+    background: linear-gradient(90deg, #FFFFFF00, #FFFFFFFF);
+  }
 
   .title {
     margin-bottom: 1em;
-    padding-left: $side-padding;
   }
 
   .schools {
@@ -15,7 +25,6 @@ $side-padding: calc((100vw - 890px) / 2);
     grid-template-rows: auto;
     column-gap: 1em;
     padding-bottom: 12px;
-    padding-left: $side-padding;
-    padding-right: $side-padding;
+    padding-right: $scroll-hint-width;
   }
 }

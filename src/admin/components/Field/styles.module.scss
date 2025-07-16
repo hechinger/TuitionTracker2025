@@ -24,3 +24,88 @@
   margin: 4px 0 8px;
   padding: 4px;
 }
+
+.richCopy,
+.autotext {
+  :global(.rsw-ce) {
+    p {
+      margin-bottom: 1em;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.autotext {
+  .autotextHelp {
+    margin-top: 6px;
+  }
+
+  .autotextPreview {
+    border-radius: 4px;
+    background: colors.$bg-light;
+    padding: 12px;
+  }
+
+  .autotextVariables {
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      list-style: none;
+      padding: 0;
+    }
+
+    .li {
+      padding: 0;
+    }
+
+    .varName {
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: monospace;
+      background: #fff5fa;
+      color: #6d0031;
+    }
+  }
+}
+
+.imagePicker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .imagePreview {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    background: colors.$bg-light;
+    border-radius: 4px;
+    padding: 12px;
+
+    .image {
+      width: 100%;
+      max-width: 300px;
+      max-height: 200px;
+      align-self: center;
+    }
+
+    button {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+  }
+
+  .imagePlaceholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+    border: 1px dashed colors.$border-main;
+    border-radius: 4px;
+    background: colors.$bg-light;
+  }
+}

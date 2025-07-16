@@ -45,6 +45,7 @@ export default function GraduationRateSection(props: {
             context={overallContext}
             template={overallTemplate}
             highlightColor="blue"
+            variant="graf"
           />
 
           <OverallBar school={school} />
@@ -53,6 +54,7 @@ export default function GraduationRateSection(props: {
             context={demoContext}
             template={demoTemplate}
             highlightColor="blue"
+            variant="graf"
           />
 
           <RadarChart school={school} />

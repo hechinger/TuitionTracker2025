@@ -1,10 +1,18 @@
+@use "@/styles/breakpoints.scss";
+
 .charts {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   gap: 24px;
   margin-top: 20px;
+
+  @include breakpoints.at-least("md") {
+    flex-direction: row;
+  }
 }
 
 .sectionTitle {
+  font-size: 28px;
   margin-bottom: 12px;
 }

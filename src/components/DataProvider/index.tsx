@@ -6,11 +6,13 @@ import {
 } from "@tanstack/react-query";
 import { StorageContext, useStorageContext } from "@/hooks/useStorageContext";
 import { DataContext, type DataContextType } from "@/hooks/useDataContext";
+import type { SchoolDetail } from "@/types";
 
 const queryClient = new QueryClient();
 
 export default function DataProvider(props: Readonly<{
   locale?: string;
+  schools?: Record<string, SchoolDetail>;
   content?: DataContextType["content"];
   children: React.ReactNode;
 }>) {
@@ -18,6 +20,7 @@ export default function DataProvider(props: Readonly<{
   const contextValue = {
     locale: props.locale || "en",
     content: props.content,
+    schools: props.schools,
   };
 
   return (

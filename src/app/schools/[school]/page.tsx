@@ -1,4 +1,6 @@
+import { cache } from "react";
 import { getContent } from "@/db/content";
+import { getSchoolsDetail } from "@/db/schools";
 import BrandTopper from "@/components/BrandTopper";
 import PageContent from "@/components/PageContent";
 import BrandFooter from "@/components/BrandFooter";
@@ -17,24 +19,60 @@ import ContactUs from "@/components/ContactUs";
 import Recirculation from "@/components/Recirculation";
 import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
+const getSchool = cache(async (id: string) => {
+  const [school] = await getSchoolsDetail({
+    schoolIds: [id],
+  });
+  return school;
+});
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ school: string }>;
+}) {
+  const { school: schoolSlug } = await params;
+  const schoolId = `${schoolSlug.split('-').at(-1)}`;
+  const school = await getSchool(schoolId);
+  return {
+    title: `${school.name} Real Tuition Costs (What You’ll Pay After Assistance)`,
+    openGraph: {
+      title: `Tuition Tracker - ${school.name}`,
+      description: "What You’ll Pay After Assistance",
+      url: `https://tuitiontracker.org/schools/${schoolSlug}`,
+      siteName: "Tuition Tracker",
+      images: school.image || "https://hechingerreport.org/wp-content/uploads/2020/07/THR-for-Cisco-wallpaper.jpg",
+      type: "website",
+    },
+    icons: {
+      icon: "https://hechingerreport.org/wp-content/uploads/2018/06/cropped-favicon-32x32.jpg",
+      shortcut: "https://i0.wp.com/hechingerreport.org/wp-content/uploads/2018/06/cropped-favicon.jpg?fit=192%2C192&ssl=1",
+      apple: "https://i0.wp.com/hechingerreport.org/wp-content/uploads/2018/06/cropped-favicon.jpg?fit=192%2C192&ssl=1",
+    },
+  };
+}
+
 export default async function School(props: {
   params: Promise<{ school: string }>;
 }) {
   const [
-    { school },
+    { school: schoolSlug },
     content,
   ] = await Promise.all([
     props.params,
     getContent(),
   ]);
 
-  const schoolId = `${school.split('-').at(-1)}`;
+  const schoolId = `${schoolSlug.split('-').at(-1)}`;
+  // const school = await getSchool(schoolId);
+  // const schools = { [schoolId]: school };
+  const schools = undefined;
 
   return (
     <>
       <BrandTopper />
       <PageContent>
-        <DataProvider content={content}>
+        <DataProvider content={content} schools={schools}>
           <PageTopOverlap>
             <ErrorBoundary>
               <SearchBar withNav />
