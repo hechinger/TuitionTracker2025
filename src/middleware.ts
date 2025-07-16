@@ -4,18 +4,16 @@ import { routing } from "@/i18n/routing";
 
 const i18nMiddleware = createI18nMiddleware(routing);
 
-const privateRoutes = [
+const isPrivateRoute = createRouteMatcher([
   "/(admin)(.*)",
-];
-const isPrivateRoute = createRouteMatcher(privateRoutes);
+]);
 
-const i18nRoutes = [
+const isI18nRoute = createRouteMatcher([
   "/",
   "/(en|es)/:path*",
   "/(search|saved-schools)",
   "/schools/:path*",
-];
-const isI18nRoute = createRouteMatcher(i18nRoutes);
+]);
 
 export default clerkMiddleware((auth, req) => {
   if (isPrivateRoute(req)) {
@@ -32,7 +30,10 @@ export const config = {
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     // Always run for API routes
     "/(api|trpc)(.*)",
-    ...privateRoutes,
-    ...i18nRoutes,
+    "/(admin)(.*)",
+    "/",
+    "/(en|es)/:path*",
+    "/(search|saved-schools)",
+    "/schools/:path*",
   ],
 };
