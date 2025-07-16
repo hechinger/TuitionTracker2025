@@ -9,6 +9,7 @@ import { formatDollars } from "@/utils/formatDollars";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { useContent } from "@/hooks/useContent";
 import type { YearData, SchoolDetail } from "@/types";
+import a11y from "@/styles/accessibility.module.scss";
 import Legend from "./Legend";
 import styles from "./styles.module.scss";
 
@@ -249,6 +250,37 @@ export default function PriceTrendChart(props: {
       </div>
       {legend && (
         <Legend />
+      )}
+
+      {school && (
+        <div className={a11y.srOnly}>
+          <table>
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Net in-state price at {school.name}</th>
+                <th>In-state sticker price at {school.name}</th>
+                {withOutState && (
+                  <th>Out-of-state sticker price at {school.name}</th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {school.years.map((year) => (
+                <tr key={year.year}>
+                  <td>{year.year}</td>
+                  <td>{formatDollars(year.netPricesByBracket[bracket].price)}</td>
+                  <td>{formatDollars(year.stickerPrice.price)}</td>
+                  {withOutState && (
+                    <td>
+                      {formatDollars(year.stickerPrice.priceOutState!)}
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

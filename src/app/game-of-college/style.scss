@@ -1,0 +1,22 @@
+$vendors: "" "-webkit-" "-moz-" "-ms-" "-o-";
+$mobile: "(min-device-width:320px) and (max-device-width:767px) and (-webkit-min-device-pixel-ratio:2)";
+$mac: "(min-device-width: 1200px) and (max-device-width: 1600px) and (-webkit-min-device-pixel-ratio: 1)";
+$smallscreen: "(min-device-width: 1024px) and (max-height: 630px)";
+$retina: "(min-device-width: 1200px) and (-webkit-min-device-pixel-ratio: 2) and (min-resolution: 192dpi)";
+$notdesktop: "(max-device-width: 1023px)";
+$print: "print";
+
+@mixin media($query){
+	@media #{$query} {
+		@content;
+	}
+}
+
+/* Import partial scss files
+------------------------------------------------*/
+@import "reset";
+@import "include-media";
+@import "foundation";
+@import "basics";
+@import "header";
+@import "main";

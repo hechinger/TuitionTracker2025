@@ -320,6 +320,269 @@ export const contentSections = [
           },
         ],
       },
+      {
+        type: "fieldGroup",
+        title: "Landing Page About Section",
+        fields: [
+          {
+            type: "copy",
+            title: "About Section Title",
+            path: "About.title",
+          },
+          {
+            type: "richCopy",
+            title: "About Section Copy",
+            path: "About.copy",
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Landing Page Data Section",
+        fields: [
+          {
+            type: "copy",
+            title: "Data Section Title",
+            path: "DownloadData.title",
+          },
+          {
+            type: "richCopy",
+            title: "Data Section Copy",
+            path: "DownloadData.copy",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "School Page Content",
+    description: "Content and configuration for dynamic text on the school detail page.",
+    fields: [
+      {
+        type: "fieldGroup",
+        title: "Price Section",
+        fields: [
+          {
+            type: "autotext",
+            title: "Historical Price Trend Copy",
+            path: "SchoolPage.Prices.priceTrendTemplate",
+            variables: [
+              {
+                name: "SCHOOL_NAME",
+                help: "The name of the displayed school",
+                example: "Florida State University",
+              },
+              {
+                name: "STUDENT_TYPE",
+                help: "The name of the active income bracket",
+                example: "students with household incomes under $30K",
+              },
+              {
+                name: "NET_PRICE",
+                help: "The net price students in the active income bracket will pay",
+                example: "$24,365",
+              },
+              {
+                name: "STICKER_PRICE",
+                help: "The school’s sticker price",
+                example: "$32,123",
+              },
+              {
+                name: "PRICE_DIFFERENCE",
+                help: "The difference between the sticker and net price",
+                example: "$7,758",
+              },
+            ],
+          },
+          {
+            type: "autotext",
+            title: "Income Bracket Copy",
+            path: "SchoolPage.Prices.incomeBracketTemplate",
+            variables: [
+              {
+                name: "SCHOOL_NAME",
+                help: "The name of the displayed school",
+                example: "Florida State University",
+              },
+              {
+                name: "STUDENT_TYPE",
+                help: "The name of the active income bracket",
+                example: "students with household incomes under $30K",
+              },
+              {
+                name: "MIN_BRACKET_PRICE",
+                help: "The lowest price across all brackets",
+                example: "$3,156",
+              },
+              {
+                name: "MAX_BRACKET_PRICE",
+                help: "The highest price across all brackets",
+                example: "$32,156",
+              },
+              {
+                name: "MIN_BRACKET_STUDENTS",
+                help: "The student type for the lowest-price bracket",
+                example: "students with household incomes under $30K",
+              },
+              {
+                name: "MAX_BRACKET_STUDENTS",
+                help: "The student type for the highest-price bracket",
+                example: "students with household incomes above $110K",
+              },
+              {
+                name: "PRICE_DIFFERENCE",
+                help: "The price difference between the lowest and highest bracket",
+                example: "$29,000",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Graduation Rate Section",
+        fields: [
+          {
+            type: "autotext",
+            title: "Overall Graduation Rate Copy",
+            path: "SchoolPage.GraduationRates.overallTemplate.template",
+            variables: [
+              {
+                name: "SCHOOL_NAME",
+                help: "The name of the displayed school",
+                example: "Florida State University",
+              },
+              {
+                name: "GRADUATION_RATE",
+                help: "The school’s overall graduation rate",
+                example: "72%",
+              },
+              {
+                name: "DEGREE_TYPE",
+                help: "The kind of degree offered by the school",
+                example: "bachelor’s degree",
+              },
+              {
+                name: "DEGREE_YEAR",
+                help: "The 150% completion type of the degree type",
+                example: "six years",
+              },
+            ],
+          },
+          {
+            type: "autotext",
+            title: "Demographic Graduation Rate Copy",
+            path: "SchoolPage.GraduationRates.demographicTemplate",
+            variables: [
+              {
+                name: "SCHOOL_NAME",
+                help: "The name of the displayed school",
+                example: "Florida State University",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Student Retention Section",
+        fields: [
+          {
+            type: "autotext",
+            title: "Student Retention Copy",
+            path: "SchoolPage.StudentRetention.template",
+            variables: [
+              {
+                name: "SCHOOL_NAME",
+                help: "The name of the displayed school",
+                example: "Florida State University",
+              },
+              {
+                name: "FULL_TIME_RETENTION_RATE",
+                help: "The school’s retention rate for full-time students",
+                example: "87%",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Demographics Section",
+        fields: [
+          {
+            type: "autotext",
+            title: "School Size Copy",
+            path: "SchoolPage.StudentDemographics.size.template",
+            variables: [
+              {
+                name: "SCHOOL_NAME",
+                help: "The name of the displayed school",
+                example: "Florida State University",
+              },
+              {
+                name: "ENROLLMENT",
+                help: "The school’s total enrollment",
+                example: "67,123",
+              },
+              {
+                name: "SIZE_PERCENTILE",
+                help: "The percentile this school’s size falls into for schools of similar type",
+                example: "23rd",
+              },
+              {
+                name: "SCHOOL_TYPE",
+                help: "The type of school this is",
+                example: "public, 4-year",
+              },
+            ],
+          },
+          {
+            type: "autotext",
+            title: "Gender Breakdown Copy",
+            path: "SchoolPage.StudentDemographics.gender.template",
+            variables: [
+              {
+                name: "SCHOOL_NAME",
+                help: "The name of the displayed school",
+                example: "Florida State University",
+              },
+              {
+                name: "GENDER_NAME_MAX",
+                help: "The name of the gender category with the largest share of students",
+                example: "men",
+              },
+              {
+                name: "GENDER_PERCENT_MAX",
+                help: "The percentage held by the max gender",
+                example: "52%",
+              },
+            ],
+          },
+          {
+            type: "autotext",
+            title: "Race Breakdown Copy",
+            path: "SchoolPage.StudentDemographics.race.template",
+            variables: [
+              {
+                name: "SCHOOL_NAME",
+                help: "The name of the displayed school",
+                example: "Florida State University",
+              },
+              {
+                name: "DEMOGRAPHIC_NAME_MAX",
+                help: "The name of the demographic category with the largest share of students",
+                example: "white",
+              },
+              {
+                name: "DEMOGRAPHIC_PERCENT_MAX",
+                help: "The percentage held by the largest demographic group",
+                example: "52%",
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -597,41 +860,74 @@ export const contentSections = [
   },
 ];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export const schoolFields = [
+  {
+    type: "string",
+    title: "Name",
+    path: "name",
+  },
+  {
+    type: "string",
+    title: "Alias (for search)",
+    path: "alias",
+  },
+  {
+    type: "image",
+    title: "Image",
+    path: "image",
+  },
+  {
+    type: "string",
+    title: "City",
+    path: "city",
+  },
+  {
+    type: "string",
+    title: "State",
+    path: "state",
+  },
+  {
+    type: "select",
+    title: "School Control",
+    path: "schoolControl",
+    options: [
+      {
+        value: "public",
+        label: "Public",
+      },
+      {
+        value: "private",
+        label: "Private",
+      },
+      {
+        value: "for-profit",
+        label: "For-profit",
+      },
+    ],
+  },
+  {
+    type: "select",
+    title: "Degree Level",
+    path: "degreeLevel",
+    options: [
+      {
+        value: "2-year",
+        label: "2-year",
+      },
+      {
+        value: "4-year",
+        label: "4-year",
+      },
+    ],
+  },
+  {
+    type: "boolean",
+    title: "HBCU",
+    path: "hbcu",
+  },
+  {
+    type: "boolean",
+    title: "Tribal College",
+    path: "tribalCollege",
+  },
+];

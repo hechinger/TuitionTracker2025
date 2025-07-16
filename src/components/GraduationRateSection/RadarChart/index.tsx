@@ -10,6 +10,7 @@ import { formatPercent } from "@/utils/formatPercent";
 import { getGraduation } from "@/utils/formatSchoolInfo";
 import { isNotUndefined } from "@/utils/isNotUndefined";
 import { type SchoolDetail } from "@/types";
+import a11y from "@/styles/accessibility.module.scss";
 import styles from "./styles.module.scss";
 
 const categories = [
@@ -285,6 +286,27 @@ export default function RadarChart(props: {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className={a11y.srOnly}>
+        <table>
+          <thead>
+            <tr>
+              <th>Demographic category</th>
+              <th>Graduation rate at {props.school.name}</th>
+              <th>National average</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((d) => (
+              <tr key={d.key}>
+                <td>{d.label}</td>
+                <td>{formatPercent(d.value)}</td>
+                <td>{formatPercent(natAvg[d.key])}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

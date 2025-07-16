@@ -2,6 +2,7 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const pg = require("pg");
+const sqlite3 = require("sqlite3");
 const chunk = require("lodash/chunk");
 const lodashGet = require("lodash/get");
 
@@ -33,15 +34,66 @@ const getValueIdSet = (nRows, nCols) => {
   }).join(", ");
 };
 
+const getDb = async () => {
+  if (dbUrl.startsWith("postgresql")) {
+    // DB connection
+    const db = new pg.Client({
+      connectionString: dbUrl,
+    });
+    await db.connect();
+
+    return db;
+  }
+
+  if (dbUrl.startsWith("sqlite")) {
+    const fileName = dbUrl.slice("sqlite://".length);
+    const conn = new sqlite3.Database(fileName);
+
+    return {
+      query: async (opts) => {
+        if (typeof opts === "string") {
+          return new Promise((resolve, reject) => {
+            conn.run(opts, [], (error) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve();
+              }
+            });
+          });
+        }
+
+        const {
+          text,
+          values,
+        } = opts;
+        const valueObject = Object.fromEntries(values.map((v, i) => [
+          `$${i + 1}`,
+          v,
+        ]));
+
+        return new Promise((resolve, reject) => {
+          conn.run(text, valueObject, (error) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          });
+        });
+      },
+      end: () => conn.close(),
+    };
+  }
+
+  throw new Error("Unsupported database URL:", dbUrl);
+};
+
 const main = async () => {
-  // DB connection
-  const db = new pg.Client({
-    connectionString: dbUrl,
-  });
-  await db.connect();
+  const db = await getDb();
 
   try {
-    if (false) {
+    if (true) {
       await db.query(`
         CREATE TABLE IF NOT EXISTS schools (
           db_id SERIAL PRIMARY KEY,
@@ -283,7 +335,7 @@ const main = async () => {
       }
     }, Promise.resolve());
 
-    if (false) {
+    if (true) {
       const txt = (s) => ({ en: s, es: s });
 
       const content = {
@@ -581,7 +633,7 @@ const main = async () => {
       await db.query(query);
     }
 
-    if (false) {
+    if (true) {
       const recirc = [
         {
           page: "default",
@@ -613,7 +665,7 @@ const main = async () => {
       await db.query(query);
     }
 
-    if (false) {
+    if (true) {
       const sections = [
         {
           pageOrder: 0,
