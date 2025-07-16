@@ -1,4 +1,5 @@
 import $ from "jquery";
+import get from "lodash/get";
 import prompts from "./prompts";
 import characters from "./characters";
 
@@ -31,6 +32,7 @@ const incomes = {
     value: 4,
   },
 } as const;
+type IncomeKey = keyof typeof incomes;
 
 const races = {
   white: {
@@ -59,6 +61,7 @@ const races = {
     value: -4,
   },
 };
+type RacesKey = keyof typeof races;
 
 const schools = {
   public: {
@@ -72,6 +75,7 @@ const schools = {
     value: 3,
   },
 };
+type SchoolsKey = keyof typeof schools;
 
 const parents = {
   finished: {
@@ -85,6 +89,7 @@ const parents = {
     value: 0,
   },
 };
+type ParentsKey = keyof typeof parents;
 
 const GameOfCollege = {
   data: {
@@ -274,19 +279,19 @@ const GameOfCollege = {
       // which prompt outcome happens
       const prompt = GameOfCollege.func.determinePrompt(current);
       const $promptContainer = $("#" + prompt.prompt_id);
-      const option = prompt.options[button];
+      const option = prompt.options[button as "left" | "right"];
       let explainText = "";
 
       // check if outcome is random and execute
       if (typeof option.chance !== "undefined" || option.chance !== null) {
         const randomNumber = Math.random();
-        if (randomNumber <= option.chance) {
+        if (randomNumber <= option.chance!) {
           if (button === "left") {
-            explainText = prompt.expanded_text_left_fail;
+            explainText = prompt.expanded_text_left_fail || "";
           } else if (button === "right") {
-            explainText = prompt.expanded_text_right_fail;
+            explainText = prompt.expanded_text_right_fail || "";
           }
-          GameOfCollege.data.score += option.chance_score;
+          GameOfCollege.data.score += option.chance_score!;
           $promptContainer
             .find('.goc-explain div[data-role="content"] p')
             .html(explainText);
@@ -295,9 +300,9 @@ const GameOfCollege = {
       }
 
       if (button === "left") {
-        explainText = prompt.expanded_text_left_succeed;
+        explainText = prompt.expanded_text_left_succeed || "";
       } else if (button === "right") {
-        explainText = prompt.expanded_text_right_succeed;
+        explainText = prompt.expanded_text_right_succeed || "";
       }
 
       GameOfCollege.data.score += option.score;
@@ -405,7 +410,7 @@ const GameOfCollege = {
                 "high_income",
               );
               GameOfCollege.data.specialPrompt = true;
-              GameOfCollege.data.score += prompt.options.left.score;
+              GameOfCollege.data.score += prompt ? prompt.options.left.score : 0;
               $(
                 '#prompt_seven .goc-prompt div[data-role="buttons"] div[data-role="right"]',
               ).hide();
@@ -429,7 +434,7 @@ const GameOfCollege = {
                 "high_income",
               );
               GameOfCollege.data.specialPrompt = true;
-              GameOfCollege.data.score += prompt.options.left.score;
+              GameOfCollege.data.score += prompt ? prompt.options.left.score : 0;
               $(
                 '#prompt_seven .goc-prompt div[data-role="buttons"] div[data-role="right"]',
               ).hide();
@@ -462,7 +467,7 @@ const GameOfCollege = {
     },
     eventTracking: (type: string, value?: string) => {
       // used for GA event tracking
-      const { gtag } = window;
+      const gtag = get(window, "gtag") as unknown as (...args: unknown[]) => void;
       if (!gtag) return;
       switch (type) {
         case "finished":
@@ -501,18 +506,18 @@ const GameOfCollege = {
       // initialize the game events
       // preload images
       for (let i = 0; i < GameOfCollege.prompts.length; i++) {
-        GameOfCollege.func.preloadImages(
-          GameOfCollege.prompts[i].image_desktop_url,
-        );
+        // GameOfCollege.func.preloadImages(
+        //   GameOfCollege.prompts[i].image_desktop_url,
+        // );
 
-        if (
-          typeof GameOfCollege.prompts[i].image_alternative !== "undefined" ||
-          GameOfCollege.prompts[i].image_alternative !== null
-        ) {
-          GameOfCollege.func.preloadImages(
-            GameOfCollege.prompts[i].image_alternative,
-          );
-        }
+        // if (
+        //   typeof GameOfCollege.prompts[i].image_alternative !== "undefined" ||
+        //   GameOfCollege.prompts[i].image_alternative !== null
+        // ) {
+        //   GameOfCollege.func.preloadImages(
+        //     GameOfCollege.prompts[i].image_alternative,
+        //   );
+        // }
       }
       GameOfCollege.func.preloadImages(GameOfCollege.data.end.nograd.img);
       GameOfCollege.func.preloadImages(GameOfCollege.data.end.gradnodebt.img);
@@ -536,22 +541,22 @@ const GameOfCollege = {
             '#goc-character-container select[name="income"]',
           )
             .children("option:selected")
-            .val();
+            .val() as IncomeKey;
           GameOfCollege.data.parents = $(
             '#goc-character-container select[name="parents"]',
           )
             .children("option:selected")
-            .val();
+            .val() as ParentsKey;
           GameOfCollege.data.race = $(
             '#goc-character-container select[name="race"]',
           )
             .children("option:selected")
-            .val();
+            .val() as RacesKey;
           GameOfCollege.data.school = $(
             '#goc-character-container select[name="school"]',
           )
             .children("option:selected")
-            .val();
+            .val() as SchoolsKey;
           GameOfCollege.func.buildScreen("character");
           GameOfCollege.func.eventTracking("manual");
         } else {
@@ -754,7 +759,7 @@ const GameOfCollege = {
             GameOfCollege.data.currentPrompt!,
             button,
           );
-          GameOfCollege.func.initializeLinks(GameOfCollege.data.currentPrompt);
+          GameOfCollege.func.initializeLinks(GameOfCollege.data.currentPrompt!);
         }
 
         // transition prompt to explain div

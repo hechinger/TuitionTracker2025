@@ -109,12 +109,14 @@ export default function Game() {
             <img
               className="goc-img-typical"
               src={prompt.image_desktop_url}
+              alt=""
             />
             
             {!!prompt.image_alternative && (
               <img
                 className="goc-img-alternative"
                 src={prompt.image_alternative}
+                alt=""
               />
             )}
           </div>

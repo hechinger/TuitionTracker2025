@@ -4,7 +4,7 @@ export default function End() {
   return (
     <section id="goc-end-container">
       <div className="goc-graphic">
-        <img src={null} />
+        <img src="" alt="" />
       </div>
       <div className="goc-prompt">
         <div data-role="content">

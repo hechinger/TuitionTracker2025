@@ -1,4 +1,4 @@
-import { pool } from "./pool";
+import { queryRows } from "./pool";
 
 export type RecommendedSchoolsRow = {
   db_id: number;
@@ -11,11 +11,11 @@ export type RecommendedSchoolsRow = {
 type Row = Omit<RecommendedSchoolsRow, "db_id">;
 
 export const getRecommendedSchools = async () => {
-  const sections = await pool.query<Row>(`
+  const sections = await queryRows<Row>(`
     SELECT page_order, title, title_spanish, school_ids FROM recommended_schools;
   `);
 
-  const sortedSections = sections.rows
+  const sortedSections = sections
     .map((section, i) => ({
       key: `section-${i}`,
       pageOrder: section.page_order,

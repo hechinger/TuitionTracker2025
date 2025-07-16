@@ -1,5 +1,5 @@
 import set from "lodash/set";
-import { pool } from "./pool";
+import { queryRows } from "./pool";
 
 export type ContentRow = {
   db_id: number;
@@ -34,13 +34,13 @@ export const getContent = async (opts: {
   } = opts;
 
   const query = getQuery(locale);
-  const contentEntries = await pool.query<Row>(query);
+  const contentEntries = await queryRows<Row>(query);
 
   const contentByLocale = {
     en: {},
     es: {},
   } as Record<string, Record<string, string>>;
-  contentEntries.rows.forEach((row) => {
+  contentEntries.forEach((row) => {
     const l = row.locale;
     if (!l || l === "en") {
       set(contentByLocale.en, [`${row.component}.${row.path}`], row.value);
@@ -54,17 +54,17 @@ export const getContent = async (opts: {
 };
 
 export const getContentForAdmin = async () => {
-  const contentEntries = await pool.query<ContentRow>(
+  const contentEntries = await queryRows<ContentRow>(
     "SELECT db_id, locale, component, path, value FROM content;",
   );
 
-  return contentEntries.rows;
+  return contentEntries;
 };
 
 export const setContent = async (rows: ContentRow[]) => {
   for (const row of rows) {
     if (row.db_id) {
-      await pool.query({
+      await queryRows({
         text: `
           UPDATE content
           SET locale = $1,
@@ -76,7 +76,7 @@ export const setContent = async (rows: ContentRow[]) => {
         values: [row.locale, row.component, row.path, row.value, row.db_id],
       });
     } else {
-      await pool.query({
+      await queryRows({
         text: `
           INSERT INTO content (locale, component, path, value)
           VALUES ($1, $2, $3, $4);

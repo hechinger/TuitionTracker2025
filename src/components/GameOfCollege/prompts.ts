@@ -1,5 +1,30 @@
 import groupBy from "lodash/groupBy";
 
+export type OptionType = {
+  prompt_id: string;
+  prompt_condition: string;
+  button_option: string;
+  button_text: string;
+  next_prompt_id: string;
+  score: number;
+  chance: number;
+  chance_score: number;
+};
+
+export type PromptType = {
+  prompt_id: string;
+  prompt_condition: string;
+  initial_text: string;
+  expanded_text_left_succeed: string;
+  expanded_text_left_fail: string;
+  expanded_text_right_succeed: string;
+  expanded_text_right_fail: string;
+  options: {
+    left: OptionType;
+    right: OptionType;
+  };
+};
+
 const prompts = [
   {
     prompt_id: "prompt_one",
@@ -393,4 +418,4 @@ const fullPrompts = prompts.map((prompt) => {
   };
 });
 
-export default fullPrompts;
+export default fullPrompts as PromptType[];

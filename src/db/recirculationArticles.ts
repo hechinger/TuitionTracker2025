@@ -1,4 +1,4 @@
-import { pool } from "./pool";
+import { queryRows } from "./pool";
 
 export type RecirculationArticlesRow = {
   db_id: number;
@@ -19,7 +19,7 @@ export const getRecirculationArticles = async (opts: {
   } = opts;
 
   // Get the articles for the specified page, always pulling default articles
-  const articles = await pool.query<Row>({
+  const articles = await queryRows<Row>({
     text: `
       SELECT page, url, headline, image, image_alt
       FROM recirculation_articles
@@ -28,7 +28,7 @@ export const getRecirculationArticles = async (opts: {
     values: [page],
   });
 
-  const sortedArticles = articles.rows
+  const sortedArticles = articles
     .map((article) => ({
       page: article.page,
       url: article.url,

@@ -1,49 +1,70 @@
-import { Pool } from "pg";
+import { Pool, type QueryResultRow } from "pg";
 import sqlite3 from "sqlite3";
 
 const dbUrl = process.env.DATABASE_URL;
 
-const getDb = () => {
+const getDbType = () => {
   if (!dbUrl) {
     throw new Error("Must specify DATABASE_URL in .env file");
   }
 
   if (dbUrl.startsWith("postgres")) {
-    return new Pool({
-      connectionString: dbUrl,
-    });
+    return { type: "postgres", url: dbUrl };
   }
 
   if (dbUrl.startsWith("sqlite")) {
-    const fileName = dbUrl.slice("sqlite://".length);
-    const conn = new sqlite3.Database(fileName);
-
-    const query = async <T>(opts: string | { text: string, values: unknown[] }) => {
-      return new Promise((resolve, reject) => {
-        const q = (typeof opts === "string") ? { text: opts, values: [] } : opts;
-        const { text, values } = q;
-        const valueObject = Object.fromEntries(values.map((v, i) => [
-          `$${i + 1}`,
-          v,
-        ]));
-        conn.all(text, valueObject, function(error, rows) {
-          if (error) {
-            reject(error);
-          } else {
-            resolve({
-              rows: (rows) as T[],
-            });
-          }
-        });
-      });
-    };
-
-    return {
-      query,
-    };
+    return { type: "sqlite", url: dbUrl };
   }
 
   throw new Error(`Unsupported DATABASE_URL type: ${dbUrl}`);
 };
 
-export const pool = getDb();
+const db = getDbType();
+
+const pool = db.type === "postgres" && new Pool({
+  connectionString: db.url,
+});
+
+const local = db.type === "sqlite" && new sqlite3.Database(
+  db.url.slice("sqlite://".length),
+);
+
+type QueryConfig = {
+  text: string;
+  values: unknown[];
+};
+export const queryRows = async <T extends QueryResultRow>(query: string | QueryConfig) => {
+  const db = getDbType();
+
+  if (db.type === "postgres") {
+    if (!pool) throw new Error("Unconfigured database");
+    const rsp = await pool.query<T>(query);
+    return rsp.rows;
+  }
+
+  if (db.type === "sqlite") {
+    if (!local) throw new Error("Unconfigured database");
+    const rows = await new Promise((resolve, reject) => {
+      const q = (typeof query === "string")
+        ? { text: query, values: [] }
+        : query;
+      const { text, values } = q;
+      const valueObject = Object.fromEntries(values.map((v, i) => [
+        `$${i + 1}`,
+        v,
+      ]));
+      local.all<T>(text, valueObject, function(error, rows) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({
+            rows,
+          });
+        }
+      });
+    });
+    return rows as T[];
+  }
+
+  throw new Error("Unconfigured database");
+};

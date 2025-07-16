@@ -1,5 +1,5 @@
 import type { YearData } from "@/types";
-import { pool } from "./pool";
+import { queryRows } from "./pool";
 
 export type SchoolsRow = {
   db_id: number;
@@ -77,10 +77,10 @@ export type PricesRow = {
 };
 
 export const getAllSchoolNames = async () => {
-  const schools = await pool.query<Pick<SchoolsRow, "id" | "name" | "slug" | "alias">>(
+  const schools = await queryRows<Pick<SchoolsRow, "id" | "name" | "slug" | "alias">>(
     "SELECT id, name, slug, alias FROM schools;",
   );
-  return schools.rows;
+  return schools;
 };
 
 const getIndexQuery = (ids?: string[]) => {
@@ -120,8 +120,8 @@ export const getSchoolsIndex = async (opts: {
   } = opts;
 
   const query = getIndexQuery(schoolIds);
-  const schools = await pool.query<SchoolsRow & PricesRow>(query);
-  return schools.rows.map((school) => ({
+  const schools = await queryRows<SchoolsRow & PricesRow>(query);
+  return schools.map((school) => ({
     id: school.id,
     slug: school.slug,
     image: school.image,
@@ -185,11 +185,11 @@ export const getSchoolsDetail = async (opts: {
   } = getDetailQueries(schoolIds);
 
   const [schools, prices] = await Promise.all([
-    pool.query<SchoolsRow>(schoolsQuery),
-    pool.query<PricesRow>(pricesQuery),
+    queryRows<SchoolsRow>(schoolsQuery),
+    queryRows<PricesRow>(pricesQuery),
   ]);
 
-  const yearsBySchool = prices.rows.reduce((map, price) => {
+  const yearsBySchool = prices.reduce((map, price) => {
     const year = {
       year: price.year,
       startYear: price.start_year,
@@ -238,7 +238,7 @@ export const getSchoolsDetail = async (opts: {
     return map;
   }, new Map<string, YearData[]>());
 
-  return schools.rows.map((school) => {
+  return schools.map((school) => {
     const years = (yearsBySchool.get(school.id) || []).sort((a, b) => {
       return b.startYear - a.startYear;
     });

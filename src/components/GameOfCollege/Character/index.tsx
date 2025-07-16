@@ -27,7 +27,7 @@ export default function Character() {
           <div className="goc-character-choice">
             <h4>Parental Education</h4>
             <select name="parents">
-              <option value="no-finish">Didn't Finish College</option>					
+              <option value="no-finish">Didn’t Finish College</option>					
               <option value="finished">Finished College</option>
             </select>
           </div>

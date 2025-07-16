@@ -11,6 +11,6 @@ export default function Arrow(props: {
 }) {
   const img = imgs[props.direction];
   return (
-    <img src={img} />
+    <img src={img} alt="" />
   );
 }
