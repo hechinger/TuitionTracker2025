@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowRightIcon, GraduationCapIcon, MapPinIcon } from "@phosphor-icons/react";
+import { Link } from "@/i18n/navigation";
 import type { Suggestion } from "../../useSuggestions";
 import styles from "./styles.module.scss";
 

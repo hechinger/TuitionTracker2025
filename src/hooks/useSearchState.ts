@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 
 export const schoolTypes = ["public", "private", "for-profit"] as const;
 export const degreeTypes = ["any", "4-year", "2-year"] as const;

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -17,15 +20,28 @@ export const metadata: Metadata = {
     shortcut: "https://i0.wp.com/hechingerreport.org/wp-content/uploads/2018/06/cropped-favicon.jpg?fit=192%2C192&ssl=1",
     apple: "https://i0.wp.com/hechingerreport.org/wp-content/uploads/2018/06/cropped-favicon.jpg?fit=192%2C192&ssl=1",
   },
+  alternates: {
+    languages: {
+      en: "https://tuitiontracker.org/",
+      es: "https://tuitiontracker.org/es/",
+    },
+  },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <Script
           async
@@ -50,7 +66,9 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
-        {children}
+        <NextIntlClientProvider>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

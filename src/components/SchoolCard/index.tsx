@@ -1,8 +1,8 @@
 "use client";
 
 import type { SchoolIndex } from "@/types";
-import Link from "next/link";
 import { StarIcon } from "@phosphor-icons/react";
+import { Link } from "@/i18n/navigation";
 import { getSchoolRoute } from "@/utils/routes";
 import { formatDollars } from "@/utils/formatDollars";
 import { useSavedSchools } from "@/hooks/useSavedSchools";

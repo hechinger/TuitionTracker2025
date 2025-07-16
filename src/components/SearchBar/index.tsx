@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import clsx from "clsx";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import ClickAwayListener from "react-click-away-listener";
+import { Link } from "@/i18n/navigation";
 import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
 import AppLogo from "@/components/AppLogo";
