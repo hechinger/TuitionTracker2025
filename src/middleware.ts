@@ -1,4 +1,5 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import createI18nMiddleware from "next-intl/middleware";
 
 export default clerkMiddleware();
 

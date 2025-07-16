@@ -23,18 +23,22 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <DataProvider>
-        <AdminNav />
+    <html lang="en">
+      <body>
+        <ClerkProvider>
+          <DataProvider>
+            <AdminNav />
 
-        <SignedIn>
-          {children}
-        </SignedIn>
+            <SignedIn>
+              {children}
+            </SignedIn>
 
-        <SignedOut>
-          <RedirectToSignIn />
-        </SignedOut>
-      </DataProvider>
-    </ClerkProvider>
+            <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
+          </DataProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
