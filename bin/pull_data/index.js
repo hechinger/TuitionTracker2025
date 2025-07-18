@@ -616,7 +616,7 @@ const main = async (config) => {
   // };
 
   const allSchools = Object.values(dataset.dataset);
-  const schools = allSchools.filter((s) => s.years.length > 10);
+  const schools = allSchools; // .filter((s) => s.years.length > 10);
 
   const validationErrors = [];
   const validationErrorsByPath = new Map();
