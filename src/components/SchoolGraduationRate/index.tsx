@@ -10,7 +10,10 @@ import OverallBar from "./OverallBar";
 import RadarChart from "./RadarChart";
 import styles from "./styles.module.scss";
 
-export default function GraduationRateSection(props: {
+/**
+ * The graduation rate section of the school detail page.
+ */
+export default function SchoolGraduationRate(props: {
   schoolId: string;
 }) {
   const { data: school } = useSchool(props.schoolId);

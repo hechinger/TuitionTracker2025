@@ -7,7 +7,7 @@ import ClickAwayListener from "react-click-away-listener";
 import { Link } from "@/i18n/navigation";
 import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
-import AppLogo from "@/components/AppLogo";
+import TuitionTrackerLogo from "@/components/TuitionTrackerLogo";
 import { useSuggestions } from "./useSuggestions";
 import WhereInput from "./WhereInput";
 import MoreOptions from "./MoreOptions";
@@ -16,13 +16,29 @@ import WhereSuggestions from "./WhereSuggestions";
 import AdvancedSearch from "./AdvancedSearch";
 import styles from "./styles.module.scss";
 
+/**
+ * The main search bar for the site. The search bar can be rendered with or
+ * without a "nav" element above it with the `withNav` prop (used on pages
+ * other than the landing page), and it can be highlighted with a gray
+ * background with the `highlight` prop (used on the landing page). The
+ * `autoload` prop controls whether the state of the search inputs should
+ * be automatically loaded from the URL when the page loads (used on the
+ * search results page).
+ * 
+ * @param props.autoload
+ *   Automatically load the search input state from the URL search params
+ * @param props.withNav
+ *   Turn on the "nav" element above the bar (the logo linking home)
+ * @param props.highlight
+ *   Add a gray background behind the search bar for emphasis
+ */
 export default function SearchBar(props: {
-  withNav?: boolean;
   autoload?: boolean;
+  withNav?: boolean;
   highlight?: boolean;
 } = {
-  withNav: false,
   autoload: false,
+  withNav: false,
   highlight: false,
 }) {
   const [inputState, setInputState] = useState<string>();
@@ -55,7 +71,7 @@ export default function SearchBar(props: {
         {props.withNav && (
           <div className={styles.nav}>
             <Link href="/" className={styles.brand}>
-              <AppLogo />
+              <TuitionTrackerLogo />
             </Link>
           </div>
         )}

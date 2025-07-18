@@ -10,6 +10,9 @@ import { useFilteredSchools } from "./useFilteredSchools";
 import Pagination from "./Pagination";
 import styles from "./styles.module.scss";
 
+/**
+ * The paginated grid of search results on the search results page.
+ */
 export default function SearchResults() {
   const ref = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(0);

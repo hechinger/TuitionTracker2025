@@ -5,6 +5,23 @@ import us from "us";
 import type { SchoolIndex } from "@/types";
 import styles from "./styles.module.scss";
 
+/**
+ * The "where" input in the search bar.
+ * 
+ * @param props.value
+ *   The current input value the user typed in
+ * @param props.states
+ *   The set of currently selected states (selected when the user clicks
+ *   on a state in the dropdown)
+ * @param props.onChange
+ *   Function to call when the user types into the input
+ * @param props.onRemoveState
+ *   Function to call when the user de-selects a state
+ * @param props.onFocus
+ *   Function to call when the user clicks into the "where" input
+ * @param props.schools
+ *   The set of schools
+ */
 export default function WhereInput(props: {
   value: string;
   states: string[];

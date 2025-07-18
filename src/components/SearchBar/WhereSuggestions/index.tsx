@@ -2,6 +2,15 @@ import type { SuggestionSet } from "../useSuggestions";
 import SuggestionEntry from "./Suggestion";
 import styles from "./styles.module.scss";
 
+/**
+ * Renders the set of suggestions that show up under the "where" input
+ * when the user searches for something.
+ * 
+ * @param props.suggestions
+ *   The set of suggestions returned by the `useSuggestions` hook
+ * @param props.onSelectState
+ *   Function to call if the user clicks on a state in the suggestions
+ */
 export default function WhereSuggestions(props: {
   suggestions: SuggestionSet;
   onSelectState: (state: string) => void;

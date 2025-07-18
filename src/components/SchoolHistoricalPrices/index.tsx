@@ -20,7 +20,10 @@ const bracketStudents = {
   "110001": "students with incomes over $110K",
 } as const;
 
-export default function HistoricalPrices(props: {
+/**
+ * The historical prices section of the school detail page.
+ */
+export default function SchoolHistoricalPrices(props: {
   schoolId: string;
 }) {
   const {

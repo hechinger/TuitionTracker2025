@@ -10,6 +10,19 @@ import type { SchoolDetail } from "@/types";
 
 const queryClient = new QueryClient();
 
+/**
+ * The DataProvider component provides a React context that is used throughout
+ * the app by other components to access general-purpose, preloaded data.
+ * 
+ * @param props.locale
+ *   The locale the user is currently viewing ("en" or "es")
+ * @param props.schools
+ *   An optional set of pre-loaded school data
+ * @param props.content
+ *   Content for the given locale
+ * @param props.children
+ *   Content to render inside the provider
+ */
 export default function DataProvider(props: Readonly<{
   locale?: string;
   schools?: Record<string, SchoolDetail>;

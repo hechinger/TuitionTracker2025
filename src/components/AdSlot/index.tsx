@@ -10,6 +10,9 @@ type GoogleTag = {
   display: (id: string) => void;
 };
 
+/**
+ * Renders an advertisement.
+ */
 export default function AdSlot() {
   const id = 'div-gpt-ad-1732288624207-0';
   const content = useContent();

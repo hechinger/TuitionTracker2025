@@ -13,6 +13,9 @@ const nationalAverages = {
   partTime: 0.4584,
 };
 
+/**
+ * Renders the student retention section of the school detail page.
+ */
 export default function StudentRetentionSection(props: {
   schoolId: string;
 }) {

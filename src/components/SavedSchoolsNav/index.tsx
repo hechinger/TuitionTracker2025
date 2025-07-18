@@ -5,6 +5,10 @@ import { useSavedSchools } from "@/hooks/useSavedSchools";
 import { getCompareRoute } from "@/utils/routes";
 import styles from "./styles.module.scss";
 
+/**
+ * The dynamic bottom nav bar that pops up with a link to the saved
+ * schools page when a user has saved one or more schools.
+ */
 export default function SavedSchoolsNav() {
   const savedSchools = useSavedSchools();
   const numSaved = savedSchools.schools.length;

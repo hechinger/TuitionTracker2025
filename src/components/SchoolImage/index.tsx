@@ -8,6 +8,10 @@ const fallbacks = {
   "for-profit": privateImg.src,
 };
 
+/**
+ * Renders the custom school image if the school has one, or the standard
+ * fallback images for public and private schools.
+ */
 export default function SchoolImage(props: {
   school: SchoolIndex | SchoolDetail;
   withFallback?: boolean;

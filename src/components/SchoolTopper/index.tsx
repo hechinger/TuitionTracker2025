@@ -13,6 +13,9 @@ import Well from "@/components/Well";
 import SchoolImage from "@/components/SchoolImage";
 import styles from "./styles.module.scss";
 
+/**
+ * Renders the top box of the school detail page.
+ */
 export default function SchoolTopper(props: {
   schoolId: string;
 }) {

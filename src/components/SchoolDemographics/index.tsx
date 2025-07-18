@@ -12,7 +12,10 @@ import GenderBars from "./GenderBars";
 import DemoBars from "./DemoBars";
 import styles from "./styles.module.scss";
 
-export default function DemographicsSection(props: {
+/**
+ * Renders the demographics section of the school detail page.
+ */
+export default function SchoolDemographics(props: {
   schoolId: string;
 }) {
   const content = useContent();

@@ -3,6 +3,8 @@ import Script from "next/script";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import HechingerTopper from "@/components/HechingerTopper";
+import HechingerFooter from "@/components/HechingerFooter";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -67,7 +69,11 @@ export default async function RootLayout({
       </head>
       <body>
         <NextIntlClientProvider>
-          {children}
+          <HechingerTopper />
+          <div>
+            {children}
+          </div>
+          <HechingerFooter />
         </NextIntlClientProvider>
       </body>
     </html>

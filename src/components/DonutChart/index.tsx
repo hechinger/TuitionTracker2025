@@ -5,6 +5,22 @@ import styles from "./styles.module.scss";
 
 const margin = 6;
 
+/**
+ * A donut chart that visualizes and labels one percentage value, optionally
+ * compared to a benchmark like a national average.
+ * 
+ * @param props.value
+ *   The percentage being visualized by the donut
+ * @param props.label
+ *   The label text to include on the interior of the donut
+ * @param props.title
+ *   An optional title to include above the donut
+ * @param props.benchmark
+ *   An optional benchmark to compare the percentage to (like a national
+ *   average, for example)
+ * @param props.benchmarkLabel
+ *   How to label the benchmark below the donut
+ */
 export default function DonutChart(props: {
   value: number;
   label: string;

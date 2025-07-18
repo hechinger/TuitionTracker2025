@@ -40,7 +40,10 @@ const footerLinks = [
   },
 ];
 
-export default function BrandFooter() {
+/**
+ * A copy of the standardard footer on hechingerreport.org
+ */
+export default function HechingerFooter() {
   const copyrightYear = new Date().getFullYear();
 
   return (

@@ -5,6 +5,10 @@ import { useContent } from "@/hooks/useContent";
 import Well from "@/components/Well";
 import styles from "./styles.module.scss";
 
+/**
+ * The newsletter signup component. Renders a simple promo signup
+ * form for a newsletter campaign.
+ */
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const content = useContent();

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import { useSchools } from "@/hooks/useSchools";
+import { useSchoolNames } from "@/hooks/useSchoolNames";
 
 type SchoolOption = {
   label: string;
@@ -22,7 +22,7 @@ export default function SelectSchool(props: {
 
   const [input, setInput] = useState("");
 
-  const { data: schools = [] } = useSchools();
+  const { data: schools = [] } = useSchoolNames();
 
   const {
     names,

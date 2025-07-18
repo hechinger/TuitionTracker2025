@@ -2,6 +2,19 @@
 
 import { useId } from "react";
 
+/**
+ * A utility component to render an outline around some content (mostly used
+ * to draw text outlines) using an SVG filter effect.
+ * 
+ * @param props.color
+ *   The color of the outline to render
+ * @param props.radius
+ *   How many pixels wide to make the outline
+ * @param props.opacity
+ *   The opacity to apply to the outline
+ * @param props.children
+ *   The content around which to draw the outline
+ */
 export default function OutlineFilter(props: {
   color?: string;
   radius?: number;

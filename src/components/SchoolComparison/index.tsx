@@ -10,6 +10,11 @@ import GraduationRates from "./GraduationRates";
 import SchoolSizes from "./SchoolSizes";
 import styles from "./styles.module.scss";
 
+/**
+ * The school comparison page. This component handles selecting the schools
+ * to compare at the top and then rendering the different sections for the
+ * selected schools.
+ */
 export default function SchoolComparison() {
   const {
     savedSchools,

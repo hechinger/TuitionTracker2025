@@ -17,7 +17,11 @@ const menuLinks = [
   },
 ];
 
-const BrandTopper = () => {
+/**
+ * A copy of the standard topper on hechingerreport.org. Works with
+ * the `PageTopOverlap` component to render the top of the page correctly.
+ */
+export default function HechingerTopper() {
   return (
     <header className={styles.brandTopper}>
       <Well>
@@ -60,6 +64,4 @@ const BrandTopper = () => {
       </Well>
     </header>
   );
-};
-
-export default BrandTopper;
+}

@@ -9,6 +9,11 @@ import Game from "./Game";
 import End from "./End";
 import goc from "./main";
 
+/**
+ * This is a simple port of the existing Game of College logic into a React
+ * component. All the logic is left as untouched as possible from the original
+ * implementation.
+ */
 export default function GameOfCollege() {
   useEffect(() => {
     goc.func.initializeGame();

@@ -12,6 +12,20 @@ import styles from "./styles.module.scss";
 
 const margin = { top: 30, right: 10, bottom: 20, left: 10 };
 
+/**
+ * The school size histogram that shows up on the school detail page and on
+ * the school comparison page. It can optionally reduce the set of schools
+ * based on a school control and/or degree level.
+ * 
+ * @param props.size
+ *   The size of the school being highlighted
+ * @param props.title
+ *   An optional title to render over the histogram
+ * @param props.schoolControl
+ *   An optional school control to limit the comparison to
+ * @param props.degreeLevel
+ *   An optional degree level to limit the comparison to
+ */
 export default function SizeHistogram(props: {
   size: number;
   title?: string;

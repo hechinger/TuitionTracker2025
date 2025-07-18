@@ -1,7 +1,17 @@
+"use client";
+
 import type { SearchOptions } from "@/hooks/useSearchState";
 import { formatDollars } from "@/utils/formatDollars";
 import styles from "./styles.module.scss";
 
+/**
+ * Renders the "more options" section of the search bar.
+ * 
+ * @param props.search
+ *   The current state of the user's search
+ * @param props.onFocus
+ *   Function to call when the user clicks into the "more options" section
+ */
 export default function MoreOptions(props: {
   search: SearchOptions;
   onFocus: () => void;

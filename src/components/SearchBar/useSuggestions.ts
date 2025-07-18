@@ -15,6 +15,17 @@ export type SuggestionSet = {
   schools: Suggestion<"school">[];
 };
 
+/**
+ * Use the current state of the "where" search input to build a set of matching
+ * suggestions to show in the search drop-down. This includes both states and
+ * school names that match the current search input.
+ * 
+ * @param opts.value
+ *   The current input value of the "where" search input, used to filter
+ *   matching results.
+ * @param opts.schools
+ *   The set of schools to match against.
+ */
 export function useSuggestions(opts: {
   value: string;
   schools: SchoolIndex[];
@@ -28,6 +39,7 @@ export function useSuggestions(opts: {
     const getSuggestions = () => {
       const search = opts.value.toLowerCase();
 
+      // We only want to find matches once we have some meaningful input
       if (!search || search.length < 3) {
         return {
           states: [],
@@ -35,6 +47,7 @@ export function useSuggestions(opts: {
         };
       }
 
+      // Collect the matching state names
       const matchingStates = [] as Suggestion<"state">[];
       us.STATES.forEach((state) => {
         if (!state.name.toLowerCase().includes(search)) return;
@@ -45,6 +58,7 @@ export function useSuggestions(opts: {
         });
       });
 
+      // Collect the matching school names
       const matchingSchools = [] as Suggestion<"school">[];
       opts.schools.forEach((school) => {
         const schoolSearch = `${school.name} ${school.alias}`.toLowerCase();
@@ -62,6 +76,8 @@ export function useSuggestions(opts: {
       };
     };
 
+    // Debounce our rebuild of the matches so that we only do it once the
+    // user stops typing
     const updateSuggestions = debounce(() => {
       setSuggestions(getSuggestions());
     }, 500);

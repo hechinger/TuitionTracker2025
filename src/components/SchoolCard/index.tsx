@@ -9,6 +9,10 @@ import { useSavedSchools } from "@/hooks/useSavedSchools";
 import SchoolImage from "@/components/SchoolImage";
 import styles from "./styles.module.scss";
 
+/**
+ * The school card that is used on the landing page and in search results to
+ * link to a school.
+ */
 export default function SchoolCard(props: {
   school: SchoolIndex;
 }) {

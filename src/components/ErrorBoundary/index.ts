@@ -10,6 +10,10 @@ type ErrorBoundaryState = {
   hasError: boolean;
 }
 
+/**
+ * This is a utility component to catch errors thrown while rendering
+ * its children.
+ */
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);

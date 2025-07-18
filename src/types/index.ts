@@ -2,6 +2,13 @@ export type SchoolControl = "public" | "private" | "for-profit";
 export type DegreeLevel = "2-year" | "4-year";
 export type StickerPriceType = string;
 
+export type SchoolNameInfo = {
+  id: string;
+  name: string;
+  slug: string;
+  alias: string;
+};
+
 export type IncomeBracketKey = "average"
   | "0_30000"
   | "30001_48000"

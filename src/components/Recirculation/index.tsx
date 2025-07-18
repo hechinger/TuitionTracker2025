@@ -5,6 +5,13 @@ import { useContent } from "@/hooks/useContent";
 import type { RecirculationArticle } from "@/types";
 import styles from "./styles.module.scss";
 
+/**
+ * The recirculation module that promotes other articles from
+ * hechingerreport.org.
+ * 
+ * @param props.articles
+ *   The list of articles to link to
+ */
 export default function Recirculation(props: {
   articles?: RecirculationArticle[];
 }) {

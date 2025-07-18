@@ -5,6 +5,9 @@ import { useContent } from "@/hooks/useContent";
 import Well from "@/components/Well";
 import styles from "./styles.module.scss";
 
+/**
+ * Renders the "Contact Us" box that shows up on most of the pages.
+ */
 export default function ContactUs() {
   const content = useContent();
 

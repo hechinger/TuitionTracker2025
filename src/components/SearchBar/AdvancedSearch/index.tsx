@@ -68,12 +68,25 @@ const degreeTypes = [
   },
 ] as const;
 
+/**
+ * 
+ * @param props.schools
+ *   The set of schools
+ * @param props.search
+ *   The current state of the user's search inputs
+ * @param props.resetAdvanced
+ *   Function that will undo all of the user's selections in the "advanced"
+ *   search inputs pane
+ * @param props.updateSearch
+ *   Function that will update the state of the user's search
+ * @param props.runSearch
+ *   Function that will execute the current search
+ */
 export default function AdvancedSearch(props: {
   schools: SchoolIndex[];
   search: SearchOptions;
   resetAdvanced: () => void;
   updateSearch: UpdateSearch;
-  searchQueryString: string;
   runSearch: () => void;
 }) {
   const id = useId();

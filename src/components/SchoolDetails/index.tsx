@@ -18,6 +18,9 @@ import { useSchool } from "@/hooks/useSchool";
 import { useContent } from "@/hooks/useContent";
 import styles from "./styles.module.scss";
 
+/**
+ * Renders the "school details" box on the school detail page.
+ */
 export default function SchoolDetails(props: {
   schoolId: string;
 }) {

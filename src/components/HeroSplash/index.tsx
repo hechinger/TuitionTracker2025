@@ -2,9 +2,13 @@
 
 import a11y from "@/styles/accessibility.module.scss";
 import { useContent } from "@/hooks/useContent";
-import AppLogo from "@/components/AppLogo";
+import TuitionTrackerLogo from "@/components/TuitionTrackerLogo";
 import styles from "./styles.module.scss";
 
+/**
+ * Renders the top branding of the landing page, including the large
+ * logo, the tagline, and the optional sponsor slot.
+ */
 export default function HeroSplash() {
   const content = useContent();
 
@@ -16,7 +20,7 @@ export default function HeroSplash() {
         Tuition Tracker
       </h1>
       <div className={styles.logo}>
-        <AppLogo />
+        <TuitionTrackerLogo />
       </div>
 
       <p className={styles.subtitle}>
