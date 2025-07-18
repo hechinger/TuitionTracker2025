@@ -33,6 +33,7 @@ type QueryConfig = {
   text: string;
   values: unknown[];
 };
+
 export const queryRows = async <T extends QueryResultRow>(query: string | QueryConfig) => {
   const db = getDbType();
 
@@ -64,6 +65,40 @@ export const queryRows = async <T extends QueryResultRow>(query: string | QueryC
       });
     });
     return rows as T[];
+  }
+
+  throw new Error("Unconfigured database");
+};
+
+export const run = async (query: string | QueryConfig) => {
+  const db = getDbType();
+
+  if (db.type === "postgres") {
+    if (!pool) throw new Error("Unconfigured database");
+    await pool.query(query);
+  }
+
+  if (db.type === "sqlite") {
+    if (!local) throw new Error("Unconfigured database");
+    const rows = await new Promise((resolve, reject) => {
+      const q = (typeof query === "string")
+        ? { text: query, values: [] }
+        : query;
+      const { text, values } = q;
+      const valueObject = Object.fromEntries(values.map((v, i) => [
+        `$${i + 1}`,
+        v,
+      ]));
+      local.run(text, valueObject, function(error) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({
+            rows,
+          });
+        }
+      });
+    });
   }
 
   throw new Error("Unconfigured database");

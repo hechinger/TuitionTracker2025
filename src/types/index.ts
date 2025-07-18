@@ -175,3 +175,14 @@ export type RecirculationArticle = {
   image: string;
   imageAlt?: string | null;
 };
+
+export type RecommendationSection = {
+  dbId?: number;
+  key: string;
+  pageOrder: number,
+  title: {
+    en: string;
+    es: string;
+  };
+  schoolIds: string[];
+};

@@ -4,32 +4,12 @@ import { useState, useCallback } from "react";
 import get from "lodash/get";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Fab from "@mui/material/Fab";
 import Container from "@mui/material/Container";
-import PublishIcon from "@mui/icons-material/Publish";
-import CheckIcon from "@mui/icons-material/Check";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
 import Field from "@/admin/components/Field";
 import SelectSchool from "@/admin/components/SelectSchool";
+import SubmitButton, { type SubmittingState } from "@/admin/components/SubmitButton";
 import { useSchool } from "@/hooks/useSchool";
 import { schoolFields } from "@/content/schema";
-import styles from "./styles.module.scss";
-
-const icons = {
-  ready: <PublishIcon />,
-  submitting: <CircularProgress />,
-  success: <CheckIcon />,
-  error: <PriorityHighIcon />,
-} as Record<string, React.ReactNode>;
-
-const colors = {
-  ready: "primary",
-  submitting: "primary",
-  success: "success",
-  error: "error",
-} as Record<string, "primary" | "success" | "error">;
 
 export default function SchoolsDashboard() {
   const [schoolId, setSchoolId] = useState<string>();
@@ -37,7 +17,7 @@ export default function SchoolsDashboard() {
 
   const [edits, setEdits] = useState(new Map<string, unknown>());
 
-  const [submittingState, setSubmittingState] = useState<{ state: string, error?: string }>({ state: "ready" });
+  const [submittingState, setSubmittingState] = useState<SubmittingState>({ state: "ready" });
 
   const selectSchoolId = (id: string | undefined) => {
     setEdits(new Map());
@@ -120,26 +100,11 @@ export default function SchoolsDashboard() {
         )}
       </Stack>
 
-      <div className={styles.fab}>
-        <Fab
-          color={colors[submittingState.state]}
-          aria-label="submit"
-          onClick={submitChanges}
-          disabled={edits.size < 1 || submittingState.state !== "ready"}
-        >
-          {icons[submittingState.state]}
-        </Fab>
-      </div>
-
-      {submittingState.error && (
-        <div className={styles.error}>
-          <Container maxWidth="sm">
-            <Alert severity="error" variant="filled">
-              {submittingState.error}
-            </Alert>
-          </Container>
-        </div>
-      )}
+      <SubmitButton
+        submittingState={submittingState}
+        submitChanges={submitChanges}
+        disabled={edits.size < 1}
+      />
     </Container>
   );
 }

@@ -1,4 +1,5 @@
-import { queryRows } from "./pool";
+import { queryRows, run } from "./pool";
+import { getValueIdSet } from "./getValueIdSet";
 
 export type RecirculationArticlesRow = {
   db_id: number;
@@ -9,7 +10,14 @@ export type RecirculationArticlesRow = {
   image_alt: string | null;
 };
 
-type Row = Omit<RecirculationArticlesRow, "db_id">;
+export type Article = {
+  dbId: number;
+  page: string;
+  url: string;
+  headline: string;
+  image: string;
+  imageAlt?: string | null;
+};
 
 export const getRecirculationArticles = async (opts: {
   page?: string;
@@ -19,9 +27,9 @@ export const getRecirculationArticles = async (opts: {
   } = opts;
 
   // Get the articles for the specified page, always pulling default articles
-  const articles = await queryRows<Row>({
+  const articles = await queryRows<RecirculationArticlesRow>({
     text: `
-      SELECT page, url, headline, image, image_alt
+      SELECT db_id, page, url, headline, image, image_alt
       FROM recirculation_articles
       WHERE page = $1 OR page = 'default';
     `,
@@ -30,6 +38,7 @@ export const getRecirculationArticles = async (opts: {
 
   const sortedArticles = articles
     .map((article) => ({
+      dbId: article.db_id,
       page: article.page,
       url: article.url,
       headline: article.headline,
@@ -43,4 +52,90 @@ export const getRecirculationArticles = async (opts: {
     });
 
   return sortedArticles;
+};
+
+export const setRecirculationArticles = async (articles: Article[]) => {
+  const newIds = new Set(articles.map((a) => a.dbId).filter(Boolean));
+
+  const existing = await queryRows<Pick<RecirculationArticlesRow, "db_id">>(`
+    SELECT db_id
+    FROM recirculation_articles;
+  `);
+  const toDelete = existing.map((d) => d.db_id).filter((id) => !newIds.has(id));
+
+  const updates = [] as Article[];
+  const creations = [] as Article[];
+  articles.forEach((article) => {
+    if (article.dbId) {
+      updates.push(article);
+    } else {
+      creations.push(article);
+    }
+  });
+
+  if (creations.length > 0) {
+    const creationValueIds = getValueIdSet({
+      rows: creations,
+      columns: ["page", "url", "headline", "image", "image_alt"],
+    });
+    const creationValues = creations.map((row) => [
+      row.page,
+      row.url,
+      row.headline,
+      row.image,
+      row.imageAlt,
+    ]).flat();
+    const creationQuery = {
+      text: `
+        INSERT INTO recirculation_articles
+          (page, url, headline, image, image_alt)
+        VALUES ${creationValueIds};
+      `,
+      values: creationValues,
+    };
+    await run(creationQuery);
+  }
+
+  if (updates.length > 0) {
+    const updateValueIds = getValueIdSet({
+      rows: creations,
+      columns: ["db_id", "page", "url", "headline", "image", "image_alt"],
+    });
+    const updateValues = updates.map((row) => [
+      row.dbId,
+      row.page,
+      row.url,
+      row.headline,
+      row.image,
+      row.imageAlt,
+    ]).flat();
+    const updateQuery = {
+      text: `
+        INSERT INTO recirculation_articles
+          (db_id, page, url, headline, image, image_alt)
+        VALUES ${updateValueIds}
+        ON CONFLICT (db_id) DO UPDATE
+        SET
+          page = EXCLUDED.page,
+          url = EXCLUDED.url,
+          headline = EXCLUDED.headline,
+          image = EXCLUDED.image,
+          image_alt = EXCLUDED.image_alt
+      `,
+      values: updateValues,
+    };
+    await run(updateQuery);
+  }
+
+  if (toDelete.length > 0) {
+    const valueIds = toDelete.map((_, i) => `$${i + 1}`);
+    const deleteQuery = {
+      text: `
+        DELETE FROM recirculation_articles
+        WHERE db_id IN (${valueIds.join(", ")});
+      `,
+      values: toDelete,
+    };
+    await run(deleteQuery);
+  }
 };

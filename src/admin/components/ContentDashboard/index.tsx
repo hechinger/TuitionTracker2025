@@ -10,15 +10,10 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Fab from "@mui/material/Fab";
 import Container from "@mui/material/Container";
-import PublishIcon from "@mui/icons-material/Publish";
-import CheckIcon from "@mui/icons-material/Check";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
 import { contentSections } from "@/content/schema";
 import Field from "@/admin/components/Field";
+import SubmitButton, { type SubmittingState } from "@/admin/components/SubmitButton";
 import { useTab } from "./useTab";
 import styles from "./styles.module.scss";
 
@@ -35,20 +30,6 @@ const locales = {
   es: "Spanish",
 } as const;
 
-const icons = {
-  ready: <PublishIcon />,
-  submitting: <CircularProgress />,
-  success: <CheckIcon />,
-  error: <PriorityHighIcon />,
-} as Record<string, React.ReactNode>;
-
-const colors = {
-  ready: "primary",
-  submitting: "primary",
-  success: "success",
-  error: "error",
-} as Record<string, "primary" | "success" | "error">;
-
 const tabNames = contentSections.map((section) => {
   return kebabCase(section.title);
 });
@@ -62,7 +43,7 @@ export default function ContentDashboard(props: {
 
   const [tab, setTab] = useTab(tabNames);
   const [locale, setLocale] = useState<keyof typeof locales>("en");
-  const [submittingState, setSubmittingState] = useState<{ state: string, error?: string }>({ state: "ready" });
+  const [submittingState, setSubmittingState] = useState<SubmittingState>({ state: "ready" });
   const [edits, setEdits] = useState(new Map<string, unknown>());
   const state = useMemo(() => {
     return new Map(content.map((c) => {
@@ -267,26 +248,11 @@ export default function ContentDashboard(props: {
           ))}
         </Stack>
 
-        <div className={styles.fab}>
-          <Fab
-            color={colors[submittingState.state]}
-            aria-label="submit"
-            onClick={submitChanges}
-            disabled={edits.size < 1 || submittingState.state !== "ready"}
-          >
-            {icons[submittingState.state]}
-          </Fab>
-        </div>
-
-        {submittingState.error && (
-          <div className={styles.error}>
-            <Container maxWidth="sm">
-              <Alert severity="error" variant="filled">
-                {submittingState.error}
-              </Alert>
-            </Container>
-          </div>
-        )}
+        <SubmitButton
+          submittingState={submittingState}
+          submitChanges={submitChanges}
+          disabled={edits.size < 1}
+        />
       </Container>
     </div>
   );

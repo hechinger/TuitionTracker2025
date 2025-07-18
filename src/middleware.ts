@@ -6,6 +6,7 @@ const i18nMiddleware = createI18nMiddleware(routing);
 
 const isPrivateRoute = createRouteMatcher([
   "/(admin)(.*)",
+  "/api/admin/(.*)",
 ]);
 
 const isI18nRoute = createRouteMatcher([

@@ -35,7 +35,7 @@ export default async function Home() {
       {schoolSections.map((section) => (
         <RecommendedSchools
           key={section.key}
-          title={section.title.english}
+          title={section.title.en}
           schoolIds={section.schoolIds}
         />
       ))}
