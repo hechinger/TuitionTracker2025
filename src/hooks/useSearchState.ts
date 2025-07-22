@@ -27,7 +27,7 @@ export function useSearchState({
   autoload = false,
   param = "search",
 }) {
-  const dispatcher = useRef<HTMLElement>(null);
+  const dispatcher = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const [cacheClear, setCacheClear] = useState({});
