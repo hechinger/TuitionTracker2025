@@ -110,5 +110,6 @@ export function useSearchState({
     updateSearch,
     searchQueryString,
     runSearch,
+    dispatcher,
   };
 }

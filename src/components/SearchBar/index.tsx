@@ -51,6 +51,7 @@ export default function SearchBar(props: {
     updateSearch,
     searchQueryString,
     runSearch,
+    dispatcher,
   } = useSearchState({
     autoload: props.autoload,
   });
@@ -66,7 +67,10 @@ export default function SearchBar(props: {
   };
 
   return (
-    <div className={clsx(styles.wrapper, { [styles.highlight]: props.highlight })}>
+    <div
+      ref={dispatcher}
+      className={clsx(styles.wrapper, { [styles.highlight]: props.highlight })}
+    >
       <div>
         {props.withNav && (
           <div className={styles.nav}>
