@@ -49,7 +49,6 @@ export default function SearchBar(props: {
     toggleState,
     resetAdvanced,
     updateSearch,
-    searchQueryString,
     runSearch,
   } = useSearchState({
     autoload: props.autoload,
@@ -138,7 +137,6 @@ export default function SearchBar(props: {
                   search={search}
                   resetAdvanced={resetAdvanced}
                   updateSearch={updateSearch}
-                  searchQueryString={searchQueryString}
                   runSearch={doSearch}
                 />
               )}

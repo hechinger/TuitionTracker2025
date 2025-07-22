@@ -38,7 +38,7 @@ export default function RecommendedSchools(props: {
 
   const recommendedSchools = useMemo(() => {
     return schools.filter((school) => (
-      props.schoolIds.includes(school.id)
+      ids.includes(school.id)
     ));
   }, [ids, schools]);
   
