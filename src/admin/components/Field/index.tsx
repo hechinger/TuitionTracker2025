@@ -70,6 +70,7 @@ export default function Field(props: {
         value={value}
         variant="outlined"
         onChange={(e) => onChange([field.path], e.target.value)}
+        sx={{ flexGrow: 1 }}
       />
     );
   }

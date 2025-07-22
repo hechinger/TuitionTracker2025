@@ -6,6 +6,7 @@ import { dndRef } from "@/utils/dndRef";
 import { formatDollars } from "@/utils/formatDollars";
 import { formatSchoolControl, formatDegreeLevel } from "@/utils/formatSchoolInfo";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
+import SchoolImage from "@/components/SchoolImage";
 import type { SchoolIndex } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -50,9 +51,9 @@ export default function Slot(props: {
 
       {props.school && (
         <div className={styles.school}>
-          <img
-            src={props.school.image}
-            alt={props.school.name}
+          <SchoolImage
+            school={props.school}
+            withFallback
           />
 
           <div className={styles.info}>

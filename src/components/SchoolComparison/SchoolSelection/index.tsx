@@ -3,6 +3,7 @@
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import ScrollArea from "@/components/ScrollArea";
+import Well from "@/components/Well";
 import type { SchoolIndex, SavedSchools } from "@/types";
 import Slot from "./Slot";
 import SchoolOption from "./SchoolOption";
@@ -37,59 +38,63 @@ export default function SchoolSelection(props: {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className={styles.schoolSelection}>
-        <div className={styles.savedSchools}>
-          <div className={styles.header}>
-            <h2 className={styles.title}>
-              Your saved schools
-            </h2>
+      <Well>
+        <div className={styles.schoolSelection}>
+          <div className={styles.savedSchools}>
+            <div className={styles.header}>
+              <h2 className={styles.title}>
+                Your saved schools
+              </h2>
 
-            <button
-              type="button"
-              className={styles.copyButton}
-              onClick={copy.copy}
-            >
-              {copy.message}
-            </button>
-          </div>
-          <ScrollArea scroll="x">
-            <div className={styles.schools}>
-              {props.optionSchools.map((school) => (
-                <SchoolOption
-                  key={school.id}
-                  school={school}
-                  clickSelect={clickSelect}
-                />
-              ))}
+              <button
+                type="button"
+                className={styles.copyButton}
+                onClick={copy.copy}
+              >
+                {copy.message}
+              </button>
             </div>
-          </ScrollArea>
-        </div>
-        <div className={styles.selection}>
-          <div className={styles.header}>
-            <h3 className={styles.subtitle}>
-              Compare schools
-            </h3>
-            <button
-              type="button"
-              className={styles.clearButton}
-              onClick={props.clearCompareIds}
-            >
-              Clear
-            </button>
-          </div>
-          <ScrollArea scroll="x">
-            <div className={styles.slots}>
-              {[0, 1, 2].map((index) => (
-                <Slot
-                  key={index}
-                  school={props.compareSchools[index]}
-                  setSlot={getSlotSetter(index)}
-                />
-              ))}
+            <div className={styles.schoolOptions}>
+              <ScrollArea scroll="x">
+                <div className={styles.schools}>
+                  {props.optionSchools.map((school) => (
+                    <SchoolOption
+                      key={school.id}
+                      school={school}
+                      clickSelect={clickSelect}
+                    />
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
-          </ScrollArea>
+          </div>
+          <div className={styles.selection}>
+            <div className={styles.header}>
+              <h3 className={styles.subtitle}>
+                Compare schools
+              </h3>
+              <button
+                type="button"
+                className={styles.clearButton}
+                onClick={props.clearCompareIds}
+              >
+                Clear
+              </button>
+            </div>
+            <ScrollArea scroll="x">
+              <div className={styles.slots}>
+                {[0, 1, 2].map((index) => (
+                  <Slot
+                    key={index}
+                    school={props.compareSchools[index]}
+                    setSlot={getSlotSetter(index)}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
         </div>
-      </div>
+      </Well>
     </DndProvider>
   );
 }

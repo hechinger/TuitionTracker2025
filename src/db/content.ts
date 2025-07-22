@@ -1,5 +1,6 @@
 import set from "lodash/set";
-import { queryRows } from "./pool";
+import { queryRows, run } from "./pool";
+import { getValueIdSet } from "./getValueIdSet";
 
 export type ContentRow = {
   db_id: number;
@@ -62,27 +63,61 @@ export const getContentForAdmin = async () => {
 };
 
 export const setContent = async (rows: ContentRow[]) => {
-  for (const row of rows) {
-    if (row.db_id) {
-      await queryRows({
-        text: `
-          UPDATE content
-          SET locale = $1,
-              component = $2,
-              path = $3,
-              value = $4
-          WHERE db_id = $5;
-        `,
-        values: [row.locale, row.component, row.path, row.value, row.db_id],
-      });
-    } else {
-      await queryRows({
-        text: `
-          INSERT INTO content (locale, component, path, value)
-          VALUES ($1, $2, $3, $4);
-        `,
-        values: [row.locale, row.component, row.path, row.value],
-      });
-    }
+  const updates = [] as ContentRow[];
+  const creations = [] as ContentRow[];
+  rows.forEach((row) => {
+    const method = row.db_id ? updates : creations;
+    method.push(row);
+  });
+
+  if (creations.length > 0) {
+    const creationValueIds = getValueIdSet({
+      rows: creations,
+      columns: ["locale", "component", "path", "value"],
+    });
+    const creationValues = creations.map((row) => [
+      row.locale,
+      row.component,
+      row.path,
+      row.value,
+    ]).flat();
+    const creationQuery = {
+      text: `
+        INSERT INTO content
+          (locale, component, path, value)
+        VALUES ${creationValueIds};
+      `,
+      values: creationValues,
+    };
+    await run(creationQuery);
+  }
+
+  if (updates.length > 0) {
+    const updateValueIds = getValueIdSet({
+      rows: creations,
+      columns: ["db_id", "locale", "component", "path", "value"],
+    });
+    const updateValues = updates.map((row) => [
+      row.db_id,
+      row.locale,
+      row.component,
+      row.path,
+      row.value,
+    ]).flat();
+    const updateQuery = {
+      text: `
+        INSERT INTO content
+          (db_id, locale, component, path, value)
+        VALUES ${updateValueIds}
+        ON CONFLICT (db_id) DO UPDATE
+        SET
+          locale = EXCLUDED.locale,
+          component = EXCLUDED.component,
+          path = EXCLUDED.path,
+          value = EXCLUDED.value;
+      `,
+      values: updateValues,
+    };
+    await run(updateQuery);
   }
 };

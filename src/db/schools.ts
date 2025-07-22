@@ -1,5 +1,5 @@
 import type { YearData } from "@/types";
-import { queryRows } from "./pool";
+import { queryRows, run } from "./pool";
 
 export type SchoolsRow = {
   db_id: number;
@@ -309,5 +309,48 @@ export const getSchoolsDetail = async (opts: {
       },
       years,
     };
+  });
+};
+
+export const setSchool = async (opts: {
+  id: string;
+  name: string;
+  alias: string;
+  image: string;
+  city: string;
+  state: string;
+  schoolControl: string;
+  degreeLevel: string;
+  hbcu: boolean;
+  tribalCollege: boolean;
+}) => {
+  await run({
+    text: `
+      UPDATE schools
+      SET
+        name = $2,
+        alias = $3,
+        image = $4,
+        city = $5,
+        state = $6,
+        school_control = $7,
+        degree_level = $8,
+        hbcu = $9,
+        tribal_college = $10
+      WHERE
+        id = $1;
+    `,
+    values: [
+      opts.id,
+      opts.name,
+      opts.alias,
+      opts.image,
+      opts.city,
+      opts.state,
+      opts.schoolControl,
+      opts.degreeLevel,
+      opts.hbcu,
+      opts.tribalCollege,
+    ],
   });
 };

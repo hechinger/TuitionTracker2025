@@ -38,21 +38,43 @@ export default function SchoolsDashboard() {
   };
 
   const submitChanges = useCallback(async () => {
+    if (!school) return;
+
     setSubmittingState({ state: "submitting" });
     try {
-      const fieldTypeByPath = new Map<string, string>();
-      schoolFields.forEach((field) => {
-        fieldTypeByPath.set(field.path, field.type);
-      });
+      const entries = [["id", school.id]];
 
-      const data = new FormData();
-      [...edits].forEach(([path, value]) => {
-        data.append(path, value as Blob | string);
-      });
+      for (const field of schoolFields) {
+        const isEdited = edits.has(field.path);
+        let value = edits.has(field.path)
+          ? edits.get(field.path)
+          : get(school, field.path);
 
-      const rsp = await fetch("/api/admin/patch-school", {
+        if (isEdited && field.type === "image") {
+          const key = `school-${field.path}-${school.id}`;
+          const filename = key.replace(/\./g, "-").toLowerCase();
+          const rsp = await fetch(`/api/admin/upload-image?filename=${filename}`, {
+            method: "POST",
+            body: value,
+          });
+          const blob = await rsp.json();
+
+          if (!rsp.ok) {
+            throw new Error("image upload failed");
+          }
+
+          value = blob.url;
+        }
+
+        entries.push([field.path, value]);
+      }
+
+      const rsp = await fetch("/api/admin/set-school", {
         method: "POST",
-        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(Object.fromEntries(entries)),
       });
 
       if (!rsp.ok) {
@@ -60,13 +82,14 @@ export default function SchoolsDashboard() {
       }
 
       setSubmittingState({ state: "success" });
+      window.location.reload();
     } catch (error) {
       console.error(error);
       setSubmittingState({ state: "error", error: `${error}` });
     } finally {
       setTimeout(() => setSubmittingState({ state: "ready" }), 3000);
     }
-  }, [edits]);
+  }, [school, edits]);
 
   return (
     <Container maxWidth="md">

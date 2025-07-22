@@ -1,7 +1,9 @@
 "use client";
 
 import { useDrag } from "react-dnd";
+import { ChartPieIcon } from "@phosphor-icons/react";
 import { dndRef } from "@/utils/dndRef";
+import SchoolCard from "@/components/SchoolCard";
 import type { SchoolIndex } from "@/types";
 import styles from "./styles.module.scss";
 
@@ -17,21 +19,23 @@ export default function SchoolOption(props: {
   }), [props.school.id]);
 
   return (
-    <div ref={dndRef(drag)}>
-      <div
-        className={styles.card}
+    <div
+      ref={dndRef(drag)}
+      className={styles.school}
+    >
+      <SchoolCard
+        school={props.school}
+      />
+      <button
+        type="button"
         onClick={() => props.clickSelect(props.school.id)}
+        className={styles.compareButton}
       >
-        <img
-          src={props.school.image}
-          alt={props.school.name}
-        />
-        <div className={styles.info}>
-          <div className={styles.name}>
-            {props.school.name}
-          </div>
-        </div>
-      </div>
+        <ChartPieIcon weight="duotone" size={20} />
+        <span>
+          Compare
+        </span>
+      </button>
     </div>
   );
 }

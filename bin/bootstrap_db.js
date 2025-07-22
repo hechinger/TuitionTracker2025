@@ -7,6 +7,9 @@ const chunk = require("lodash/chunk");
 const lodashGet = require("lodash/get");
 
 const dbUrl = process.env.DATABASE_URL;
+const SERIAL_PRIMARY_KEY = dbUrl.startsWith("postgresql")
+  ? "SERIAL PRIMARY KEY"
+  : "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
 
 const validSchoolsFile = path.join(
   path.dirname(__dirname),
@@ -35,58 +38,87 @@ const getValueIdSet = (nRows, nCols) => {
 };
 
 const getDb = async () => {
-  if (dbUrl.startsWith("postgresql")) {
-    // DB connection
-    const db = new pg.Client({
-      connectionString: dbUrl,
-    });
-    await db.connect();
+  const pgClient = dbUrl.startsWith("postgresql") && new pg.Pool({
+    connectionString: dbUrl,
+  });
+  const sqliteClient = dbUrl.startsWith("sqlite") && new sqlite3.Database(
+    dbUrl.slice("sqlite://".length),
+  );
 
-    return db;
-  }
+  const get = async (queryOpts) => {
+    if (dbUrl.startsWith("postgresql")) {
+      if (!pgClient) throw new Error("Unconfigured database");
+      const rsp = await pgClient.query(queryOpts);
+      return rsp.rows;
+    }
 
-  if (dbUrl.startsWith("sqlite")) {
-    const fileName = dbUrl.slice("sqlite://".length);
-    const conn = new sqlite3.Database(fileName);
-
-    return {
-      query: async (opts) => {
-        if (typeof opts === "string") {
-          return new Promise((resolve, reject) => {
-            conn.run(opts, [], (error) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve();
-              }
-            });
-          });
-        }
-
-        const {
-          text,
-          values,
-        } = opts;
+    if (dbUrl.startsWith("sqlite")) {
+      if (!sqliteClient) throw new Error("Unconfigured database");
+      const q = (typeof queryOpts === "string")
+        ? { text: queryOpts, values: [] }
+        : queryOpts;
+      const rows = await new Promise((resolve, reject) => {
+        const { text, values } = q;
         const valueObject = Object.fromEntries(values.map((v, i) => [
           `$${i + 1}`,
           v,
         ]));
-
-        return new Promise((resolve, reject) => {
-          conn.run(text, valueObject, (error) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve();
-            }
-          });
+        sqliteClient.all(text, valueObject, function(error, rows) {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(rows);
+          }
         });
-      },
-      end: () => conn.close(),
-    };
-  }
+      });
+      return rows;
+    }
+  };
 
-  throw new Error("Unsupported database URL:", dbUrl);
+  const query = async (queryOpts) => {
+    if (dbUrl.startsWith("postgresql")) {
+      if (!pgClient) throw new Error("Unconfigured database");
+      await pgClient.query(queryOpts);
+      return;
+    }
+
+    if (dbUrl.startsWith("sqlite")) {
+      if (!sqliteClient) throw new Error("Unconfigured database");
+      await new Promise((resolve, reject) => {
+        const q = (typeof queryOpts === "string")
+          ? { text: queryOpts, values: [] }
+          : queryOpts;
+        const { text, values } = q;
+        const valueObject = Object.fromEntries(values.map((v, i) => [
+          `$${i + 1}`,
+          v,
+        ]));
+        sqliteClient.run(text, valueObject, function(error) {
+          if (error) {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
+      });
+      return;
+    }
+  };
+
+  const end = async () => {
+    if (sqliteClient) {
+      sqliteClient.close();
+    }
+    if (pgClient) {
+      await pgClient.end();
+    }
+  };
+
+  return {
+    get,
+    query,
+    end,
+  };
 };
 
 const main = async () => {
@@ -94,9 +126,10 @@ const main = async () => {
 
   try {
     if (true) {
+      console.log("Creating table: schools");
       await db.query(`
         CREATE TABLE IF NOT EXISTS schools (
-          db_id SERIAL PRIMARY KEY,
+          db_id ${SERIAL_PRIMARY_KEY},
           id VARCHAR(10) UNIQUE NOT NULL,
           slug VARCHAR(255) UNIQUE NOT NULL,
           image VARCHAR(255),
@@ -143,9 +176,10 @@ const main = async () => {
         );
       `);
 
+      console.log("Creating table: prices");
       await db.query(`
         CREATE TABLE IF NOT EXISTS prices (
-          db_id SERIAL PRIMARY KEY,
+          db_id ${SERIAL_PRIMARY_KEY},
           school_id VARCHAR(10) NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
           year VARCHAR(10) NOT NULL,
           start_year INT,
@@ -174,9 +208,10 @@ const main = async () => {
         );
       `);
 
+      console.log("Creating table: content");
       await db.query(`
         CREATE TABLE IF NOT EXISTS content (
-          db_id SERIAL PRIMARY KEY,
+          db_id ${SERIAL_PRIMARY_KEY},
           locale VARCHAR(255),
           component VARCHAR(255) NOT NULL,
           path VARCHAR(255) NOT NULL,
@@ -184,9 +219,10 @@ const main = async () => {
         );
       `);
 
+      console.log("Creating table: recirculation_articles");
       await db.query(`
         CREATE TABLE IF NOT EXISTS recirculation_articles (
-          db_id SERIAL PRIMARY KEY,
+          db_id ${SERIAL_PRIMARY_KEY},
           page VARCHAR(255) NOT NULL,
           url TEXT NOT NULL,
           headline TEXT NOT NULL,
@@ -195,17 +231,28 @@ const main = async () => {
         );
       `);
 
+      console.log("Creating table: recommended_schools");
       await db.query(`
         CREATE TABLE IF NOT EXISTS recommended_schools (
-          db_id SERIAL PRIMARY KEY,
+          db_id ${SERIAL_PRIMARY_KEY},
           page_order INT NOT NULL,
           title TEXT NOT NULL,
-          title_spanish TEXT NOT NULL,
-          school_ids JSON
+          title_spanish TEXT NOT NULL
+        );
+      `);
+
+      console.log("Creating table: recommended_school_ids");
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS recommended_school_ids (
+          db_id ${SERIAL_PRIMARY_KEY},
+          section_id INT NOT NULL REFERENCES recommended_schools(db_id) ON DELETE CASCADE,
+          school_id VARCHAR(10) NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+          UNIQUE (section_id, school_id)
         );
       `);
     }
 
+    console.log("Creating school and price records...");
     const schoolChunks = chunk(schools, 100);
     await schoolChunks.reduce(async (promise, ss) => {
       await promise;
@@ -336,6 +383,9 @@ const main = async () => {
     }, Promise.resolve());
 
     if (true) {
+      console.log("Creating content records...");
+      await db.query("TRUNCATE TABLE content;");
+
       const txt = (s) => ({ en: s, es: s });
 
       const content = {
@@ -498,6 +548,12 @@ const main = async () => {
           },
           Prices: {
             priceTrendTemplate: txt("<p>This year at <strong>{SCHOOL_NAME}</strong>, we project that {STUDENT_TYPE} will pay <span class=\"highlight\">{NET_PRICE}</span>, while the advertised sticker price is {STICKER_PRICE}. That’s a difference of {PRICE_DIFFERENCE}.</p>"),
+            priceTrendTemplateStudentsAverage: "students",
+            priceTrendTemplateStudents030K: "students with incomes below $30K",
+            priceTrendTemplateStudents3048: "students with incomes between $30K and $48K",
+            priceTrendTemplateStudents4875: "students with incomes between $48K and $75K",
+            priceTrendTemplateStudents75110: "students with incomes between $75K and $110K",
+            priceTrendTemplateStudents110: "students with incomes over $110K",
             priceTrendChartTitle: txt("Prices at {SCHOOL_NAME} over time for"),
             outOfStateStickerLabel: txt("out-of-state sticker price"),
             inStateStickerLabel: txt("in-state sticker price"),
@@ -634,6 +690,9 @@ const main = async () => {
     }
 
     if (true) {
+      console.log("Creating recirculation records...");
+      await db.query("TRUNCATE TABLE recirculation_articles;");
+
       const recirc = [
         {
           page: "default",
@@ -666,6 +725,10 @@ const main = async () => {
     }
 
     if (true) {
+      console.log("Creating recommended school records...");
+      await db.query("TRUNCATE TABLE recommended_school_ids CASCADE;");
+      await db.query("TRUNCATE TABLE recommended_schools CASCADE;");
+
       const sections = [
         {
           pageOrder: 0,
@@ -693,15 +756,33 @@ const main = async () => {
         },
       ];
 
-      const getValueIdSet = (i) => `($${i}, $${i + 1}, $${i + 2}, $${i + 3})`;
-      const valueIdSets = sections.map((_, i) => getValueIdSet((i * 4) + 1)).join(", ");
-      const values = sections.map((r) => [r.pageOrder, r.title, r.titleSpanish, JSON.stringify(r.schoolIds)]).flat();
-      const query = {
-        text: `INSERT INTO recommended_schools (page_order, title, title_spanish, school_ids) VALUES ${valueIdSets};`,
-        values,
-      };
+      for (const section of sections) {
+        console.log("Creating section", section);
+        const query = {
+          text: `
+            INSERT INTO recommended_schools
+              (page_order, title, title_spanish)
+            VALUES ($1, $2, $3);
+          `,
+          values: [section.pageOrder, section.title, section.titleSpanish],
+        };
+        await db.query(query);
 
-      await db.query(query);
+        const [row] = await db.get({
+          text: "SELECT db_id FROM recommended_schools WHERE title = $1;",
+          values: [section.title],
+        });
+        console.log("Creating school ID connections", row);
+        const valueIds = getValueIdSet(section.schoolIds.length, 2);
+        await db.query({
+          text: `
+            INSERT INTO recommended_school_ids
+              (section_id, school_id)
+            VALUES ${valueIds};
+          `,
+          values: section.schoolIds.map((s) => [row.db_id, s]).flat(),
+        });
+      }
     }
   } catch (error) {
     console.error(error);

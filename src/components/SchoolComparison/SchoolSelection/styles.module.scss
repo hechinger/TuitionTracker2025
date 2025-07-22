@@ -1,7 +1,7 @@
 @use "@/styles/colors.scss";
 @use "@/styles/breakpoints.scss";
 
-$side-padding: calc((100vw - min(90vw, 1200px)) / 2);
+$scroll-hint-width: 32px;
 
 .schoolSelection {
   .savedSchools {
@@ -13,8 +13,6 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
       gap: 12px;
       align-items: center;
       justify-content: space-between;
-      padding-left: $side-padding;
-      padding-right: $side-padding;
 
       .title {
         font-size: 20px;
@@ -33,6 +31,20 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
       cursor: pointer;
     }
 
+    .schoolOptions {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: $scroll-hint-width;
+        background: linear-gradient(90deg, #FFFFFF00, #FFFFFFFF);
+      }
+    }
+
     .schools {
       display: grid;
       grid-auto-flow: column;
@@ -40,8 +52,7 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
       grid-template-rows: auto;
       column-gap: 1em;
       padding-bottom: 12px;
-      padding-left: $side-padding;
-      padding-right: $side-padding;
+      padding-right: $scroll-hint-width;
     }
   }
 
@@ -51,8 +62,6 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-left: $side-padding;
-      padding-right: $side-padding;
     }
 
     .clearButton {
@@ -69,8 +78,6 @@ $side-padding: calc((100vw - min(90vw, 1200px)) / 2);
       grid-template-rows: auto;
       column-gap: 1em;
       padding-bottom: 12px;
-      padding-left: $side-padding;
-      padding-right: $side-padding;
     }
   }
 }

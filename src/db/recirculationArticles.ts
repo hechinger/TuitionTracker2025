@@ -11,7 +11,7 @@ export type RecirculationArticlesRow = {
 };
 
 export type Article = {
-  dbId: number;
+  dbId?: number;
   page: string;
   url: string;
   headline: string;
@@ -98,7 +98,7 @@ export const setRecirculationArticles = async (articles: Article[]) => {
 
   if (updates.length > 0) {
     const updateValueIds = getValueIdSet({
-      rows: creations,
+      rows: updates,
       columns: ["db_id", "page", "url", "headline", "image", "image_alt"],
     });
     const updateValues = updates.map((row) => [
@@ -124,6 +124,7 @@ export const setRecirculationArticles = async (articles: Article[]) => {
       `,
       values: updateValues,
     };
+    console.log(updateQuery);
     await run(updateQuery);
   }
 

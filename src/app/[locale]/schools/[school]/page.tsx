@@ -31,6 +31,9 @@ export async function generateMetadata({
   const { school: schoolSlug } = await params;
   const schoolId = `${schoolSlug.split('-').at(-1)}`;
   const school = await getSchool(schoolId);
+  const fallbackImage = (school.schoolControl === "public")
+    ? "/public.jpg"
+    : "/private.jpg";
   return {
     title: `${school.name} Real Tuition Costs (What You’ll Pay After Assistance)`,
     openGraph: {
@@ -38,7 +41,7 @@ export async function generateMetadata({
       description: "What You’ll Pay After Assistance",
       url: `https://tuitiontracker.org/schools/${schoolSlug}`,
       siteName: "Tuition Tracker",
-      images: school.image || "https://hechingerreport.org/wp-content/uploads/2020/07/THR-for-Cisco-wallpaper.jpg",
+      images: school.image || fallbackImage,
       type: "website",
     },
     icons: {

@@ -1,34 +1,29 @@
+"use client";
+
 import Link from "next/link";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
+import { sections } from "@/admin/components/AdminNav";
 
-export default async function Admin() {
+export default function Admin() {
   return (
     <Container maxWidth="md">
       <Stack spacing={4} sx={{ py: 4 }}>
-        <Paper
-          sx={{ p: 4 }}
-          elevation={1}
-        >
-          <Link href="/admin/content">
-            <Typography variant="h4" gutterBottom>
-              Content management
-            </Typography>
-          </Link>
-        </Paper>
-
-        <Paper
-          sx={{ p: 4 }}
-          elevation={1}
-        >
-          <Link href="/admin/schools">
-            <Typography variant="h4" gutterBottom>
-              School data management
-            </Typography>
-          </Link>
-        </Paper>
+        {sections.map((section) => (
+          <Paper
+            key={section.url}
+            sx={{ p: 4 }}
+            elevation={1}
+          >
+            <Link href={section.url}>
+              <Typography variant="h4" gutterBottom>
+                {section.name}
+              </Typography>
+            </Link>
+          </Paper>
+        ))}
       </Stack>
     </Container>
   );

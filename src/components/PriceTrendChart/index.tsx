@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useMemo } from "react";
 import clsx from "clsx";
 import { useResizeObserver } from "usehooks-ts";
@@ -11,6 +13,7 @@ import { useContent } from "@/hooks/useContent";
 import type { YearData, SchoolDetail } from "@/types";
 import a11y from "@/styles/accessibility.module.scss";
 import Legend from "./Legend";
+import { useFixLabelOverlap } from "./useFixLabelOverlap";
 import styles from "./styles.module.scss";
 
 export default function PriceTrendChart(props: {
@@ -24,6 +27,8 @@ export default function PriceTrendChart(props: {
     lineLabels = true,
     legend = true,
   } = props;
+
+  const annotationsRef = useFixLabelOverlap<HTMLDivElement>();
 
   const content = useContent();
   const { bracket = "average" } = useIncomeBracket();
@@ -161,6 +166,17 @@ export default function PriceTrendChart(props: {
                     className={clsx(styles.axisLine, { [styles.zero]: tick === 0 })}
                   />
                 ))}
+
+                {x.ticks(xTicks).map((tick) => (
+                  <line
+                    key={tick}
+                    x1={x(tick) - 0.5}
+                    y1={y(0)}
+                    x2={x(tick) - 0.5}
+                    y2={y(0) + 4}
+                    className={clsx(styles.axisLine, styles.zero)}
+                  />
+                ))}
               </g>
 
               {withOutState && (
@@ -185,7 +201,10 @@ export default function PriceTrendChart(props: {
               />
             </svg>
 
-            <div className={styles.annotation}>
+            <div
+              ref={annotationsRef}
+              className={styles.annotation}
+            >
               {y.ticks(4).filter((tick) => tick !== 0).map((tick) => (
                 <div
                   key={tick}
@@ -196,11 +215,11 @@ export default function PriceTrendChart(props: {
                 </div>
               ))}
 
-              {x.ticks(xTicks).map((tick) => (
+              {x.ticks(xTicks).map((tick, i, ts) => (
                 <div
                   key={tick}
                   className={clsx(styles.xLabel)}
-                  style={{ transform: `translateX(${x(tick)}px) translateX(-50%)` }}
+                  style={{ transform: `translateX(${x(tick)}px) translateX(${i === ts.length - 1 ? "-100%" : "-50%"})` }}
                 >
                   {`${tick.toString().slice(2)}-${(tick + 1).toString().slice(2)}`}
                 </div>
@@ -214,6 +233,7 @@ export default function PriceTrendChart(props: {
                       style={{
                         transform: `translateY(${y(outStatePrice)}px) translate(-${margin.right - 4}px, -18px)`,
                       }}
+                      data-overlap={outStatePrice}
                     >
                       <strong>{formatDollars(outStatePrice)}</strong>
                       <br />
@@ -226,6 +246,7 @@ export default function PriceTrendChart(props: {
                     style={{
                       transform: `translateY(${y(school.stickerPrice.price)}px) translate(-${margin.right - 4}px, -18px)`,
                     }}
+                    data-overlap={school.stickerPrice.price}
                   >
                     <strong>{formatDollars(school.stickerPrice.price)}</strong>
                     <br />
@@ -237,6 +258,7 @@ export default function PriceTrendChart(props: {
                     style={{
                       transform: `translateY(${y(school.netPricesByBracket[bracket])}px) translate(-${margin.right - 4}px, -18px)`,
                     }}
+                    data-overlap={school.netPricesByBracket[bracket]}
                   >
                     <strong>{formatDollars(school.netPricesByBracket[bracket])}</strong>
                     <br />

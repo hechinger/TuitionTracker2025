@@ -8,31 +8,31 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SubmitButton, { type SubmittingState } from "@/admin/components/SubmitButton";
-import type { RecommendationSection as RecommendationSectionType } from "@/types";
-import RecommendationSection from "./RecommendationSection";
+import { type Article } from "@/db/recirculationArticles";
+import RecircArticle from "./RecircArticle";
 
-export default function RecommendedSchoolsDashboard() {
-  const { data: sections } = useQuery<RecommendationSectionType[]>({
+export default function RecirculationDashboard() {
+  const { data: articles } = useQuery<Article[]>({
     queryKey: ['recommendedSchools'],
     queryFn: async () => {
-      const rsp = await fetch("/api/admin/recommended-schools");
+      const rsp = await fetch("/api/admin/recirculation-articles");
       const data = await rsp.json();
       return data;
     },
   });
 
-  const [state, setState] = useState<Partial<RecommendationSectionType>[]>([]);
+  const [state, setState] = useState<Partial<Article>[]>([]);
   useEffect(() => {
-    if (!sections) return;
-    setState(sections);
-  }, [sections]);
+    if (!articles) return;
+    setState(articles);
+  }, [articles]);
 
   const [submittingState, setSubmittingState] = useState<SubmittingState>({ state: "ready" });
 
   const submit = useCallback(async () => {
     setSubmittingState({ state: "submitting" });
     try {
-      const rsp = await fetch("/api/admin/recommended-schools", {
+      const rsp = await fetch("/api/admin/recirculation-articles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,11 +41,10 @@ export default function RecommendedSchoolsDashboard() {
       });
 
       if (!rsp.ok) {
-        throw new Error("Failed to update recommendations");
+        throw new Error("Failed to update articles");
       }
 
       setSubmittingState({ state: "success" });
-      window.location.reload();
     } catch (error) {
       console.error(error);
       setSubmittingState({ state: "error", error: `${error}` });
@@ -57,11 +56,10 @@ export default function RecommendedSchoolsDashboard() {
   return (
     <Container maxWidth="md">
       <Stack spacing={4} sx={{ py: 4 }}>
-        {state.map((section, i) => (
-          <RecommendationSection
-            key={section.dbId || `new-section-${i}`}
-            section={section}
-            pageOrder={i}
+        {state.map((article, i) => (
+          <RecircArticle
+            key={article.dbId || `new-article-${i}`}
+            article={article}
             onChange={(newSection) => {
               const newSections = state.map((oldSection, oldIndex) => {
                 if (i === oldIndex) return newSection;
@@ -69,7 +67,7 @@ export default function RecommendedSchoolsDashboard() {
               });
               setState(newSections);
             }}
-            removeSection={() => setState(state.filter((_, j) => i !== j))}
+            removeArticle={() => setState(state.filter((_, j) => i !== j))}
           />
         ))}
 
@@ -82,7 +80,7 @@ export default function RecommendedSchoolsDashboard() {
             startIcon={<AddIcon />}
             onClick={() => setState([...state, {}])}
           >
-            Add section
+            Add article
           </Button>
         </Paper>
       </Stack>

@@ -293,6 +293,450 @@ export const contentSections = [
           },
         ],
       },
+      {
+        type: "fieldGroup",
+        title: "Advanced: School Topper",
+        fields: [
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolTopper.schoolInfo",
+            title: "School info"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolTopper.stickerPriceLabel",
+            title: "Sticker price label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolTopper.netPriceLabel",
+            title: "Net price label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolTopper.saveButton.saveThisSchool",
+            title: "Save button: save this school"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolTopper.saveButton.saved",
+            title: "Save button: saved"
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Advanced: Prices",
+        fields: [
+          {
+             type: "copy",
+             path: "SchoolPage.Prices.priceTrendTemplateStudentsAverage",
+             title: "Price trend template students: Average",
+          },
+          {
+             type: "copy",
+             path: "SchoolPage.Prices.priceTrendTemplateStudents030K",
+             title: "Price trend template students: <$30K",
+          },
+          {
+             type: "copy",
+             path: "SchoolPage.Prices.priceTrendTemplateStudents3048",
+             title: "Price trend template students: $30-48K",
+          },
+          {
+             type: "copy",
+             path: "SchoolPage.Prices.priceTrendTemplateStudents4875",
+             title: "Price trend template students: $48-75K",
+          },
+          {
+             type: "copy",
+             path: "SchoolPage.Prices.priceTrendTemplateStudents75110",
+             title: "Price trend template students: $75-110K",
+          },
+          {
+             type: "copy",
+             path: "SchoolPage.Prices.priceTrendTemplateStudents110",
+             title: "Price trend template students: >$110",
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.priceTrendChartTitle",
+            title: "Price trend chart title"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.outOfStateStickerLabel",
+            title: "Out-of-state sticker price label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.inStateStickerLabel",
+            title: "In-state sticker price label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.stickerLabel",
+            title: "Generic sticker price label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.inStateNetPriceLabel",
+            title: "In-state net price label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.netPriceLabel",
+            title: "Generic net price label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.upperEstimateLabel",
+            title: "Upper estimate label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.estimateLabel",
+            title: "Estimate label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.lowerEstimateLabel",
+            title: "Lower estimate label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.incomeBracketChartTitle",
+            title: "Income bracket chart title"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.incomeBracketChartAxisLabel",
+            title: "Income bracket chart axis label"
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Advanced: School Details",
+        fields: [
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolDetails.title",
+            title: "Title"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolDetails.location",
+            title: "Location"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolDetails.schoolType",
+            title: "School type"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolDetails.acceptanceRate",
+            title: "Acceptance rate"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolDetails.graduationRate",
+            title: "Graduation rate"
+          },
+          {
+            type: "richCopy",
+            path: "SchoolPage.SchoolDetails.aboutTheData",
+            title: "About the data"
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Advanced: Graduation rates",
+        fields: [
+          {
+            type: "copy",
+            path: "SchoolPage.GraduationRates.title",
+            title: "Title"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.GraduationRates.overallTemplate.degreeTypes.2-year",
+            title: "Overall template variable: 2-year degree type"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.GraduationRates.overallTemplate.degreeTypes.4-year",
+            title: "Overall template variable: 4-year degree type"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.GraduationRates.overallTemplate.degreeYearsCompletionLimit.2-year",
+            title: "Overall template variable: 2-year completion years"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.GraduationRates.overallTemplate.degreeYearsCompletionLimit.4-year",
+            title: "Overall template variable: 4-year completion years"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.GraduationRates.overallBarLabel",
+            title: "Overall bar label"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.GraduationRates.nationalAverageBarLabel",
+            title: "National average bar label"
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Advanced: Student Retention",
+        fields: [
+          {
+            type: "copy",
+            path: "SchoolPage.StudentRetention.title",
+            title: "Title"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentRetention.fullTimeStudents",
+            title: "Chart label: Full time students"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentRetention.partTimeStudents",
+            title: "Chart label: Part time students"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentRetention.chartLabel",
+            title: "Interior chart label: student retention"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentRetention.nationalAverageLabel",
+            title: "National average label"
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Advanced: Student Demographics",
+        fields: [
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.title",
+            title: "Title"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.size.students",
+            title: "Size label: students"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.gender.genderTextNames.men",
+            title: "Gender template variable: men"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.gender.genderTextNames.women",
+            title: "Gender template variable: women"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.gender.genderTextNames.unknown",
+            title: "Gender template variable: unknown"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.gender.genderTextNames.other",
+            title: "Gender template variable: other"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.gender.genderChartLabels.men",
+            title: "Gender chart label: men"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.gender.genderChartLabels.women",
+            title: "Gender chart label: women"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.gender.genderChartLabels.other",
+            title: "Gender chart label: other"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.unknown",
+            title: "Race template variable: Unknown"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.multiple",
+            title: "Race template variable: Multiple"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.white",
+            title: "Race template variable: White"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.hisp",
+            title: "Race template variable: Hispanic"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.nathawpacisl",
+            title: "Race template variable: Native Hawaiian/Pacific Islander"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.black",
+            title: "Race template variable: Black"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.asian",
+            title: "Race template variable: Asian"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.amerindalasknat",
+            title: "Race template variable: American Indian/Alaskan Native"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.StudentDemographics.race.demographicTextNames.nonresident",
+            title: "Race template variable: Nonresident"
+          }
+        ]
+      }
+    ],
+  },
+  {
+    title: "School Comparison",
+    description: "Content for the school comparison page.",
+    fields: [
+      {
+        type: "fieldGroup",
+        title: "Section Copy",
+        fields: [
+          {
+            type: "copy",
+            path: "SchoolComparison.priceTrend.title",
+            title: "Price trend title"
+          },
+          {
+            type: "richCopy",
+            path: "SchoolComparison.priceTrend.fallbackText",
+            title: "Price trend fallback text"
+          },
+          {
+            type: "richCopy",
+            path: "SchoolComparison.priceTrend.comparisonText",
+            title: "Price trend comparison text"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.graduationRate.title",
+            title: "Graduation rate title"
+          },
+          {
+            type: "richCopy",
+            path: "SchoolComparison.graduationRate.fallbackText",
+            title: "Graduation rate fallback text"
+          },
+          {
+            type: "richCopy",
+            path: "SchoolComparison.graduationRate.comparisonText",
+            title: "Graduation rate comparison text"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.schoolSizes.title",
+            title: "School sizes title"
+          },
+          {
+            type: "richCopy",
+            path: "SchoolComparison.schoolSizes.fallbackText",
+            title: "School sizes fallback text"
+          },
+          {
+            type: "richCopy",
+            path: "SchoolComparison.schoolSizes.comparisonText",
+            title: "School sizes comparison text"
+          },
+        ],
+      },
+      {
+        type: "fieldGroup",
+        title: "Advanced",
+        fields: [
+          {
+            type: "copy",
+            path: "SchoolComparison.title",
+            title: "Title"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.savedSchools.title",
+            title: "Saved schools title"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.savedSchools.copyLink",
+            title: "Saved schools copy link"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.compareSchools.title",
+            title: "Compare schools title"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.compareSchools.clear",
+            title: "Compare schools clear"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.compareSchools.card.typeTitle",
+            title: "Compare schools card type title"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.compareSchools.card.stickerPriceTitle",
+            title: "Compare schools card sticker price title"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.compareSchools.card.netPriceTitle",
+            title: "Compare schools card net price title"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.compareSchools.dragPrompt",
+            title: "Compare schools drag prompt"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.graduationRate.graphLabel",
+            title: "Graduation rate graph label"
+          },
+          {
+            type: "copy",
+            path: "SchoolComparison.schoolSizes.students",
+            title: "School sizes students"
+          }
+        ]
+      }
     ],
   },
   {
@@ -453,6 +897,153 @@ export const contentSections = [
     ],
   },
   {
+    title: "Search",
+    description: "Content for the search UI.",
+    fields: [
+      {
+        type: "fieldGroup",
+        title: "Search Bar Labels",
+        fields: [
+          {
+            type: "copy",
+            path: "SearchBar.where.title",
+            title: "Where title"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.where.placeholder",
+            title: "Where placeholder"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.where.states",
+            title: "Where states"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.where.schools",
+            title: "Where schools"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.more.title",
+            title: "More title"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.more.placeholder",
+            title: "More placeholder"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.cost.title",
+            title: "Advanced cost title"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.cost.instructions",
+            title: "Advanced cost instructions"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.cost.anyIncome",
+            title: "Advanced cost any income"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.cost.histogramTitle",
+            title: "Advanced cost histogram title"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.cost.minimum",
+            title: "Advanced cost minimum"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.cost.maximum",
+            title: "Advanced cost maximum"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.schoolType.title",
+            title: "Advanced school type title"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.degreeType.title",
+            title: "Advanced degree type title"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.degreeType.anyType",
+            title: "Advanced degree type any type"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.other.title",
+            title: "Advanced other title"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.other.tribalCollege",
+            title: "Advanced other tribal college"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.other.hbcu",
+            title: "Advanced other hbcu"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.controls.clear",
+            title: "Advanced controls clear"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.controls.search",
+            title: "Advanced controls search"
+          }
+        ]
+      },
+      {
+        type: "fieldGroup",
+        title: "Search Results",
+        fields: [
+          {
+            type: "copy",
+            title: "Result Count",
+            path: "SearchResults.schoolsFound",
+            template: {
+              FOUND: "142",
+              TOTAL_SCHOOLS: "2,476",
+            },
+          },
+          {
+            type: "copy",
+            title: "Sort By Label",
+            path: "SearchResults.sortBy.title",
+          },
+          {
+            type: "copy",
+            title: "Sort By Name",
+            path: "SearchResults.sortBy.name",
+          },
+          {
+            type: "copy",
+            title: "Sort By Price Ascending",
+            path: "SearchResults.sortBy.priceAscending",
+          },
+          {
+            type: "copy",
+            title: "Sort By Price Descending",
+            path: "SearchResults.sortBy.priceDescending",
+          },
+        ],
+      },
+    ],
+  },
+  {
     title: "UI Details",
     description: "Content and configuration details for fundamental UI elements.",
     presentation: "collapsed",
@@ -517,41 +1108,6 @@ export const contentSections = [
             type: "copy",
             title: "Title",
             path: "Recirculation.title",
-          },
-        ],
-      },
-      {
-        type: "fieldGroup",
-        title: "Search Results",
-        fields: [
-          {
-            type: "copy",
-            title: "Result Count",
-            path: "SearchResults.schoolsFound",
-            template: {
-              FOUND: "142",
-              TOTAL_SCHOOLS: "2,476",
-            },
-          },
-          {
-            type: "copy",
-            title: "Sort By Label",
-            path: "SearchResults.sortBy.title",
-          },
-          {
-            type: "copy",
-            title: "Sort By Name",
-            path: "SearchResults.sortBy.name",
-          },
-          {
-            type: "copy",
-            title: "Sort By Price Ascending",
-            path: "SearchResults.sortBy.priceAscending",
-          },
-          {
-            type: "copy",
-            title: "Sort By Price Descending",
-            path: "SearchResults.sortBy.priceDescending",
           },
         ],
       },

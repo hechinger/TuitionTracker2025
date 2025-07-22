@@ -1,26 +1,21 @@
-.card {
-  position: relative;
+@use "@/styles/colors.scss";
+
+.school {
   display: flex;
   flex-direction: column;
   gap: 10px;
   cursor: grab;
+}
 
-  img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-  }
-
-  .info {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-
-    .name {
-      font-weight: bold;
-      font-size: 20px;
-      line-height: 1em;
-    }
-  }
+.compareButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 18px;
+  background: white; // colors.$bg-light;
+  border: 1px solid colors.$border-main;
+  padding: 4px;
+  cursor: pointer;
+  background: colors.$bg-light;
 }

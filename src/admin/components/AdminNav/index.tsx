@@ -11,6 +11,25 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
+export const sections = [
+  {
+    url: "/admin/content",
+    name: "Content",
+  },
+  {
+    url: "/admin/schools",
+    name: "Schools",
+  },
+  {
+    url: "/admin/recommended-schools",
+    name: "Recommendations",
+  },
+  {
+    url: "/admin/recirculation-articles",
+    name: "Recirculation",
+  },
+];
+
 export default function AdminNav() {
   return (
     <AppBar position="static">
@@ -23,17 +42,13 @@ export default function AdminNav() {
         <SignedIn>
           <Stack direction="row" alignItems="center" spacing={4}>
             <Stack direction="row" alignItems="center" spacing={2}>
-              <Typography>
-                <Link href="/admin/content">
-                  Content
-                </Link>
-              </Typography>
-
-              <Typography>
-                <Link href="/admin/schools">
-                  Schools
-                </Link>
-              </Typography>
+              {sections.map((section) => (
+                <Typography key={section.url}>
+                  <Link href={section.url}>
+                    {section.name}
+                  </Link>
+                </Typography>
+              ))}
             </Stack>
 
             <SignOutButton redirectUrl="/admin">

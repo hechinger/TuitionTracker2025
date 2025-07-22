@@ -2,6 +2,7 @@
 
 import { useCallback, useState, useMemo } from "react";
 import kebabCase from "lodash/kebabCase";
+import S from "string";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -83,8 +84,10 @@ export default function ContentDashboard(props: {
         `${c.component}.${c.path}.${c.locale}`,
         c.db_id,
       ]));
+
       const newContent = [] as { db_id?: number, locale?: string, component: string, path: string, value: unknown }[];
       const newImages = [] as { db_id?: number, locale?: string, component: string, path: string, value: unknown }[];
+
       [...edits].forEach(([key, value]) => {
         const [path, locale] = JSON.parse(key);
         const [component, ...restPath] = path.split(".");
@@ -104,6 +107,32 @@ export default function ContentDashboard(props: {
         }
       });
 
+      if (newImages.length > 0) {
+        for (const img of newImages) {
+          const key = `${img.component}.${img.path}`;
+          const filename = key.replace(/\./g, "-").toLowerCase();
+          const file = img.value as Blob;
+          const rsp = await fetch(`/api/admin/upload-image?filename=${filename}`, {
+            method: "POST",
+            body: file,
+          });
+          const blob = await rsp.json();
+
+          if (!rsp.ok) {
+            throw new Error("image upload failed");
+          }
+
+          const idKey = `${img.component}.${img.path}.${img.locale}`;
+          newContent.push({
+            db_id: dbIds.get(idKey),
+            locale: img.locale,
+            component: img.component,
+            path: img.path,
+            value: blob.url,
+          });
+        }
+      }
+
       if (newContent.length > 0) {
         const rsp = await fetch("/api/admin/set-content", {
           method: "POST",
@@ -118,27 +147,8 @@ export default function ContentDashboard(props: {
         }
       }
 
-      if (newImages.length > 0) {
-        for (const img of newImages) {
-          const formData = new FormData();
-          if (img.db_id) {
-            formData.append("db_id", `${img.db_id}`);
-          }
-          formData.append("component", img.component);
-          formData.append("path", img.path);
-          formData.append("value", img.value as Blob);
-          const rsp = await fetch("/api/admin/set-content-images", {
-            method: "POST",
-            body: formData,
-          });
-
-          if (!rsp.ok) {
-            throw new Error("post failed");
-          }
-        }
-      }
-
       setSubmittingState({ state: "success" });
+      window.location.reload();
     } catch (error) {
       console.error(error);
       setSubmittingState({ state: "error", error: `${error}` });
@@ -155,6 +165,8 @@ export default function ContentDashboard(props: {
             <Tabs
               value={tab}
               onChange={(_, newTabIndex) => setTab(newTabIndex)}
+              variant="scrollable"
+              scrollButtons="auto"
             >
               {contentSections.map((section, i) => (
                 <Tab

@@ -13,9 +13,11 @@ type SchoolOption = {
 
 export default function SelectSchool(props: {
   label?: string;
+  value?: string | null;
   onChange: (value?: string) => void;
 }) {
   const {
+    value,
     onChange,
     label = "School",
   } = props;
@@ -25,20 +27,27 @@ export default function SelectSchool(props: {
   const { data: schools = [] } = useSchoolNames();
 
   const {
+    selectedValue,
     names,
   } = useMemo(() => {
+    let val: undefined | null | { label: string, value: string } = (typeof value === "undefined") ? undefined : null;
     const names = [] as SchoolOption[];
     schools.forEach((school) => {
-      names.push({
+      const opt = {
         label: school.name,
         value: school.id,
         search: `${school.name} ${school.alias}`.toLowerCase(),
-      });
+      };
+      if (value && school.id === value) {
+        val = opt;
+      }
+      names.push(opt);
     });
     return {
+      selectedValue: val,
       names,
     };
-  }, [schools]);
+  }, [schools, value]);
 
   const options = useMemo(() => {
     if (input.length < 3) return names.slice(0, 20);
@@ -52,6 +61,7 @@ export default function SelectSchool(props: {
     <Autocomplete
       disablePortal
       options={options}
+      value={selectedValue}
       onChange={(_, school) => onChange(school?.value)}
       onInputChange={(_, newInput) => setInput(newInput)}
       renderInput={(params) => (

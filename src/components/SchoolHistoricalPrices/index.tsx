@@ -11,15 +11,6 @@ import IncomeBracketBarChart from "@/components/IncomeBracketBarChart";
 import IncomeBracketSelect from "@/components/IncomeBracketSelect";
 import styles from "./styles.module.scss";
 
-const bracketStudents = {
-  average: "students",
-  "0_30000": "students with incomes below $30K",
-  "30001_48000": "students with incomes between $30K and $48K",
-  "48001_75000": "students with incomes between $48K and $75K",
-  "75001_110000": "students with incomes between $75K and $110K",
-  "110001": "students with incomes over $110K",
-} as const;
-
 /**
  * The historical prices section of the school detail page.
  */
@@ -43,6 +34,15 @@ export default function SchoolHistoricalPrices(props: {
     STICKER_PRICE: formatDollars(sticker),
     NET_PRICE: formatDollars(net),
     PRICE_DIFFERENCE: formatDollars(sticker - net),
+  };
+
+  const bracketStudents = {
+    average: content("SchoolPage.Prcies.priceTrendTemplateStudentsAverage"),
+    "0_30000": content("SchoolPage.Prcies.priceTrendTemplateStudents030K"),
+    "30001_48000": content("SchoolPage.Prcies.priceTrendTemplateStudents3048"),
+    "48001_75000": content("SchoolPage.Prcies.priceTrendTemplateStudents4875"),
+    "75001_110000": content("SchoolPage.Prcies.priceTrendTemplateStudents75110"),
+    "110001": content("SchoolPage.Prcies.priceTrendTemplateStudents110"),
   };
 
   const brackets = Object.entries(school.netPricesByBracket)
