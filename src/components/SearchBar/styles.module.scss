@@ -2,9 +2,10 @@
 @use "@/styles/colors.scss";
 
 .wrapper {
-  padding: 40px 0;
+  padding: 40px 0 0;
 
   &.highlight {
+    padding: 40px 0;
     background: colors.$bg-light;
 
     @include breakpoints.at-most("sm") {
@@ -46,7 +47,9 @@
   }
 
   &.mobileDialog {
-    position: initial;
+    @include breakpoints.at-most("sm") {
+      position: initial;
+    }
   }
 
   &.active {

@@ -80,9 +80,9 @@ export function useSearchState({
   }, []);
 
   const runSearch = useCallback(() => {
-    setCacheClear({});
+    setCacheClear({ ...cacheClear });
     router.push(`/search?${searchQueryString}`);
-  }, [searchQueryString, router]);
+  }, [cacheClear, searchQueryString, router]);
 
   return {
     search,
