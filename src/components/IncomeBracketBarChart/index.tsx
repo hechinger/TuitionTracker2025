@@ -4,7 +4,6 @@ import { useMemo, useRef } from "react";
 import clsx from "clsx";
 import { useResizeObserver } from "usehooks-ts";
 import { useSchool } from "@/hooks/useSchool";
-import { formatDollars } from "@/utils/formatDollars";
 import { scaleLinear, scaleBand } from "d3-scale";
 import { max } from "d3-array";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
