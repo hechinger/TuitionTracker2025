@@ -49,6 +49,7 @@ export default function SearchBar(props: {
     toggleState,
     resetAdvanced,
     updateSearch,
+    searchQueryString,
     runSearch,
   } = useSearchState({
     autoload: props.autoload,
@@ -116,6 +117,7 @@ export default function SearchBar(props: {
               <button
                 type="submit"
                 onClick={doSearch}
+                data-search={searchQueryString}
               >
                 <MagnifyingGlassIcon size="32" />
               </button>
