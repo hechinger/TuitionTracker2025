@@ -104,7 +104,7 @@ export default function AdvancedSearch(props: {
   }, [updateSearch]);
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.sections}>
         <div className={styles.costSection}>
           <h3>What it will cost</h3>
@@ -160,7 +160,7 @@ export default function AdvancedSearch(props: {
               <label>
                 <input
                   type="number"
-                  value={search.maxPrice}
+                  value={search.maxPrice || ""}
                   onChange={(e) => updateSearch("maxPrice", +e.target.value)}
                 />
                 <span>Maximum</span>

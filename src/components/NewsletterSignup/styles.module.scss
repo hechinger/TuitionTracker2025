@@ -5,32 +5,61 @@
   border-top: 4px solid colors.$brand-yellow-dark;
   padding: 20px;
 
-  h2 {
+  .title {
+    font-size: 28px;
     margin-bottom: 0.6em;
   }
 
-  .form {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    column-gap: 10px;
-    margin-top: 1em;
+  .blurb {
+    font-size: 22px;
+    margin-bottom: 0.6em;
+  }
 
-    .input {
+  .mailchimp {
+    // hide Mailchimp title
+    h2 {
+      display: none;
+    }
+
+    // Mailchimp indicates required label
+    :global(.indicates-required) {
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    :global(.asterisk) {
+      color: colors.$text-main;
+      font-weight: bold;
+      font-size: 150%;
+    }
+
+    :global(.mc-field-group) {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    input:not([type=submit]) {
       background: rgba(#fff, 33%);
       border: 1px solid black;
       padding: 10px 16px;
 
-      &::placeholder {
-        color: black;
+      &:focus-visible {
+        outline: 2px solid colors.$brand-yellow-dark;
       }
     }
 
-    .submit {
+    input[type=submit] {
+      margin-top: 1em;
       padding: 9px;
       background: black;
       outline: none;
       border: none;
       color: white;
+      cursor: pointer;
     }
   }
 }

@@ -2,7 +2,7 @@
 
 .whereInput {
   position: relative;
-  padding: 20px;
+  padding: var(--bar-padding);
 
   .label {
     font-weight: bold;

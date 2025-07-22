@@ -32,8 +32,8 @@ export async function generateMetadata({
   const schoolId = `${schoolSlug.split('-').at(-1)}`;
   const school = await getSchool(schoolId);
   const fallbackImage = (school.schoolControl === "public")
-    ? "/public.jpg"
-    : "/private.jpg";
+    ? "https://tuitiontracker.org/public.jpg"
+    : "https://tuitiontracker.org/private.jpg";
   return {
     title: `${school.name} Real Tuition Costs (What You’ll Pay After Assistance)`,
     openGraph: {

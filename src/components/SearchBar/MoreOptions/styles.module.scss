@@ -1,7 +1,7 @@
 @use "@/styles/colors.scss";
 
 .moreOptions {
-  padding: 20px;
+  padding: var(--bar-padding);
 
   .label {
     font-weight: bold;

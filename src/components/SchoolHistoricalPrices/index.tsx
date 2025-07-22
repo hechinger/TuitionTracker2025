@@ -37,16 +37,16 @@ export default function SchoolHistoricalPrices(props: {
   };
 
   const bracketStudents = {
-    average: content("SchoolPage.Prcies.priceTrendTemplateStudentsAverage"),
-    "0_30000": content("SchoolPage.Prcies.priceTrendTemplateStudents030K"),
-    "30001_48000": content("SchoolPage.Prcies.priceTrendTemplateStudents3048"),
-    "48001_75000": content("SchoolPage.Prcies.priceTrendTemplateStudents4875"),
-    "75001_110000": content("SchoolPage.Prcies.priceTrendTemplateStudents75110"),
-    "110001": content("SchoolPage.Prcies.priceTrendTemplateStudents110"),
+    average: content("SchoolPage.Prices.priceTrendTemplateStudentsAverage"),
+    "0_30000": content("SchoolPage.Prices.priceTrendTemplateStudents030K"),
+    "30001_48000": content("SchoolPage.Prices.priceTrendTemplateStudents3048"),
+    "48001_75000": content("SchoolPage.Prices.priceTrendTemplateStudents4875"),
+    "75001_110000": content("SchoolPage.Prices.priceTrendTemplateStudents75110"),
+    "110001": content("SchoolPage.Prices.priceTrendTemplateStudents110"),
   };
 
   const brackets = Object.entries(school.netPricesByBracket)
-    .filter(([key]) => key !== "average");
+    .filter(([key, value]) => key !== "average" && value !== 0);
   const minBracket = brackets[minIndex(brackets, (b) => b[1])];
   const maxBracket = brackets[maxIndex(brackets, (b) => b[1])];
 

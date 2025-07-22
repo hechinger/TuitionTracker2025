@@ -1,8 +1,19 @@
+@use "@/styles/breakpoints.scss";
 @use "@/styles/colors.scss";
 
+.container {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 60vh auto;
+
+  @include breakpoints.at-most("sm") {
+    grid-template-rows: 1fr auto;
+  }
+}
+
 .sections {
-  max-height: 60vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .costSection,

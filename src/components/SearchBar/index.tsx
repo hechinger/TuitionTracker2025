@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import clsx from "clsx";
-import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, SlidersHorizontalIcon } from "@phosphor-icons/react";
 import ClickAwayListener from "react-click-away-listener";
 import { Link } from "@/i18n/navigation";
 import { useSearchState } from "@/hooks/useSearchState";
@@ -78,6 +78,7 @@ export default function SearchBar(props: {
           <div
             className={clsx(styles.searchBarContainer, {
               [styles.active]: !!inputState,
+              [styles.mobileDialog]: inputState === "more",
             })}
           >
             <div
@@ -123,6 +124,8 @@ export default function SearchBar(props: {
             <Dropdown
               isOpen={!!inputState}
               right={inputState === "more"}
+              mobileDialog={inputState === "more"}
+              close={() => setInputState(undefined)}
             >
               {inputState === "where" && (
                 <WhereSuggestions
@@ -143,6 +146,18 @@ export default function SearchBar(props: {
             </Dropdown>
           </div>
         </ClickAwayListener>
+
+        <div className={styles.mobileMoreButton}>
+          <button
+            type="button"
+            onClick={() => setInputState("more")}
+          >
+            <SlidersHorizontalIcon />
+            <span>
+              More search options
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );

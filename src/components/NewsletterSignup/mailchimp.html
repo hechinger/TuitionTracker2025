@@ -1,10 +1,3 @@
-"use client";
-
-import { useContent } from "@/hooks/useContent";
-import Well from "@/components/Well";
-import styles from "./styles.module.scss";
-
-const mailchimpHtml = `
 <div id="mc_embed_shell">
   
 <div id="mc_embed_signup">
@@ -20,32 +13,3 @@ const mailchimpHtml = `
 </form>
 </div>
 </div>
-`;
-
-/**
- * The newsletter signup component. Renders a simple promo signup
- * form for a newsletter campaign.
- */
-export default function Newsletter() {
-  const content = useContent();
-
-  return (
-    <Well width="text">
-      <div className={styles.newsletter}>
-        <h2 className={styles.title}>
-          {content("Newsletter.title")}
-        </h2>
-
-        <p className={styles.blurb}>
-          {content("Newsletter.blurb")}
-        </p>
-
-        <div
-          className={styles.mailchimp}
-          dangerouslySetInnerHTML={{ __html: mailchimpHtml }}
-        />
-
-      </div>
-    </Well>
-  );
-}

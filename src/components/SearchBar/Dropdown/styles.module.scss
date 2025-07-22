@@ -1,3 +1,4 @@
+@use "@/styles/breakpoints.scss";
 @use "@/styles/colors.scss";
 
 .dropdown {
@@ -17,5 +18,30 @@
   &.right {
     left: unset;
     right: 0;
+  }
+
+  &.mobileDialog {
+    @include breakpoints.at-most("sm") {
+      position: fixed;
+      z-index: 10;
+      top: 2vh;
+      left: 2vw;
+      right: 2vw;
+      height: 92vh;
+      outline: 100vw solid rgba(black, 0.6);
+    }
+  }
+
+  .closeButton {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    display: block;
+    margin-left: auto;
+    background: white;
+    border: none;
+    padding: 10px 10px 0px 0px;
+    cursor: pointer;
   }
 }

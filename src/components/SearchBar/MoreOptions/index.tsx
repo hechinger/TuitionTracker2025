@@ -26,7 +26,7 @@ export default function MoreOptions(props: {
   } = props.search;
 
   const text = [
-    minPrice !== 0 && `${formatDollars(minPrice)} to ${formatDollars(maxPrice)}`,
+    (minPrice !== 0 || !!maxPrice) && `${formatDollars(minPrice)} to ${formatDollars(maxPrice)}`,
     schoolType.join(", "),
     (degreeType !== "any") ? degreeType : "",
     tribalCollege && "tribal college",

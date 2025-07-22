@@ -1,6 +1,7 @@
 @use "@/styles/colors.scss";
 
 .adSlot {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,7 +15,10 @@
 }
 
 .adContainer {
-  min-width: 728px;
+  position: relative;
+  width: 728px;
+  max-width: 100%;
   min-height: 90px;
   background: rgba(black, 0.1);
+  overflow: auto;
 }

@@ -413,6 +413,11 @@ export const contentSections = [
             path: "SchoolPage.Prices.incomeBracketChartAxisLabel",
             title: "Income bracket chart axis label"
           },
+          {
+            type: "copy",
+            path: "SchoolPage.Prices.incomeBracketChartNoData",
+            title: "Income bracket chart no-data label"
+          },
         ],
       },
       {

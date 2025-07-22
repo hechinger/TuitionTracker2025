@@ -11,6 +11,7 @@ import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { useContent } from "@/hooks/useContent";
 import Robotext from "@/components/Robotext";
 import a11y from "@/styles/accessibility.module.scss";
+import BarLabel from "./BarLabel";
 import styles from "./styles.module.scss";
 
 const margin = { top: 20, right: 0, bottom: 25, left: 0 };
@@ -67,6 +68,8 @@ export default function IncomeBracketBarChart(props: {
     return { maxYearData, x, y };
   }, [school, width, height]);
 
+  console.log(maxYearData);
+
   return (
     <div className={styles.container}>
       {school && (
@@ -74,7 +77,7 @@ export default function IncomeBracketBarChart(props: {
           <Robotext
             template={content("SchoolPage.Prices.incomeBracketChartTitle")}
             context={{
-              SCHOOL_YEAR: "24-25", // FIXME
+              SCHOOL_YEAR: maxYearData?.year,
             }}
           />
         </h2>
@@ -130,7 +133,10 @@ export default function IncomeBracketBarChart(props: {
                     ].join(' '),
                   }}
                 >
-                  {formatDollars(maxYearData.netPricesByBracket[bracket].price || 0, { round: true })}
+                  <BarLabel
+                    value={maxYearData.netPricesByBracket[bracket].price}
+                    fallback={content("SchoolPage.Prices.incomeBracketChartNoData")}
+                  />
                 </div>
               ))}
 
@@ -161,7 +167,12 @@ export default function IncomeBracketBarChart(props: {
               {brackets.map((bracket) => (
                 <tr key={bracket}>
                   <td>{bracketLabels[bracket]}</td>
-                  <td>{formatDollars(maxYearData.netPricesByBracket[bracket].price || 0, { round: true })}</td>
+                  <td>
+                    <BarLabel
+                      value={maxYearData.netPricesByBracket[bracket].price}
+                      fallback={content("SchoolPage.Prices.incomeBracketChartNoData")}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>

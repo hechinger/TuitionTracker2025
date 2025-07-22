@@ -16,10 +16,12 @@ export default function Pagination(props: {
 
   if (totalPages < 2) return null;
 
-  const start = Math.max(1, page - 2);
-  const end = Math.min(totalPages - 2, page + 3);
-  const includeStartEllipsis = start > 1;
-  const includeEndEllipsis = totalPages > end + 1;
+  const start = Math.max(0, page - 1);
+  const end = Math.min(totalPages - 1, start + 3);
+  const showFirst = start > 0;
+  const showStartEllipsis = start > 1;
+  const showLast = end < (totalPages - 1);
+  const showEndEllipsis = end < (totalPages - 2);
 
   const pageButtons = [...Array(Math.max(0, end - start))].map((_, i) => start + i);
 
@@ -28,22 +30,24 @@ export default function Pagination(props: {
       <button
         type="button"
         onClick={() => setPage(Math.max(0, page - 1))}
-        disabled={page === 1}
+        disabled={page === 0}
         aria-label="Previous page of results"
       >
         <CaretLeftIcon />
       </button>
 
-      <button
-        type="button"
-        onClick={() => setPage(0)}
-        aria-label={`Page 1 of results`}
-        aria-current={page === 0 ? "page" : undefined}
-      >
-        1
-      </button>
+      {showFirst && (
+        <button
+          type="button"
+          onClick={() => setPage(0)}
+          aria-label={`Page 1 of results`}
+          aria-current={page === 0 ? "page" : undefined}
+        >
+          1
+        </button>
+      )}
 
-      {includeStartEllipsis && (
+      {showStartEllipsis && (
         <div className={styles.ellipsis}>
           <DotsThreeIcon />
         </div>
@@ -61,20 +65,22 @@ export default function Pagination(props: {
         </button>
       ))}
 
-      {includeEndEllipsis && (
+      {showEndEllipsis && (
         <div className={styles.ellipsis}>
           <DotsThreeIcon />
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => setPage(totalPages - 1)}
-        aria-label={`Page ${totalPages - 1} of results`}
-        aria-current={page === totalPages - 1 ? "page" : undefined}
-      >
-        {totalPages.toLocaleString()}
-      </button>
+      {showLast && (
+        <button
+          type="button"
+          onClick={() => setPage(totalPages - 1)}
+          aria-label={`Page ${totalPages - 1} of results`}
+          aria-current={page === totalPages - 1 ? "page" : undefined}
+        >
+          {totalPages.toLocaleString()}
+        </button>
+      )}
 
       <button
         type="button"

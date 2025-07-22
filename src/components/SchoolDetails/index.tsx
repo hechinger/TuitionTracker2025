@@ -32,9 +32,12 @@ export default function SchoolDetails(props: {
 
   if (!school) return null;
 
+  const grad = getGraduation(school);
+  const acceptance = school.stats.percentAdmitted;
+
   const place = `${school.city}, ${school.state}`;
-  const acceptanceRate = formatPercent(school.stats.percentAdmitted);
-  const gradRate = formatPercent(getGraduation(school).total);
+  const acceptanceRate = acceptance && formatPercent(acceptance);
+  const gradRate = grad && formatPercent(grad.total);
 
   const { schoolControl, degreeLevel } = school;
 
@@ -60,16 +63,18 @@ export default function SchoolDetails(props: {
             />
           </div>
 
-          <div className={styles.fact}>
-            <TrophyIcon />
-            <Robotext
-              as="span"
-              template={content("SchoolPage.SchoolDetails.acceptanceRate")}
-              context={{
-                ACCEPTANCE_RATE: acceptanceRate,
-              }}
-            />
-          </div>
+          {acceptanceRate && (
+            <div className={styles.fact}>
+              <TrophyIcon />
+              <Robotext
+                as="span"
+                template={content("SchoolPage.SchoolDetails.acceptanceRate")}
+                context={{
+                  ACCEPTANCE_RATE: acceptanceRate,
+                }}
+              />
+            </div>
+          )}
 
           <div className={styles.fact}>
             <BuildingApartmentIcon />
@@ -83,16 +88,18 @@ export default function SchoolDetails(props: {
             />
           </div>
 
-          <div className={styles.fact}>
-            <GraduationCapIcon />
-            <Robotext
-              as="span"
-              template={content("SchoolPage.SchoolDetails.graduationRate")}
-              context={{
-                GRADUATION_RATE: gradRate,
-              }}
-            />
-          </div>
+          {gradRate && (
+            <div className={styles.fact}>
+              <GraduationCapIcon />
+              <Robotext
+                as="span"
+                template={content("SchoolPage.SchoolDetails.graduationRate")}
+                context={{
+                  GRADUATION_RATE: gradRate,
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div className={styles.about}>

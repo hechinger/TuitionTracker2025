@@ -1,31 +1,26 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
 import chunk from "lodash/chunk";
 import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
 import Well from "@/components/Well";
 import SchoolCard from "@/components/SchoolCard";
-import { useFilteredSchools } from "./useFilteredSchools";
 import Pagination from "./Pagination";
+import { useFilteredSchools } from "./useFilteredSchools";
+import { useSearchUi } from "./useSearchUi";
 import styles from "./styles.module.scss";
 
 /**
  * The paginated grid of search results on the search results page.
  */
 export default function SearchResults() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [page, setPage] = useState(0);
-  const updatePage = useCallback((value: number) => {
-    setPage(value);
-    if (!ref.current) return;
-    ref.current.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  }, []);
-
-  const [sorting, setSorting] = useState("alpha");
+  const {
+    resultsRef,
+    page,
+    updatePage,
+    sorting,
+    setSorting,
+  } = useSearchUi();
 
   const { search } = useSearchState({
     autoload: true,
@@ -51,7 +46,7 @@ export default function SearchResults() {
 
   return (
     <div
-      ref={ref}
+      ref={resultsRef}
       className={styles.container}
     >
       <Well>

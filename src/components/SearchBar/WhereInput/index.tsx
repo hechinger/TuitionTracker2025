@@ -43,18 +43,20 @@ export default function WhereInput(props: {
         </div>
 
         <div className={styles.inputWrapper}>
-          <div className={styles.states}>
-            {props.states.map((state) => (
-              <button
-                key={state}
-                type="button"
-                className={styles.state}
-                onClick={() => props.onRemoveState(state)}
-              >
-                {us.lookup(state)?.name}
-              </button>
-            ))}
-          </div>
+          {props.states.length > 0 && (
+            <div className={styles.states}>
+              {props.states.map((state) => (
+                <button
+                  key={state}
+                  type="button"
+                  className={styles.state}
+                  onClick={() => props.onRemoveState(state)}
+                >
+                  {us.lookup(state)?.name}
+                </button>
+              ))}
+            </div>
+          )}
 
           <input
             id={id}

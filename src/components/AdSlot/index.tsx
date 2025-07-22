@@ -30,7 +30,9 @@ export default function AdSlot() {
       <span>
         {content("AdSlot.title")}
       </span>
-      <div id={id} className={styles.adContainer} />
+      <div className={styles.adContainer}>
+        <div id={id} className={styles.ad} />
+      </div>
     </div>
   );
 }
