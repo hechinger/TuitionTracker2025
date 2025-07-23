@@ -55,6 +55,12 @@ export async function generateMetadata({
       shortcut: "https://i0.wp.com/hechingerreport.org/wp-content/uploads/2018/06/cropped-favicon.jpg?fit=192%2C192&ssl=1",
       apple: "https://i0.wp.com/hechingerreport.org/wp-content/uploads/2018/06/cropped-favicon.jpg?fit=192%2C192&ssl=1",
     },
+    alternates: {
+      languages: {
+        en: `https://tuitiontracker.org/schools/${schoolSlug}`,
+        es: `https://tuitiontracker.org/es/schools/${schoolSlug}`,
+      },
+    },
   };
 }
 

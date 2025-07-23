@@ -3,9 +3,9 @@ import { getAllSchoolNames } from "@/db/schools";
 
 const baseUrl = "https://tuitiontracker.org/";
 const localizedRoutes = [
-  "/",
-  "/saved-schools",
-  "/search",
+  "",
+  "saved-schools",
+  "search",
 ];
 
 const getRoute = ({
@@ -22,11 +22,12 @@ const getRoute = ({
     priority: 1,
   };
   if (!localized) return base;
+  const esUrl = new URL("es/", baseUrl).href;
   return {
     ...base,
     alternates: {
       languages: {
-        es: new URL(route, `${baseUrl}/es/`).href,
+        es: new URL(route, esUrl).href,
       },
     },
   };
