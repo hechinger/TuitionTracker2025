@@ -1,4 +1,4 @@
-import type { YearData } from "@/types";
+import type { SchoolDetail, YearData } from "@/types";
 import { queryRows, run } from "./pool";
 
 export type SchoolsRow = {
@@ -315,7 +315,7 @@ export const getSchoolsDetail = async (opts: {
       },
       years,
     };
-  });
+  }) as SchoolDetail[];
 };
 
 export const setSchool = async (opts: {
