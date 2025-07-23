@@ -28,6 +28,10 @@ export const sections = [
     url: "/admin/recirculation-articles",
     name: "Recirculation",
   },
+  {
+    url: "/admin/data-pipeline",
+    name: "Data Pipeline",
+  },
 ];
 
 export default function AdminNav() {

@@ -33,3 +33,11 @@ export type AdminField = {
   path: string;
   title: string;
 };
+
+export type ContentEntry = {
+  db_id: number;
+  locale?: string | null;
+  component: string;
+  path: string;
+  value?: string | null;
+};

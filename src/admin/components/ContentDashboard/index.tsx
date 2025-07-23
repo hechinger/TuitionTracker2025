@@ -2,6 +2,7 @@
 
 import { useCallback, useState, useMemo } from "react";
 import kebabCase from "lodash/kebabCase";
+import get from "lodash/get";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -14,16 +15,10 @@ import Container from "@mui/material/Container";
 import { contentSections } from "@/content/schema";
 import Field from "@/admin/components/Field";
 import SubmitButton, { type SubmittingState } from "@/admin/components/SubmitButton";
+import type { ContentEntry } from "@/types/admin";
 import { useTab } from "./useTab";
+import FieldGroup from "./FieldGroup";
 import styles from "./styles.module.scss";
-
-type ContentEntry = {
-  db_id: number;
-  locale?: string | null;
-  component: string;
-  path: string;
-  value?: string | null;
-};
 
 const locales = {
   en: "English",
@@ -231,15 +226,12 @@ export default function ContentDashboard(props: {
                   </Paper>
 
                   {section.fields.map((fieldGroup) => (
-                    <Paper
+                    <FieldGroup
                       key={fieldGroup.title}
-                      sx={{ p: 4 }}
-                      elevation={1}
+                      title={fieldGroup.title}
+                      presentation={get(fieldGroup, "presentation")}
                     >
-                      <Typography variant="h5" gutterBottom>
-                        {fieldGroup.title}
-                      </Typography>
-                      <Stack spacing={2}>
+                      <Stack spacing={4}>
                         {fieldGroup.fields.map((field) => (
                           <Field
                             key={field.path}
@@ -251,7 +243,7 @@ export default function ContentDashboard(props: {
                           />
                         ))}
                       </Stack>
-                    </Paper>
+                    </FieldGroup>
                   ))}
                 </Stack>
               )}

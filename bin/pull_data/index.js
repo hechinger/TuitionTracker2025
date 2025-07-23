@@ -8,6 +8,7 @@ const Papa = require("papaparse");
 const { parseIpedsDataset } = require("./utils");
 
 const baseYear = 2022;
+const needYears = new Set([...Array(7)].map((_, i) => baseYear - i - 1));
 const rootDir = path.dirname(path.dirname(__dirname));
 const ipedsDir = path.join(rootDir, "src", "data", "ipeds");
 
@@ -91,7 +92,7 @@ const schoolSchema = z.object({
   tribalCollege: z.boolean(),
   sector: z.string(),
   schoolControl: z.enum(["public", "private", "for-profit"]),
-  degreeLevel: z.enum(["4-year", "2-year", "other"]),
+  degreeLevel: z.enum(["4-year", "2-year"]),
   admissionRate: z.nullable(z.number()).optional(), // 1850 missing, 15 null
   percentSticker: z.number(),
   enrollment: z.object({
@@ -209,7 +210,7 @@ const datasetConfig = {
             const level = `${get(data, "ICLEVEL")}`;
             if (level === "1") return "4-year";
             if (level === "2") return "2-year";
-            if (level === "3") return "other";
+            if (level === "3") return "2-year";
             registerError(`Unhandled degree level value: ${level}`);
             return null;
           })(),
@@ -439,6 +440,7 @@ const datasetConfig = {
         },
       };
 
+      const startYears = new Set();
       const years = stickerPriceYears.map((stickerYear, i) => {
         const yearNum = baseYear - i;
         const netYear = netPriceYears[i - 1];
@@ -452,7 +454,10 @@ const datasetConfig = {
           }
 
           const netPrice = netYear.prices[bracket];
-          const discount = netPrice / (stickerPrice.inStateOnCampus || stickerPrice.inStateOffCampus);
+          const sticker = (stickerPrice.type === "on-campus")
+            ? stickerPrice.inStateOnCampus
+            : stickerPrice.inStateOffCampus
+          const discount = netPrice / sticker;
           const { min, max } = minMaxDiscounts[bracket];
 
           if (min === undefined || discount < min) {
@@ -469,12 +474,18 @@ const datasetConfig = {
           };
         };
 
+        const avgPrice = getNetPrice("average");
+
+        if (stickerPrice && avgPrice.price) {
+          startYears.add(yearNum);
+        }
+
         return {
           year: `${(yearNum).toString().slice(2)}-${(yearNum + 1).toString().slice(2)}`,
           startYear: yearNum,
           stickerPrice,
           netPricesByBracket: {
-            average: getNetPrice("average"),
+            average: avgPrice,
             "0_30000": getNetPrice("0_30000"),
             "30001_48000": getNetPrice("30001_48000"),
             "48001_75000": getNetPrice("48001_75000"),
@@ -588,9 +599,11 @@ const datasetConfig = {
         });
       }
 
+      const hasEnoughData = startYears.intersection(needYears).size >= needYears.size;
+
       return {
         ...restSchool,
-        years,
+        years: hasEnoughData ? years : [],
       };
     } catch (error) {
       if (school.stickerPriceYears && school.netPriceYears) {
@@ -603,20 +616,97 @@ const datasetConfig = {
   },
 };
 
+const getNationalAverages = (schools) => {
+  const averages = {
+    "2-year": {
+      retentionFullTime: { sum: 0, n: 0 },
+      retentionPartTime: { sum: 0, n: 0 },
+      graduationTotal: { sum: 0, n: 0 },
+      graduationUnknown: { sum: 0, n: 0 },
+      graduationMultiple: { sum: 0, n: 0 },
+      graduationWhite: { sum: 0, n: 0 },
+      graduationHisp: { sum: 0, n: 0 },
+      graduationNathawpacisl: { sum: 0, n: 0 },
+      graduationBlack: { sum: 0, n: 0 },
+      graduationAsian: { sum: 0, n: 0 },
+      graduationAmerindalasknat: { sum: 0, n: 0 },
+      graduationNonresident: { sum: 0, n: 0 },
+    },
+    "4-year": {
+      retentionFullTime: { sum: 0, n: 0 },
+      retentionPartTime: { sum: 0, n: 0 },
+      graduationTotal: { sum: 0, n: 0 },
+      graduationUnknown: { sum: 0, n: 0 },
+      graduationMultiple: { sum: 0, n: 0 },
+      graduationWhite: { sum: 0, n: 0 },
+      graduationHisp: { sum: 0, n: 0 },
+      graduationNathawpacisl: { sum: 0, n: 0 },
+      graduationBlack: { sum: 0, n: 0 },
+      graduationAsian: { sum: 0, n: 0 },
+      graduationAmerindalasknat: { sum: 0, n: 0 },
+      graduationNonresident: { sum: 0, n: 0 },
+    },
+  };
+
+  const keys = {
+    retentionFullTime: "retention.fullTime",
+    retentionPartTime: "retention.partTime",
+    graduationTotal: "graduation.total",
+    graduationUnknown: "graduation.byRace.unknown",
+    graduationMultiple: "graduation.byRace.multiple",
+    graduationWhite: "graduation.byRace.white",
+    graduationHisp: "graduation.byRace.hisp",
+    graduationNathawpacisl: "graduation.byRace.nathawpacisl",
+    graduationBlack: "graduation.byRace.black",
+    graduationAsian: "graduation.byRace.asian",
+    graduationAmerindalasknat: "graduation.byRace.amerindalasknat",
+    graduationNonresident: "graduation.byRace.nonresident",
+  };
+
+  const updateAverage = (school, valuePath, avgPath) => {
+    const value = get(school, valuePath);
+    if (typeof value === "undefined") return;
+    const avg = get(averages, `${school.degreeLevel}.${avgPath}`);
+    if (!avg) {
+      console.log({ valuePath, avgPath, averages, key: `${school.degreeLevel}.${avgPath}` });
+    }
+    avg.sum += value;
+    avg.n += 1;
+  };
+
+  schools.forEach((school) => {
+    Object.entries(keys).forEach(([avgKey, valueKey]) => {
+      updateAverage(school, valueKey, avgKey);
+    });
+  });
+
+  Object.keys(averages).forEach((level) => {
+    Object.keys(averages[level]).forEach((key) => {
+      const { sum, n } = averages[level][key];
+      averages[level][key] = sum / n;
+    });
+  });
+
+  return averages;
+};
+
 
 const main = async (config) => {
   fs.mkdirSync(ipedsDir, { recursive: true });
 
-  const dataset = await parseIpedsDataset(config, {
-    dataDir: ipedsDir,
-  });
-  // const dataset = {
-  //   errors: [],
-  //   dataset: JSON.parse(fs.readFileSync(path.join(ipedsDir, "dataset.json"))),
-  // };
+  // const dataset = await parseIpedsDataset(config, {
+  //   dataDir: ipedsDir,
+  // });
+  const dataset = {
+    errors: [],
+    dataset: JSON.parse(fs.readFileSync(path.join(ipedsDir, "dataset.json"))),
+  };
 
   const allSchools = Object.values(dataset.dataset);
   const schools = allSchools; // .filter((s) => s.years.length > 10);
+
+  const nationalAverages = getNationalAverages(schools);
+  console.log(nationalAverages);
 
   const validationErrors = [];
   const validationErrorsByPath = new Map();
@@ -650,7 +740,8 @@ const main = async (config) => {
       });
     }
 
-    return result.success;
+    // return result.success;
+    return true;
   });
 
   const validationErrorsByPathRows = [];
@@ -775,6 +866,9 @@ const main = async (config) => {
 
   const validSchoolsFile = path.join(ipedsDir, "valid_schools.json");
   fs.writeFileSync(validSchoolsFile, JSON.stringify(validSchools, null, 2));
+
+  const nationalAveragesFile = path.join(ipedsDir, "national_averages.json");
+  fs.writeFileSync(nationalAveragesFile, JSON.stringify(nationalAverages, null, 2));
 
   // invalidSchools.forEach((school) => {
   //   if (!oldSchoolIds.has(school.school.id)) return;

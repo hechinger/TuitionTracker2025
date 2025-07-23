@@ -16,9 +16,14 @@ const isI18nRoute = createRouteMatcher([
   "/schools/:path*",
 ]);
 
-export default clerkMiddleware((auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   if (isPrivateRoute(req)) {
-    auth.protect();
+    const { userId, redirectToSignIn } = await auth();
+    if (!userId) {
+      return redirectToSignIn({
+        returnBackUrl: req.url,
+      });
+    }
   }
   if (isI18nRoute(req)) {
     return i18nMiddleware(req);

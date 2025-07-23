@@ -141,6 +141,9 @@ export default function Field(props: {
 
         {field.variables && (
           <div className={styles.autotextHelp}>
+            <div className={styles.autotextPreviewTitle}>
+              Example
+            </div>
             <div className={styles.autotextPreview}>
               <Robotext
                 template={`${value || ""}`}
@@ -151,7 +154,7 @@ export default function Field(props: {
               />
             </div>
             <div className={styles.autotextVariables}>
-              <div>Variables:</div>
+              <div className={styles.autotextVariablesTitle}>Variables</div>
               <ul>
                 {field.variables.map((v) => (
                   <li key={v.name}>

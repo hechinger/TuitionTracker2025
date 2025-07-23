@@ -11,14 +11,20 @@ const SERIAL_PRIMARY_KEY = dbUrl.startsWith("postgresql")
   ? "SERIAL PRIMARY KEY"
   : "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
 
-const validSchoolsFile = path.join(
+const ipedsDir = path.join(
   path.dirname(__dirname),
   "src",
   "data",
   "ipeds",
+);
+const validSchoolsFile = path.join(
+  ipedsDir,
   "valid_schools.json",
 );
+const nationalAveragesFile = path.join(ipedsDir, "national_averages.json");
+
 const schools = JSON.parse(fs.readFileSync(validSchoolsFile));
+const nationalAverages = JSON.parse(fs.readFileSync(nationalAveragesFile));
 
 const get = (obj, path, defaultValue) => {
   if (typeof path === "function") {
@@ -208,6 +214,17 @@ const main = async () => {
         );
       `);
 
+      console.log("Creating table: national_averages");
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS national_averages (
+          db_id ${SERIAL_PRIMARY_KEY},
+          school_control VARCHAR(255),
+          average_key VARCHAR(255),
+          value DOUBLE PRECISION,
+          UNIQUE (school_control, average_key)
+        );
+      `);
+
       console.log("Creating table: content");
       await db.query(`
         CREATE TABLE IF NOT EXISTS content (
@@ -378,9 +395,32 @@ const main = async () => {
           values: values.flat(),
         };
 
-        await db.query(query);
+        if (query.values.length > 0) {
+          await db.query(query);
+        }
       }
     }, Promise.resolve());
+
+    if (true) {
+      console.log("Creating content records...");
+      await db.query("TRUNCATE TABLE national_averages;");
+      const rows = Object.entries(nationalAverages).map(([control, avgs]) => {
+        return Object.entries(avgs).map(([key, value]) => ({
+          schoolControl: control,
+          averageKey: key,
+          value,
+        }));
+      }).flat();
+      const valueIds = getValueIdSet(rows.length, 3);
+      await db.query({
+        text: `
+          INSERT INTO national_averages
+            (school_control, average_key, value)
+          VALUES ${valueIds};
+        `,
+        values: rows.map((r) => [r.schoolControl, r.averageKey, r.value]).flat(),
+      });
+    }
 
     if (true) {
       console.log("Creating content records...");
@@ -545,6 +585,8 @@ const main = async () => {
               saveThisSchool: txt("Save this school"),
               saved: txt("Saved"),
             },
+            noDataMessage: txt("This institution doesn’t have enough data for us to  calculate its sticker or net price. Learn more by visiting its official College Navigator page."),
+            collegeNavigatorLink: txt("Go to College Navigator"),
           },
           Prices: {
             priceTrendTemplate: txt("<p>This year at <strong>{SCHOOL_NAME}</strong>, we project that {STUDENT_TYPE} will pay <span class=\"highlight\">{NET_PRICE}</span>, while the advertised sticker price is {STICKER_PRICE}. That’s a difference of {PRICE_DIFFERENCE}.</p>"),

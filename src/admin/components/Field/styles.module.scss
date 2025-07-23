@@ -40,7 +40,15 @@
 
 .autotext {
   .autotextHelp {
-    margin-top: 6px;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid colors.$border-main;
+    border-radius: 4px;
+  }
+
+  .autotextPreviewTitle {
+    color: colors.$text-light;
+    font-weight: bold;
   }
 
   .autotextPreview {
@@ -49,7 +57,14 @@
     padding: 12px;
   }
 
+  .autotextVariablesTitle {
+    color: colors.$text-light;
+    font-weight: bold;
+  }
+
   .autotextVariables {
+    margin-top: 8px;
+
     ul {
       display: flex;
       flex-direction: column;

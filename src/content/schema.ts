@@ -296,6 +296,7 @@ export const contentSections = [
       {
         type: "fieldGroup",
         title: "Advanced: School Topper",
+        presentation: "collapsed",
         fields: [
           {
             type: "copy",
@@ -337,6 +338,7 @@ export const contentSections = [
       {
         type: "fieldGroup",
         title: "Advanced: Prices",
+        presentation: "collapsed",
         fields: [
           {
              type: "copy",
@@ -433,6 +435,7 @@ export const contentSections = [
       {
         type: "fieldGroup",
         title: "Advanced: School Details",
+        presentation: "collapsed",
         fields: [
           {
             type: "copy",
@@ -469,6 +472,7 @@ export const contentSections = [
       {
         type: "fieldGroup",
         title: "Advanced: Graduation rates",
+        presentation: "collapsed",
         fields: [
           {
             type: "copy",
@@ -510,6 +514,7 @@ export const contentSections = [
       {
         type: "fieldGroup",
         title: "Advanced: Student Retention",
+        presentation: "collapsed",
         fields: [
           {
             type: "copy",
@@ -541,6 +546,7 @@ export const contentSections = [
       {
         type: "fieldGroup",
         title: "Advanced: Student Demographics",
+        presentation: "collapsed",
         fields: [
           {
             type: "copy",
@@ -694,6 +700,7 @@ export const contentSections = [
       {
         type: "fieldGroup",
         title: "Advanced",
+        presentation: "collapsed",
         fields: [
           {
             type: "copy",
@@ -1061,7 +1068,6 @@ export const contentSections = [
   {
     title: "UI Details",
     description: "Content and configuration details for fundamental UI elements.",
-    presentation: "collapsed",
     fields: [
       {
         type: "fieldGroup",
