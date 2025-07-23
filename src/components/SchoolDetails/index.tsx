@@ -14,23 +14,21 @@ import {
 import { formatPercent } from "@/utils/formatPercent";
 import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
-import { useSchool } from "@/hooks/useSchool";
 import { useContent } from "@/hooks/useContent";
+import type { SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
 /**
  * Renders the "school details" box on the school detail page.
  */
 export default function SchoolDetails(props: {
-  schoolId: string;
+  school: SchoolDetail;
 }) {
   const {
-    data: school,
-  } = useSchool(props.schoolId);
+    school,
+  } = props;
   const [isOpen, setIsOpen] = useState(false);
   const content = useContent();
-
-  if (!school) return null;
 
   const grad = getGraduation(school);
   const acceptance = school.stats.percentAdmitted;

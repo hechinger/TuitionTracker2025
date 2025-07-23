@@ -1,6 +1,5 @@
 "use client";
 
-import { useSchool } from "@/hooks/useSchool";
 import { useSizePercentile } from "@/hooks/useSizePercentile";
 import { useContent } from "@/hooks/useContent";
 import { formatOrdinal } from "@/utils/formatOrdinal";
@@ -8,6 +7,7 @@ import { formatPercent } from "@/utils/formatPercent";
 import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
 import SizeHistogram from "@/components/SizeHistogram";
+import type { SchoolDetail } from "@/types";
 import GenderBars from "./GenderBars";
 import DemoBars from "./DemoBars";
 import styles from "./styles.module.scss";
@@ -16,10 +16,13 @@ import styles from "./styles.module.scss";
  * Renders the demographics section of the school detail page.
  */
 export default function SchoolDemographics(props: {
-  schoolId: string;
+  school: SchoolDetail;
 }) {
+  const {
+    school,
+  } = props;
+
   const content = useContent();
-  const { data: school } = useSchool(props.schoolId);
   const sizePercentile = useSizePercentile(school?.enrollment.total || 0);
 
   if (!school) return null;

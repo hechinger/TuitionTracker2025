@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { notFound } from "next/navigation";
 import { getContent } from "@/db/content";
 import { getSchoolsDetail } from "@/db/schools";
 import { getNationalAverages } from "@/db/nationalAverages";
@@ -32,9 +33,13 @@ export async function generateMetadata({
   const { school: schoolSlug } = await params;
   const schoolId = `${schoolSlug.split('-').at(-1)}`;
   const school = await getSchool(schoolId);
+
+  if (!school) return {};
+
   const fallbackImage = (school.schoolControl === "public")
     ? "https://tuitiontracker.org/public.jpg"
     : "https://tuitiontracker.org/private.jpg";
+
   return {
     title: `${school.name} Real Tuition Costs (What You’ll Pay After Assistance)`,
     openGraph: {
@@ -67,12 +72,14 @@ export default async function School(props: {
   ]);
 
   const schoolId = `${schoolSlug.split('-').at(-1)}`;
-  // const school = await getSchool(schoolId);
-  // const schools = { [schoolId]: school };
-  const schools = undefined;
+  const school = await getSchool(schoolId);
+
+  if (!school) {
+    return notFound();
+  }
 
   return (
-    <DataProvider content={content} schools={schools}>
+    <DataProvider content={content}>
       <PageTopOverlap>
         <ErrorBoundary>
           <SearchBar withNav />
@@ -80,22 +87,22 @@ export default async function School(props: {
       </PageTopOverlap>
 
       <ErrorBoundary>
-        <SchoolTopper schoolId={schoolId} />
+        <SchoolTopper school={school} />
       </ErrorBoundary>
 
       <AdSlot />
 
       <ErrorBoundary>
-        <SchoolHistoricalPrices schoolId={schoolId} />
+        <SchoolHistoricalPrices school={school} />
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <SchoolDetails schoolId={schoolId} />
+        <SchoolDetails school={school} />
       </ErrorBoundary>
 
       <ErrorBoundary>
         <SchoolGraduationRate
-          schoolId={schoolId}
+          school={school}
           nationalAverages={nationalAverages}
         />
       </ErrorBoundary>
@@ -104,13 +111,13 @@ export default async function School(props: {
 
       <ErrorBoundary>
         <SchoolRetention
-          schoolId={schoolId}
+          school={school}
           nationalAverages={nationalAverages}
         />
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <SchoolDemographics schoolId={schoolId} />
+        <SchoolDemographics school={school} />
       </ErrorBoundary>
 
       <Recirculation />

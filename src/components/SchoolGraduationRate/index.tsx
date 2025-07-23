@@ -1,12 +1,11 @@
 "use client";
 
-import { useSchool } from "@/hooks/useSchool";
 import { useContent } from "@/hooks/useContent";
 import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
 import { formatPercent } from "@/utils/formatPercent";
 import { getGraduation } from "@/utils/formatSchoolInfo";
-import type { NationalAverages } from "@/types";
+import type { SchoolDetail, NationalAverages } from "@/types";
 import OverallBar from "./OverallBar";
 import RadarChart from "./RadarChart";
 import styles from "./styles.module.scss";
@@ -15,13 +14,15 @@ import styles from "./styles.module.scss";
  * The graduation rate section of the school detail page.
  */
 export default function SchoolGraduationRate(props: {
-  schoolId: string;
+  school: SchoolDetail;
   nationalAverages: NationalAverages;
 }) {
-  const { data: school } = useSchool(props.schoolId);
-  const content = useContent();
+  const {
+    school,
+    nationalAverages,
+  } = props;
 
-  if (!school) return null;
+  const content = useContent();
 
   const overallTemplate = content("SchoolPage.GraduationRates.overallTemplate.template");
   const demoTemplate = content("SchoolPage.GraduationRates.demographicTemplate");
@@ -55,7 +56,7 @@ export default function SchoolGraduationRate(props: {
 
           <OverallBar
             school={school}
-            nationalAverages={props.nationalAverages}
+            nationalAverages={nationalAverages}
           />
 
           <Robotext
@@ -67,7 +68,7 @@ export default function SchoolGraduationRate(props: {
 
           <RadarChart
             school={school}
-            nationalAverages={props.nationalAverages}
+            nationalAverages={nationalAverages}
           />
         </div>
       )}

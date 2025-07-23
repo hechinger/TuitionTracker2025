@@ -3,13 +3,13 @@
 import { useMemo, useRef } from "react";
 import clsx from "clsx";
 import { useResizeObserver } from "usehooks-ts";
-import { useSchool } from "@/hooks/useSchool";
 import { scaleLinear, scaleBand } from "d3-scale";
 import { max } from "d3-array";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { useContent } from "@/hooks/useContent";
 import Robotext from "@/components/Robotext";
 import a11y from "@/styles/accessibility.module.scss";
+import type { SchoolDetail } from "@/types";
 import BarLabel from "./BarLabel";
 import styles from "./styles.module.scss";
 
@@ -30,12 +30,14 @@ const bracketLabels = {
 } as const;
 
 export default function IncomeBracketBarChart(props: {
-  schoolId: string;
+  school: SchoolDetail;
 }) {
+  const {
+    school,
+  } = props;
   const { bracket: incomeBracket = "average" } = useIncomeBracket();
   const content = useContent();
 
-  const { data: school } = useSchool(props.schoolId);
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
   const height = 300;

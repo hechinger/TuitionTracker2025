@@ -2,7 +2,6 @@
 
 import { minIndex, maxIndex } from "d3-array";
 import { useContent } from "@/hooks/useContent";
-import { useSchool } from "@/hooks/useSchool";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { formatDollars } from "@/utils/formatDollars";
 import Well from "@/components/Well";
@@ -10,17 +9,18 @@ import Robotext from "@/components/Robotext";
 import PriceTrendChart from "@/components/PriceTrendChart";
 import IncomeBracketBarChart from "@/components/IncomeBracketBarChart";
 import IncomeBracketSelect from "@/components/IncomeBracketSelect";
+import type { SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
 /**
  * The historical prices section of the school detail page.
  */
 export default function SchoolHistoricalPrices(props: {
-  schoolId: string;
+  school: SchoolDetail;
 }) {
   const {
-    data: school,
-  } = useSchool(props.schoolId);
+    school,
+  } = props;
 
   const content = useContent();
   const { bracket = "average" } = useIncomeBracket();
@@ -112,7 +112,7 @@ export default function SchoolHistoricalPrices(props: {
         />
 
         <IncomeBracketBarChart
-          schoolId={props.schoolId}
+          school={school}
         />
       </div>
     </Well>

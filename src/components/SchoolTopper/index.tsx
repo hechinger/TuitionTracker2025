@@ -3,7 +3,6 @@
 import { GraduationCapIcon, MapPinIcon, StarIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useContent } from "@/hooks/useContent";
-import { useSchool } from "@/hooks/useSchool";
 import { useSavedSchools } from "@/hooks/useSavedSchools";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { formatDollars } from "@/utils/formatDollars";
@@ -11,17 +10,18 @@ import Robotext from "@/components/Robotext";
 import IncomeBracketSelect from "@/components/IncomeBracketSelect";
 import Well from "@/components/Well";
 import SchoolImage from "@/components/SchoolImage";
+import type { SchoolDetail } from "@/types";
 import styles from "./styles.module.scss";
 
 /**
  * Renders the top box of the school detail page.
  */
 export default function SchoolTopper(props: {
-  schoolId: string;
+  school: SchoolDetail;
 }) {
   const {
-    data: school,
-  } = useSchool(props.schoolId);
+    school,
+  } = props;
 
   const content = useContent();
 
