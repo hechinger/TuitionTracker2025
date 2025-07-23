@@ -3,6 +3,7 @@
 import { minIndex, maxIndex } from "d3-array";
 import { useContent } from "@/hooks/useContent";
 import { useSchool } from "@/hooks/useSchool";
+import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import { formatDollars } from "@/utils/formatDollars";
 import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
@@ -22,12 +23,13 @@ export default function SchoolHistoricalPrices(props: {
   } = useSchool(props.schoolId);
 
   const content = useContent();
+  const { bracket = "average" } = useIncomeBracket();
 
   if (!school) return null;
   if (school.years.length < 1) return null;
 
   const sticker = school.stickerPrice.price;
-  const net = school.netPricesByBracket.average;
+  const net = school.netPricesByBracket[bracket]
   const historicTemplate = content("SchoolPage.Prices.priceTrendTemplate");
   const historicContext = {
     SCHOOL_NAME: school.name,
