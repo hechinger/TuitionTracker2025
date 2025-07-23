@@ -186,3 +186,5 @@ export type RecommendationSection = {
   };
   schoolIds: string[];
 };
+
+export type NationalAverages = Record<DegreeLevel, Record<string, number>>;

@@ -38,6 +38,8 @@ export default function SchoolTopper(props: {
     ? content("SchoolPage.SchoolTopper.saveButton.saved")
     : content("SchoolPage.SchoolTopper.saveButton.saveThisSchool");
 
+  const hasData = school.years.length > 0;
+
   return (
     <Well>
       <div className={styles.topper}>
@@ -71,26 +73,42 @@ export default function SchoolTopper(props: {
           </div>
         </div>
 
-        <div className={styles.prices}>
-          <div className={styles.price}>
-            <span className={clsx(styles.priceNumber, styles.sticker)}>
-              {formatDollars(school.stickerPrice.price)}
-            </span>
-            <span className={styles.priceLabel}>
-              {content("SchoolPage.SchoolTopper.stickerPriceLabel")}
-            </span>
+        {!hasData && (
+          <div className={styles.dataFallback}>
+            <div className={styles.message}>
+              {content("SchoolPage.SchoolTopper.noDataMessage")}
+            </div>
+            <a
+              href={`https://nces.ed.gov/collegenavigator/?id=${school.id}`}
+              className={styles.collegeNavigatorLink}
+            >
+              {content("SchoolPage.SchoolTopper.collegeNavigatorLink")}
+            </a>
           </div>
+        )}
 
-          <div className={styles.price}>
-            <span className={clsx(styles.priceNumber, styles.net)}>
-              {formatDollars(school.netPricesByBracket[bracket])}
-            </span>
-            <span className={styles.priceLabel}>
-              {content("SchoolPage.SchoolTopper.netPriceLabel")}
-            </span>
-            <IncomeBracketSelect className={styles.select} />
+        {hasData && (
+          <div className={styles.prices}>
+            <div className={styles.price}>
+              <span className={clsx(styles.priceNumber, styles.sticker)}>
+                {formatDollars(school.stickerPrice.price)}
+              </span>
+              <span className={styles.priceLabel}>
+                {content("SchoolPage.SchoolTopper.stickerPriceLabel")}
+              </span>
+            </div>
+
+            <div className={styles.price}>
+              <span className={clsx(styles.priceNumber, styles.net)}>
+                {formatDollars(school.netPricesByBracket[bracket])}
+              </span>
+              <span className={styles.priceLabel}>
+                {content("SchoolPage.SchoolTopper.netPriceLabel")}
+              </span>
+              <IncomeBracketSelect className={styles.select} />
+            </div>
           </div>
-        </div>
+        )}
 
         <button
           type="button"

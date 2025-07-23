@@ -6,11 +6,12 @@
   margin: 40px auto;
   display: flex;
   justify-content: center;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .plot {
   position: relative;
-  overflow: hidden;
 }
 
 .canvas {

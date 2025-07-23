@@ -6,6 +6,7 @@ import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
 import { formatPercent } from "@/utils/formatPercent";
 import { getGraduation } from "@/utils/formatSchoolInfo";
+import type { NationalAverages } from "@/types";
 import OverallBar from "./OverallBar";
 import RadarChart from "./RadarChart";
 import styles from "./styles.module.scss";
@@ -15,6 +16,7 @@ import styles from "./styles.module.scss";
  */
 export default function SchoolGraduationRate(props: {
   schoolId: string;
+  nationalAverages: NationalAverages;
 }) {
   const { data: school } = useSchool(props.schoolId);
   const content = useContent();
@@ -51,7 +53,10 @@ export default function SchoolGraduationRate(props: {
             variant="graf"
           />
 
-          <OverallBar school={school} />
+          <OverallBar
+            school={school}
+            nationalAverages={props.nationalAverages}
+          />
 
           <Robotext
             context={demoContext}
@@ -60,7 +65,10 @@ export default function SchoolGraduationRate(props: {
             variant="graf"
           />
 
-          <RadarChart school={school} />
+          <RadarChart
+            school={school}
+            nationalAverages={props.nationalAverages}
+          />
         </>
       )}
     </Well>

@@ -9,19 +9,24 @@ import { formatPercent } from "@/utils/formatPercent";
 import { getAlignmentTransform } from "@/utils/getAlignmentTransform";
 import { getGraduation } from "@/utils/formatSchoolInfo";
 import Robotext from "@/components/Robotext";
-import { type SchoolDetail } from "@/types";
+import type { SchoolDetail, NationalAverages } from "@/types";
 import styles from "./styles.module.scss";
 
 const margin = { top: 24, right: 0, bottom: 20, left: 0 };
-const nationalAverage = 0.6; // FIXME
 
 export default function OverallBar(props: {
   school: SchoolDetail;
+  nationalAverages: NationalAverages;
 }) {
   const content = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
   const height = 80;
+
+  const nationalAverage = get(props.nationalAverages, [
+    props.school.degreeLevel,
+    "graduationTotal",
+  ]);
 
   const x = scaleLinear()
     .domain([0, 1])

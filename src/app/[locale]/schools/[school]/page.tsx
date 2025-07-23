@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { getContent } from "@/db/content";
 import { getSchoolsDetail } from "@/db/schools";
+import { getNationalAverages } from "@/db/nationalAverages";
 import DataProvider from "@/components/DataProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AdSlot from "@/components/AdSlot";
@@ -58,9 +59,11 @@ export default async function School(props: {
   const [
     { school: schoolSlug },
     content,
+    nationalAverages,
   ] = await Promise.all([
     props.params,
     getContent(),
+    getNationalAverages(),
   ]);
 
   const schoolId = `${schoolSlug.split('-').at(-1)}`;
@@ -91,13 +94,19 @@ export default async function School(props: {
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <SchoolGraduationRate schoolId={schoolId} />
+        <SchoolGraduationRate
+          schoolId={schoolId}
+          nationalAverages={nationalAverages}
+        />
       </ErrorBoundary>
 
       <ContactUs />
 
       <ErrorBoundary>
-        <SchoolRetention schoolId={schoolId} />
+        <SchoolRetention
+          schoolId={schoolId}
+          nationalAverages={nationalAverages}
+        />
       </ErrorBoundary>
 
       <ErrorBoundary>

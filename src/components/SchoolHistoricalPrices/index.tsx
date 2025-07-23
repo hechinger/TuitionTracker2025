@@ -66,6 +66,10 @@ export default function SchoolHistoricalPrices(props: {
     MIN_BRACKET_STUDENTS: minBracketName,
     MAX_BRACKET_STUDENTS: maxBracketName,
   };
+
+  if (school.years.length < 1) {
+    return null;
+  }
   
   return (
     <Well width="text" section>

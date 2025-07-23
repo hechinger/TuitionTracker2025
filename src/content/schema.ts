@@ -322,6 +322,16 @@ export const contentSections = [
             path: "SchoolPage.SchoolTopper.saveButton.saved",
             title: "Save button: saved"
           },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolTopper.noDataMessage",
+            title: "No-data fallback message"
+          },
+          {
+            type: "copy",
+            path: "SchoolPage.SchoolTopper.collegeNavigatorLink",
+            title: "No-data College Navigator link"
+          },
         ],
       },
       {

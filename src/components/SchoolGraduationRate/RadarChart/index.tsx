@@ -9,7 +9,7 @@ import OutlineFilter from "@/components/OutlineFilter";
 import { formatPercent } from "@/utils/formatPercent";
 import { getGraduation } from "@/utils/formatSchoolInfo";
 import { isNotUndefined } from "@/utils/isNotUndefined";
-import { type SchoolDetail } from "@/types";
+import { type SchoolDetail, NationalAverages } from "@/types";
 import a11y from "@/styles/accessibility.module.scss";
 import styles from "./styles.module.scss";
 
@@ -43,29 +43,16 @@ const categories = [
   },
 ] as const;
 
-const nationalAverage = {
-  "4-year": {
-    amerindalasknat: 0.4267,
-    asian: 0.5677,
-    black: 0.4036,
-    hisp: 0.4790,
-    nathawpacisl: 0.4656,
-    white: 0.5439,
-    multiple: 0.4700,
-    nonresident: 0.4901,
-    unknown: 0.5556,
-  },
-  "2-year": {
-    amerindalasknat: 0.3244,
-    asian: 0.4727,
-    black: 0.3008,
-    hisp: 0.3987,
-    nathawpacisl: 0.3367,
-    white: 0.4510,
-    multiple: 0.3505,
-    nonresident: 0.3737,
-    unknown: 0.4031,
-  },
+const nationalAverageKeys = {
+  amerindalasknat: "graduationAmerindalasknat",
+  asian: "graduationAsian",
+  black: "graduationBlack",
+  hisp: "graduationHisp",
+  nathawpacisl: "graduationNathawpacisl",
+  white: "graduationWhite",
+  multiple: "graduationMultiple",
+  nonresident: "graduationnOnresident",
+  unknown: "graduationUnknown",
 };
 
 type DataPoint = {
@@ -76,6 +63,7 @@ type DataPoint = {
 
 export default function RadarChart(props: {
   school: SchoolDetail;
+  nationalAverages: NationalAverages;
 }) {
   const content = useContent();
   const ref = useRef<HTMLDivElement>(null);
@@ -96,14 +84,15 @@ export default function RadarChart(props: {
       value: graduation.byRace[c.key],
     };
   }).filter(isNotUndefined);
-  const natAvg = nationalAverage[props.school.degreeLevel];
+
+  const natAvgs = props.nationalAverages[props.school.degreeLevel];
   const natAvgData = data.map((d) => ({
     key: d.key,
     label: d.label,
-    value: natAvg[d.key],
+    value: natAvgs[nationalAverageKeys[d.key]],
   }));
 
-  const spokeLength = (width / 2) - 50;
+  const spokeLength = (width / 2) - 55;
   const angle = scaleOrdinal<string, number>()
     .domain(data.map((c) => c.key))
     .range(data.map((_, i) => i * ((2 * Math.PI) / data.length)));
@@ -302,7 +291,7 @@ export default function RadarChart(props: {
               <tr key={d.key}>
                 <td>{d.label}</td>
                 <td>{formatPercent(d.value)}</td>
-                <td>{formatPercent(natAvg[d.key])}</td>
+                <td>{formatPercent(natAvgs[nationalAverageKeys[d.key]])}</td>
               </tr>
             ))}
           </tbody>

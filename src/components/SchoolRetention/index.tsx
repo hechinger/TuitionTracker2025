@@ -6,23 +6,22 @@ import { formatPercent } from "@/utils/formatPercent";
 import Well from "@/components/Well";
 import Robotext from "@/components/Robotext";
 import DonutChart from "@/components/DonutChart";
+import type { NationalAverages } from "@/types";
 import styles from "./styles.module.scss";
-
-const nationalAverages = {
-  fullTime: 0.7185,
-  partTime: 0.4584,
-};
 
 /**
  * Renders the student retention section of the school detail page.
  */
 export default function StudentRetentionSection(props: {
   schoolId: string;
+  nationalAverages: NationalAverages;
 }) {
   const content = useContent();
   const { data: school } = useSchool(props.schoolId);
 
   if (!school) return null;
+
+  const nationalAverages = props.nationalAverages[school.degreeLevel];
 
   const retentionContext = {
     SCHOOL_NAME: school.name,
@@ -49,7 +48,7 @@ export default function StudentRetentionSection(props: {
               value={school.retention.fullTime}
               label="retention"
               title={content("SchoolPage.StudentRetention.fullTimeStudents")}
-              benchmark={nationalAverages.fullTime}
+              benchmark={nationalAverages.retentionFullTime}
               benchmarkLabel="Nat’l average"
             />
           )}
@@ -59,7 +58,7 @@ export default function StudentRetentionSection(props: {
               value={school.retention.partTime}
               label="retention"
               title={content("SchoolPage.StudentRetention.partTimeStudents")}
-              benchmark={nationalAverages.partTime}
+              benchmark={nationalAverages.retentionPartTime}
               benchmarkLabel="Nat’l average"
             />
           )}
