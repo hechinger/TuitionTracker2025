@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { useRouter } from "@/i18n/navigation";
 
@@ -27,7 +27,6 @@ export function useSearchState({
   autoload = false,
   param = "search",
 }) {
-  const dispatcher = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const [cacheClear, setCacheClear] = useState({});
@@ -81,27 +80,9 @@ export function useSearchState({
   }, []);
 
   const runSearch = useCallback(() => {
-    if (dispatcher.current) {
-      dispatcher.current.dispatchEvent(new CustomEvent("ttsearch", {
-        bubbles: true,
-        cancelable: true,
-      }));
-    }
     setCacheClear({ ...cacheClear });
     router.push(`/search?${searchQueryString}`);
   }, [cacheClear, searchQueryString, router]);
-
-  useEffect(() => {
-    const handleSearchEvent = () => {
-      setCacheClear({});
-    };
-
-    window.addEventListener("ttsearch", handleSearchEvent);
-
-    return () => {
-      window.removeEventListener("ttsearch", handleSearchEvent);
-    };
-  }, []);
 
   return {
     search,
@@ -110,6 +91,5 @@ export function useSearchState({
     updateSearch,
     searchQueryString,
     runSearch,
-    dispatcher,
   };
 }
