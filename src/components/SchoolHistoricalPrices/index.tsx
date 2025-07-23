@@ -28,17 +28,6 @@ export default function SchoolHistoricalPrices(props: {
   if (!school) return null;
   if (school.years.length < 1) return null;
 
-  const sticker = school.stickerPrice.price;
-  const net = school.netPricesByBracket[bracket]
-  const historicTemplate = content("SchoolPage.Prices.priceTrendTemplate");
-  const historicContext = {
-    SCHOOL_NAME: school.name,
-    STUDENT_TYPE: "students",
-    STICKER_PRICE: formatDollars(sticker),
-    NET_PRICE: formatDollars(net),
-    PRICE_DIFFERENCE: formatDollars(sticker - net),
-  };
-
   const bracketStudents = {
     average: content("SchoolPage.Prices.priceTrendTemplateStudentsAverage"),
     "0_30000": content("SchoolPage.Prices.priceTrendTemplateStudents030K"),
@@ -46,6 +35,17 @@ export default function SchoolHistoricalPrices(props: {
     "48001_75000": content("SchoolPage.Prices.priceTrendTemplateStudents4875"),
     "75001_110000": content("SchoolPage.Prices.priceTrendTemplateStudents75110"),
     "110001": content("SchoolPage.Prices.priceTrendTemplateStudents110"),
+  };
+
+  const sticker = school.stickerPrice.price;
+  const net = school.netPricesByBracket[bracket]
+  const historicTemplate = content("SchoolPage.Prices.priceTrendTemplate");
+  const historicContext = {
+    SCHOOL_NAME: school.name,
+    STUDENT_TYPE: bracketStudents[bracket],
+    STICKER_PRICE: formatDollars(sticker),
+    NET_PRICE: formatDollars(net),
+    PRICE_DIFFERENCE: formatDollars(sticker - net),
   };
 
   const brackets = Object.entries(school.netPricesByBracket)
