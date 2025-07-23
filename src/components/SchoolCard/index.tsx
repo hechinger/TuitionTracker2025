@@ -19,6 +19,9 @@ export default function SchoolCard(props: {
   const savedSchools = useSavedSchools();
   const isSaved = savedSchools.schoolIsSaved(props.school.id);
 
+  const price = props.school.stickerPrice.price;
+  const missingData = !price;
+
   return (
     <div className={styles.card}>
       <div className={styles.save}>
@@ -48,14 +51,23 @@ export default function SchoolCard(props: {
           <div className={styles.name}>
             {props.school.name}
           </div>
-          <div className={styles.price}>
-            <span className={styles.number}>
-              {formatDollars(props.school.stickerPrice.price)}
-            </span>
-            <span className={styles.numberLabel}>
-              sticker price
-            </span>
-          </div>
+
+          {!missingData && (
+            <div className={styles.price}>
+              <span className={styles.number}>
+                {formatDollars(props.school.stickerPrice.price)}
+              </span>
+              <span className={styles.numberLabel}>
+                sticker price
+              </span>
+            </div>
+          )}
+
+          {missingData && (
+            <div className={styles.missingData}>
+              No data
+            </div>
+          )}
         </div>
       </Link>
     </div>
