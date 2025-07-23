@@ -1,3 +1,9 @@
+@use "@/styles/colors.scss";
+
+.content {
+  --highlight-color: #{colors.$brand-pink};
+}
+
 .chart {
   margin: 40px 0;
 

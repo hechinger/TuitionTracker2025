@@ -1,3 +1,9 @@
+@use "@/styles/colors.scss";
+
+.content {
+  --highlight-color: #{colors.$brand-blue-dark};
+}
+
 .sectionTitle {
   font-size: 28px;
   margin-bottom: 12px;

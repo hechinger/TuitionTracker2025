@@ -34,12 +34,14 @@ export default function StudentRetentionSection(props: {
         {content("SchoolPage.StudentRetention.title")}
       </h2>
 
-      <Robotext
-        context={retentionContext}
-        template={content("SchoolPage.StudentRetention.template")}
-        highlightColor="blue"
-        variant="graf"
-      />
+      <div className={styles.content}>
+        <Robotext
+          context={retentionContext}
+          template={content("SchoolPage.StudentRetention.template")}
+          highlightColor="blue"
+          variant="graf"
+        />
+      </div>
 
       {school && (
         <div className={styles.charts}>

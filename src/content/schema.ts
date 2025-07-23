@@ -1083,21 +1083,6 @@ export const contentSections = [
             title: "Promo Blurb",
             path: "Newsletter.blurb",
           },
-          {
-            type: "copy",
-            title: "Email Input Placeholder",
-            path: "Newsletter.emailPlaceholder",
-          },
-          {
-            type: "copy",
-            title: "Submit Button",
-            path: "Newsletter.submitButton",
-          },
-          {
-            type: "string",
-            title: "Campaign ID",
-            path: "Newsletter.campaignId",
-          },
         ],
       },
       {

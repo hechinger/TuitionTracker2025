@@ -1,19 +1,10 @@
 @use "@/styles/colors.scss";
 
 .text {
-  --highlight-color: #{colors.$text-main};
-
-  &.blue {
-    --highlight-color: #{colors.$brand-blue-dark};
-  }
-
-  &.pink {
-    --highlight-color: #{colors.$brand-pink};
-  }
-
-  :global(.highlight) {
+  ul {
     font-weight: bold;
-    color: var(--highlight-color);
+    color: var(--highlight-color, #{colors.$text-main});
+    text-decoration: none;
   }
 }
 

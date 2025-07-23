@@ -74,43 +74,45 @@ export default function SchoolHistoricalPrices(props: {
   
   return (
     <Well width="text" section>
-      <Robotext
-        template={historicTemplate}
-        context={historicContext}
-        highlightColor="pink"
-        variant="graf"
-      />
+      <div className={styles.content}>
+        <Robotext
+          template={historicTemplate}
+          context={historicContext}
+          highlightColor="pink"
+          variant="graf"
+        />
 
-      <div className={styles.chart}>
-        {school && (
-          <h2 className={styles.chartTitle}>
-            <Robotext
-              as="span"
-              template={content("SchoolPage.Prices.priceTrendChartTitle")}
-              context={{
-                SCHOOL_NAME: school.name,
-              }}
-            />
-            {' '}
-            <IncomeBracketSelect />
-          </h2>
-        )}
+        <div className={styles.chart}>
+          {school && (
+            <h2 className={styles.chartTitle}>
+              <Robotext
+                as="span"
+                template={content("SchoolPage.Prices.priceTrendChartTitle")}
+                context={{
+                  SCHOOL_NAME: school.name,
+                }}
+              />
+              {' '}
+              <IncomeBracketSelect />
+            </h2>
+          )}
 
-        <PriceTrendChart
-          school={school}
+          <PriceTrendChart
+            school={school}
+          />
+        </div>
+
+        <Robotext
+          template={bracketTemplate}
+          context={bracketContext}
+          highlightColor="pink"
+          variant="graf"
+        />
+
+        <IncomeBracketBarChart
+          schoolId={props.schoolId}
         />
       </div>
-
-      <Robotext
-        template={bracketTemplate}
-        context={bracketContext}
-        highlightColor="pink"
-        variant="graf"
-      />
-
-      <IncomeBracketBarChart
-        schoolId={props.schoolId}
-      />
     </Well>
   );
 }

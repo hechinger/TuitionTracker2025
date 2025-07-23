@@ -1,4 +1,9 @@
 @use "@/styles/breakpoints.scss";
+@use "@/styles/colors.scss";
+
+.content {
+  --highlight-color: #{colors.$brand-blue-dark};
+}
 
 .charts {
   display: flex;

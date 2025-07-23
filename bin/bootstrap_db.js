@@ -278,6 +278,8 @@ const main = async () => {
     }
 
     console.log("Creating school and price records...");
+    // await db.query("TRUNCATE TABLE schools CASCADE;");
+
     const schoolChunks = chunk(schools, 100);
     await schoolChunks.reduce(async (promise, ss) => {
       await promise;
@@ -519,15 +521,12 @@ const main = async () => {
           },
         },
         Newsletter: {
-          title: txt("Subscribe to our newsletter"),
-          blurb: txt("Keep up with the latest on higher education."),
-          emailPlaceholder: txt("Email address"),
-          submitButton: txt("Submit"),
-          campaignId: "",
+          title: txt("Sign up for our newsletter"),
+          blurb: txt("We will help you understand the true cost of college."),
         },
         ContactUs: {
           title: txt("Have a question?"),
-          blurb: txt("Send us a message if you can’t find what you’re looking for or if something doesn’t seem right."),
+          blurb: txt("Get in touch with us if you have a question. Reach us at editor@hechingerreport.org."),
           url: "https://hechingerreport.org/contact/",
         },
         Recirculation: {
@@ -535,11 +534,11 @@ const main = async () => {
         },
         About: {
           title: txt("About"),
-          copy: txt("<p>Tuition Tracker is an interactive tool that shows the relationship between published tuition and the actual costs of attending a college. Students can compare colleges by using their household income level to see what students like them have paid in the past.</p><p>Colleges and universities can also be compared based on graduation rate, which shows the likelihood of a student successfully completing their degree on time — a significant factor in affordability.</p><p>The Tuition Tracker tool was relaunched in Fall 2019 using historical data to forecast college costs. The tool currently allows users to see an estimate of what they may pay to attend the college of their choice in the 2024-25 academic year. Other historical data, such as retention and completion rates, have been updated in April 2024 using the most recently available figures.</p><p>Tuition Tracker uses cookies for optimal performance. Neither Tuition Tracker nor The Hechinger Report retains records of your personal data or answers to income questions.</p>"),
+          copy: txt("<p>Tuition Tracker is an interactive tool that shows the relationship between published tuition and the actual costs of a given college. You can compare colleges by using your household income level to see what students like you have paid in the past and might be expected to pay now. The tool uses historical data to estimate of what you may pay to attend in the 2025-26 academic year.</p><p>You can also compare colleges based on graduation rates, which shows the likelihood of a student successfully completing their degree on time — a significant factor in affordability. For individual schools, you can also find out demographic information and retention rates.</p><p>Tuition Tracker uses cookies for optimal performance. Neither Tuition Tracker nor The Hechinger Report retain records of your personal data or answers to your income questions.</p>"),
         },
         DownloadData: {
           title: txt("Download the data"),
-          copy: txt("<p>Tuition Tracker is powered by U.S. Department of Education data from IPEDS, the Integrated Postsecondary Education Data System, a service provided by the National Center for Education Statistics. The institutions analyzed are all U.S.-based, degree-granting colleges and universities that have first-time, full-time undergraduates.</p><p>Prices are for first-time, first-year students. The projected prices for each institution were calculated by taking the compound annual growth rate over the period of 2012-13 to 2022-23 using raw IPEDS data, then projecting that rate from the 2022-23 sticker price to the 2024-25 academic year. Institutions without consecutive years of data going back to 2012-13 will not have projected prices. Average net price projections are determined by applying the discount rate for each income level in the last historical year these data were available.</p><p>Rates for graduation, retention and percent of students paying sticker price are derived from IPEDS data on first-time, first-year students.</p><p>The data on institutional characteristics, acceptance rate and enrollment by race/ethnicity and gender are published as they are provided in IPEDS.</p>"),
+          copy: txt("<p>Tuition Tracker is powered by U.S. Department of Education data from IPEDS, the Integrated Postsecondary Education Data System, a service provided by the National Center for Education Statistics. The institutions analyzed are all U.S.-based, degree-granting colleges and universities that have first-time, full-time undergraduates.</p><p>Net prices are for first-time, full-time students (and, for public institutions, in-state students). The projected prices for each institution were calculated by taking the compound annual growth rate over the period of 2013-14 to 2023-24 using raw IPEDS data, then projecting that rate from the 2023-24 sticker price up to the 2025-26 academic year. Institutions without consecutive years of data going back to 2012-13 will not have projected prices. Average net price projections are determined by applying the discount rate for each income level in the last historical year these data were available. The percentage of students paying sticker price is derived from IPEDS data on first-time, first-year students.</p><p>Graduation rates and retention rates are calculated from the last five years of available data.</p><p>The data on institutional characteristics, acceptance rates and enrollment by race/ethnicity and gender are published as they are provided in IPEDS. The tool was last updated in April 2025.</p>"),
         },
         SearchResults: {
           schoolsFound: txt("{FOUND} schools found out of {TOTAL_SCHOOLS}"),
@@ -574,7 +573,7 @@ const main = async () => {
           graduationRate: {
             title: txt("Graduation Rates"),
             fallbackText: txt("Select schools above to see how their graduation rates compare."),
-            comparisonText: txt("Graduation rate can be a good indicator of how likely students are to complete their degree. See how the graduation rates of {SCHOOLS} compare."),
+            comparisonText: txt("Past graduation rates can be an indicator of how likely students are to complete their degree. See how the graduation rates of {SCHOOLS} compare."),
             graphLabel: txt("graduation rate"),
           },
           schoolSizes: {
@@ -597,7 +596,7 @@ const main = async () => {
             collegeNavigatorLink: txt("Go to College Navigator"),
           },
           Prices: {
-            priceTrendTemplate: txt("<p>This year at <strong>{SCHOOL_NAME}</strong>, we project that {STUDENT_TYPE} will pay <span class=\"highlight\">{NET_PRICE}</span>, while the advertised sticker price is {STICKER_PRICE}. That’s a difference of {PRICE_DIFFERENCE}.</p>"),
+            priceTrendTemplate: txt("<p>This year at <strong>{SCHOOL_NAME}</strong>, we project that on average {STUDENT_TYPE} will pay <u>{NET_PRICE}</u>, while the advertised price of attendance is {STICKER_PRICE}. That’s a difference of {PRICE_DIFFERENCE}.</p>"),
             priceTrendTemplateStudentsAverage: "students",
             priceTrendTemplateStudents030K: "students with incomes below $30K",
             priceTrendTemplateStudents3048: "students with incomes between $30K and $48K",
@@ -613,7 +612,7 @@ const main = async () => {
             upperEstimateLabel: txt("Upper net price estimation"),
             estimateLabel: txt("Projected net price"),
             lowerEstimateLabel: txt("Lower net price estimation"),
-            incomeBracketTemplate: txt("<p>How much a student has to pay usually depends on their family's household income. At <strong>{SCHOOL_NAME}</strong> this year, {MAX_BRACKET_STUDENTS} will pay around {MAX_BRACKET_PRICE}, while {MIN_BRACKET_STUDENTS} will pay around {MIN_BRACKET_PRICE}. That's a difference of {PRICE_DIFFERENCE}.</p>"),
+            incomeBracketTemplate: txt("<p>How much a student actually pays usually depends, at least in part, on their family's household income. At <strong>{SCHOOL_NAME}</strong> this year, we project {MAX_BRACKET_STUDENTS} will pay around {MAX_BRACKET_PRICE}, while {MIN_BRACKET_STUDENTS} will pay around {MIN_BRACKET_PRICE}. That's a difference of {PRICE_DIFFERENCE}.</p>"),
             incomeBracketChartTitle: txt("Net price by income bracket, {SCHOOL_YEAR} school year"),
             incomeBracketChartAxisLabel: txt("Family income bracket"),
           },
@@ -623,12 +622,12 @@ const main = async () => {
             schoolType: txt("{SCHOOL_CONTROL} {DEGREE_LEVEL} school"),
             acceptanceRate: txt("{ACCEPTANCE_RATE} acceptance rate"),
             graduationRate: txt("{GRADUATION_RATE} graduation rate"),
-            aboutTheData: txt("<p>Historical sticker-price data up to 2022-23 and net price up to 2021-22 provided by NCES. Data for following years projected from Hechinger Report analyses. Shaded area calculated using highest and lowest historical discount rate for average incoming freshman in income level. In-state tuition figures are used.</p><p>Net price is calculated by subtracting federal, state, local and institutional grants and scholarships from the sticker price for first-time, full-time (and, at public universities, in-state) undergraduates. Net price data shown above includes only families of students who received some form of federal student aid, including loans, since others are not tracked.</p>"),
+            aboutTheData: txt("<p>Historical sticker-price data up to 2022-23 and net price data up to 2021-22 come from the National Center for Education Statistics. Data for the following years are projected from Hechinger Report analyses. Projections are only provided for schools with complete historical data.</p><p>Net price is calculated by subtracting federal, state, local and institutional grants and scholarships from the total cost of attendance for first-time, full-time (and, at public universities, in-state) undergraduates. The data includes only families of students who received some form of federal student aid, including loans, since others are not tracked.</p><p>The shaded area provides a projected range of cost and is calculated using the highest and lowest discount rate in each income bracket over the last decade.</p>"),
           },
           GraduationRates: {
             title: txt("Graduation Rates"),
             overallTemplate: {
-              template: txt("<p>A school’s graduation rate can help capture how likely a student is to complete their degree. At <strong>{SCHOOL_NAME}</strong>, roughly <span class=\"highlight\">{GRADUATION_RATE}</span> of students achieve their {DEGREE_TYPE} within {DEGREE_YEARS} of enrolling.</p>"),
+              template: txt("<p>A school’s graduation rate can indicate how likely a student is to complete their degree. At <strong>{SCHOOL_NAME}</strong>, over the last five years <u>{GRADUATION_RATE}</u> of students earned their {DEGREE_TYPE} within {DEGREE_YEARS} of enrolling.</p>"),
               degreeTypes: {
                 "2-year": txt("associate’s degree"),
                 "4-year": txt("bachelor’s degree"),
@@ -640,7 +639,7 @@ const main = async () => {
             },
             overallBarLabel: txt("{GRADUATION_RATE} overall grad rate"),
             nationalAverageBarLabel: txt("Nat’l average"),
-            demographicTemplate: txt("<p>Students of different demographic backgrounds often graduate at different rates, so it can be helpful to look beyond the overall graduation rate. This chart shows how students of different demographic backgrounds fare completing their degrees at <strong>{SCHOOL_NAME}</strong>.</p>"),
+            demographicTemplate: txt("<p>Students from different demographic backgrounds often graduate at different rates, so it can be helpful to look beyond the overall graduation rate. This chart shows how students of different races and ethnicities fare earning their degrees at <strong>{SCHOOL_NAME}</strong>.</p>"),
           },
           StudentRetention: {
             title: txt("Student Retention"),
@@ -648,16 +647,16 @@ const main = async () => {
             partTimeStudents: txt("Part-time students"),
             chartLabel: txt("retention"),
             nationalAverageLabel: txt("Nat’l average: {NATIONAL_AVERAGE}"),
-            template: txt("<p>Student retention, or how frequently enrolled students return to continue their degree after the first year or two, is another helpful indicator of how successful students at a school tend to be. At <strong>{SCHOOL_NAME}</strong>, about <span class=\"highlight\">{FULL_TIME_RETENTION_RATE}</span> of full-time students return to continue their degree.</p>"),
+            template: txt("<p>Student retention, or how often students return to continue their degree after completing their first year, is another helpful indicator. Over the last five years, at <strong>{SCHOOL_NAME}</strong>, about <u>{FULL_TIME_RETENTION_RATE}</u> of full-time students returned the following fall to continue their degree.</p>"),
           },
           StudentDemographics: {
             title: txt("Student Demographics"),
             size: {
-              template: txt("<p>The size and makeup of a school’s student body can have a large impact on a student’s experience. <strong>{SCHOOL_NAME}</strong> has {ENROLLMENT} students, which puts it in the <strong>{SIZE_PERCENTILE} percentile</strong> of {SCHOOL_TYPE} schools.</p>"),
+              template: txt("<p>The size and demographic makeup of a school’s student body can have a large impact on a student’s experience. <strong>{SCHOOL_NAME}</strong> has {ENROLLMENT} students, which puts it in the {SIZE_PERCENTILE} percentile of {SCHOOL_TYPE} schools.</p>"),
               students: txt("students"),
             },
             gender: {
-              template: txt("<p>Different schools attract students from different backgrounds. At <strong>{SCHOOL_NAME}</strong>, about <strong>{GENDER_PERCENT_MAX}</strong> of students are {GENDER_NAME_MAX}.</p>"),
+              template: txt("<p>About {GENDER_PERCENT_MAX} of students are {GENDER_NAME_MAX}.</p>"),
               genderTextNames: {
                 men: txt("male"),
                 women: txt("female"),
@@ -671,7 +670,7 @@ const main = async () => {
               },
             },
             race: {
-              template: txt("<p>The demographic makeup of a school’s student body also plays a big role in its campus culture. At <strong>{SCHOOL_NAME}</strong>, about <strong>{DEMOGRAPHIC_PERCENT_MAX}</strong> of students are {DEMOGRAPHIC_NAME_MAX}.</p>"),
+              template: txt("<p>And about {DEMOGRAPHIC_PERCENT_MAX} of students are {DEMOGRAPHIC_NAME_MAX}.</p>"),
               demographicTextNames: {
                 unknown: txt("of an unknown demographic background"),
                 multiple: txt("of multiple races"),

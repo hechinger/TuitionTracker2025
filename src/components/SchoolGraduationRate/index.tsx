@@ -45,7 +45,7 @@ export default function SchoolGraduationRate(props: {
       </h2>
 
       {school && (
-        <>
+        <div className={styles.content}>
           <Robotext
             context={overallContext}
             template={overallTemplate}
@@ -69,7 +69,7 @@ export default function SchoolGraduationRate(props: {
             school={school}
             nationalAverages={props.nationalAverages}
           />
-        </>
+        </div>
       )}
     </Well>
   );
