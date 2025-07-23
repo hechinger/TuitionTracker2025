@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     // await pipeline({ year });
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
       setTimeout(() => resolve(), 2000);
     });
 
