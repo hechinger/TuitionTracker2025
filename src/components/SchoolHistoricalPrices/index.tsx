@@ -24,6 +24,7 @@ export default function SchoolHistoricalPrices(props: {
   const content = useContent();
 
   if (!school) return null;
+  if (school.years.length < 1) return null;
 
   const sticker = school.stickerPrice.price;
   const net = school.netPricesByBracket.average;

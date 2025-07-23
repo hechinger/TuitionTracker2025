@@ -8,7 +8,7 @@ const Papa = require("papaparse");
 const { parseIpedsDataset } = require("./utils");
 
 const baseYear = 2022;
-const needYears = new Set([...Array(7)].map((_, i) => baseYear - i - 1));
+const needYears = new Set([...Array(7)].map((_, i) => baseYear - i));
 const rootDir = path.dirname(path.dirname(__dirname));
 const ipedsDir = path.join(rootDir, "src", "data", "ipeds");
 
@@ -446,6 +446,10 @@ const datasetConfig = {
         const netYear = netPriceYears[i - 1];
 
         const stickerPrice = stickerYear.prices;
+        const sticker = (stickerPrice.type === "on-campus")
+          ? stickerPrice.inStateOnCampus
+          : stickerPrice.inStateOffCampus
+
         const getNetPrice = (bracket) => {
           if (!netYear) {
             return {
@@ -454,9 +458,6 @@ const datasetConfig = {
           }
 
           const netPrice = netYear.prices[bracket];
-          const sticker = (stickerPrice.type === "on-campus")
-            ? stickerPrice.inStateOnCampus
-            : stickerPrice.inStateOffCampus
           const discount = netPrice / sticker;
           const { min, max } = minMaxDiscounts[bracket];
 
@@ -476,7 +477,7 @@ const datasetConfig = {
 
         const avgPrice = getNetPrice("average");
 
-        if (stickerPrice && avgPrice.price) {
+        if (sticker && (avgPrice.price || i === 0)) {
           startYears.add(yearNum);
         }
 
@@ -495,25 +496,8 @@ const datasetConfig = {
         };
       });
 
-      if (
-        years.length === 11
-        && years.every((y) => !!y.stickerPrice.price)
-      ) {
-        const [mostRecentYear] = years;
-        const oldestYear = years.at(-1);
-
-        const getGrowth = (a, b) => ((a / b) ** (1 / 11));
-        const growth = getGrowth(
-          mostRecentYear.stickerPrice.price,
-          oldestYear.stickerPrice.price,
-        );
-        const growthOutState = getGrowth(
-          mostRecentYear.stickerPrice.priceOutState,
-          oldestYear.stickerPrice.priceOutState,
-        );
-
-        const grow = (n) => ((!n && n !== 0) ? null : (n * growth));
-
+      const hasEnoughData = startYears.intersection(needYears).size >= needYears.size;
+      if (hasEnoughData) {
         years[0].netPricesByBracket = {
           average: {
             // price: grow(years[1].netPricesByBracket.average.price),
@@ -552,6 +536,26 @@ const datasetConfig = {
             max: minMaxDiscounts["110001"].max,
           },
         };
+      }
+
+      if (
+        years.length === 11
+        && years.every((y) => !!y.stickerPrice.price)
+      ) {
+        const [mostRecentYear] = years;
+        const oldestYear = years.at(-1);
+
+        const getGrowth = (a, b) => ((a / b) ** (1 / 11));
+        const growth = getGrowth(
+          mostRecentYear.stickerPrice.price,
+          oldestYear.stickerPrice.price,
+        );
+        const growthOutState = getGrowth(
+          mostRecentYear.stickerPrice.priceOutState,
+          oldestYear.stickerPrice.priceOutState,
+        );
+
+        const grow = (n) => ((!n && n !== 0) ? null : (n * growth));
 
         [...Array(2)].forEach((_, i) => {
           const newYear = baseYear + 1 + i;
@@ -598,8 +602,6 @@ const datasetConfig = {
           });
         });
       }
-
-      const hasEnoughData = startYears.intersection(needYears).size >= needYears.size;
 
       return {
         ...restSchool,
@@ -694,13 +696,13 @@ const getNationalAverages = (schools) => {
 const main = async (config) => {
   fs.mkdirSync(ipedsDir, { recursive: true });
 
-  // const dataset = await parseIpedsDataset(config, {
-  //   dataDir: ipedsDir,
-  // });
-  const dataset = {
-    errors: [],
-    dataset: JSON.parse(fs.readFileSync(path.join(ipedsDir, "dataset.json"))),
-  };
+  const dataset = await parseIpedsDataset(config, {
+    dataDir: ipedsDir,
+  });
+  // const dataset = {
+  //   errors: [],
+  //   dataset: JSON.parse(fs.readFileSync(path.join(ipedsDir, "dataset.json"))),
+  // };
 
   const allSchools = Object.values(dataset.dataset);
   const schools = allSchools; // .filter((s) => s.years.length > 10);

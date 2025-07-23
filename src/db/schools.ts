@@ -87,15 +87,21 @@ const getIndexQuery = (ids?: string[]) => {
   const baseQuery = `
     SELECT *
     FROM schools
-      INNER JOIN prices
-      ON schools.id = prices.school_id
-      INNER JOIN (
-        SELECT prices.school_id, MAX(prices.start_year) as start_year
+      LEFT OUTER JOIN (
+        SELECT *
         FROM prices
-        GROUP BY prices.school_id
-      ) as latest_years
-      ON prices.school_id = latest_years.school_id
-        AND prices.start_year = latest_years.start_year
+        INNER JOIN (
+          SELECT
+            school_id as max_school_id,
+            max(start_year) as start_year
+          FROM prices
+          GROUP BY school_id
+        ) as years
+        ON
+          prices.school_id = years.max_school_id
+          AND prices.start_year = years.start_year
+      ) as latest_prices
+      ON schools.id = latest_prices.school_id
   `.trim();
 
   if (!ids) {
@@ -242,7 +248,7 @@ export const getSchoolsDetail = async (opts: {
     const years = (yearsBySchool.get(school.id) || []).sort((a, b) => {
       return b.startYear - a.startYear;
     });
-    const lastYear = years[0];
+    const lastYear = years[0] as YearData | undefined;
 
     return {
       id: school.id,
@@ -260,8 +266,8 @@ export const getSchoolsDetail = async (opts: {
         percentSticker: school.percent_sticker,
         percentAdmitted: school.admission_rate,
       },
-      stickerPrice: lastYear.stickerPrice,
-      netPricesByBracket: {
+      stickerPrice: lastYear?.stickerPrice,
+      netPricesByBracket: lastYear && {
         average: lastYear.netPricesByBracket.average.price,
         "0_30000": lastYear.netPricesByBracket["0_30000"].price,
         "30001_48000": lastYear.netPricesByBracket["30001_48000"].price,

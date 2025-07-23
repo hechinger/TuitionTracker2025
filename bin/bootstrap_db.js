@@ -6,6 +6,14 @@ const sqlite3 = require("sqlite3");
 const chunk = require("lodash/chunk");
 const lodashGet = require("lodash/get");
 
+const createTables = true;
+const loadSchools = true;
+const loadPrices = true;
+const loadNationalAverages = true;
+const loadContent = true;
+const loadRecirculation = true;
+const loadRecommendedSchools = true;
+
 const dbUrl = process.env.DATABASE_URL;
 const SERIAL_PRIMARY_KEY = dbUrl.startsWith("postgresql")
   ? "SERIAL PRIMARY KEY"
@@ -131,7 +139,7 @@ const main = async () => {
   const db = await getDb();
 
   try {
-    if (true) {
+    if (createTables) {
       console.log("Creating table: schools");
       await db.query(`
         CREATE TABLE IF NOT EXISTS schools (
@@ -348,7 +356,7 @@ const main = async () => {
       };
 
       // Update schools table
-      if (true) {
+      if (loadSchools) {
         const values = [];
         let valueId = 0;
         const valueIds = [];
@@ -372,7 +380,7 @@ const main = async () => {
       }
 
       // Update prices table
-      if (true) {
+      if (loadPrices) {
         const values = [];
         let valueId = 0;
         const valueIds = [];
@@ -401,7 +409,7 @@ const main = async () => {
       }
     }, Promise.resolve());
 
-    if (true) {
+    if (loadNationalAverages) {
       console.log("Creating content records...");
       await db.query("TRUNCATE TABLE national_averages;");
       const rows = Object.entries(nationalAverages).map(([control, avgs]) => {
@@ -422,7 +430,7 @@ const main = async () => {
       });
     }
 
-    if (true) {
+    if (loadContent) {
       console.log("Creating content records...");
       await db.query("TRUNCATE TABLE content;");
 
@@ -731,7 +739,7 @@ const main = async () => {
       await db.query(query);
     }
 
-    if (true) {
+    if (loadRecirculation) {
       console.log("Creating recirculation records...");
       await db.query("TRUNCATE TABLE recirculation_articles;");
 
@@ -766,7 +774,7 @@ const main = async () => {
       await db.query(query);
     }
 
-    if (true) {
+    if (loadRecommendedSchools) {
       console.log("Creating recommended school records...");
       await db.query("TRUNCATE TABLE recommended_school_ids CASCADE;");
       await db.query("TRUNCATE TABLE recommended_schools CASCADE;");
