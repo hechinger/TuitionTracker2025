@@ -1,7 +1,7 @@
 @use "@/styles/colors.scss";
 
 .text {
-  ul {
+  u {
     font-weight: bold;
     color: var(--highlight-color, #{colors.$text-main});
     text-decoration: none;
