@@ -1,4 +1,5 @@
 import AdmZip from "adm-zip";
+import { fetchWithRetries } from "./fetchWithRetries";
 
 export const fetchAndUnzipIpeds = async ({
   file,
@@ -8,9 +9,9 @@ export const fetchAndUnzipIpeds = async ({
   baseUrl: string;
 }) => {
   try {
-    const zipUrl = new URL(file, baseUrl);
+    const zipUrl = new URL(file, baseUrl).href;
 
-    const rsp = await fetch(zipUrl);
+    const rsp = await fetchWithRetries(zipUrl);
     const body = await rsp.arrayBuffer();
     const zip = new AdmZip(Buffer.from(body));
     const [unzippedFile] = zip.getEntries()

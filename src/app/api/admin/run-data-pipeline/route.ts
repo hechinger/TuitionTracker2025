@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-// import { pipeline } from "@/pipeline";
+import { pipeline } from "@/pipeline";
 
 export async function POST(request: Request) {
   try {
@@ -11,10 +11,7 @@ export async function POST(request: Request) {
       throw new Error("Specify year in query parameter");
     }
 
-    // await pipeline({ year });
-    await new Promise<void>((resolve) => {
-      setTimeout(() => resolve(), 2000);
-    });
+    pipeline({ year });
 
     return NextResponse.json({
       message: "Success",

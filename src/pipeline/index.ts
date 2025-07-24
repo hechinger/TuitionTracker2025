@@ -1,3 +1,4 @@
+import { performance } from "node:perf_hooks";
 import { isNotUndefined } from "@/utils/isNotUndefined";
 import { loadSchools } from "./utils/loadSchools";
 import { parseIpedsFile } from "./utils/parseIpedsFile";
@@ -26,11 +27,13 @@ export const pipeline = async ({
     registerError,
   };
 
+  console.log("Fetching and parsing data files...");
+  performance.mark("fetch-start");
   const [
     hd,
     adm,
-    effy,
     gr,
+    effy,
     efd,
     icay,
     sfa,
@@ -44,13 +47,13 @@ export const pipeline = async ({
       parseSchoolRows: parseADM,
     }, parsingContext),
     parseIpedsFile({
-      file: "EFFY{YEAR}",
-      parseSchoolRows: parseEFFY,
-    }, parsingContext),
-    parseIpedsFile({
       file: "GR{YEAR}",
       years: 5,
       parseSchoolRows: parseGR,
+    }, parsingContext),
+    parseIpedsFile({
+      file: "EFFY{YEAR}",
+      parseSchoolRows: parseEFFY,
     }, parsingContext),
     parseIpedsFile({
       file: "EF{YEAR}D",
@@ -68,7 +71,10 @@ export const pipeline = async ({
       parseSchoolRows: parseSFA,
     }, parsingContext),
   ]);
+  performance.mark("fetch-end");
 
+  console.log("Synthesizing schools...");
+  performance.mark("synthesize-start");
   const schools = [...hd.keys()].map((id) => {
     const school = {
       ...hd.get(id)!,
@@ -82,6 +88,19 @@ export const pipeline = async ({
     const synthSchool = synthesize(school, { year });
     return synthSchool || undefined;
   }).filter(isNotUndefined);
+  performance.mark("synthesize-end");
 
+  console.log("Loading schools...");
+  performance.mark("load-start");
   await loadSchools({ schools });
+  performance.mark("load-end");
+
+  console.log("Done.");
+
+  const measure = (tag: string) => {
+    return performance.measure(tag, `${tag}-start`, `${tag}-end`);
+  };
+  console.log(measure("fetch"));
+  console.log(measure("synthesize"));
+  console.log(measure("load"));
 };

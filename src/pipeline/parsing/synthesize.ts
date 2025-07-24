@@ -1,4 +1,4 @@
-import type { SchoolData } from "../config";
+import type { SchoolData } from "./types";
 
 type ParseContext = {
   year: number;
