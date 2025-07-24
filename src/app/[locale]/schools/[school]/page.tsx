@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getContent } from "@/db/content";
 import { getSchoolsDetail } from "@/db/schools";
 import { getNationalAverages } from "@/db/nationalAverages";
-import { getRecommendedSchoolSlugs } from "@/db/recommendedSchools";
+// import { getRecommendedSchoolSlugs } from "@/db/recommendedSchools";
 import DataProvider from "@/components/DataProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AdSlot from "@/components/AdSlot";
@@ -21,7 +21,7 @@ import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
 // Gets purged when content changes
 export const revalidate = 86400; // 1d
-export const dynamicParams = true;
+// export const dynamicParams = true;
 
 const getSchool = cache(async (id: string) => {
   const [school] = await getSchoolsDetail({
@@ -69,12 +69,12 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  const schools = await getRecommendedSchoolSlugs();
-  return schools.map((school) => ({
-    school: school.slug,
-  }));
-}
+// export async function generateStaticParams() {
+//   const schools = await getRecommendedSchoolSlugs();
+//   return schools.map((school) => ({
+//     school: school.slug,
+//   }));
+// }
 
 export default async function School(props: {
   params: Promise<{ school: string }>;
