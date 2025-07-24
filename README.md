@@ -9,8 +9,9 @@ This project contains all the font-end and back-end code for the Tuition Tracker
 1. Clone the repo
 2. Copy `.env.example` to `.env.local` and fill in secrets
 3. Run `npm install`
-4. Run `npm run dev`
-5. Open [localhost:3000](http://localhost:3000)
+4. (Optional, requires local database setup) Bootstrap local data with `npm run bootstrap`
+5. Run `npm run dev`
+6. Open [localhost:3000](http://localhost:3000)
 
 ## ⚙️ Framework overview
 
