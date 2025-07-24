@@ -13,6 +13,9 @@ import Recirculation from "@/components/Recirculation";
 import LandingPageTextSection from "@/components/LandingPageTextSection";
 import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
+// Gets purged when content changes
+export const revalidate = 86400; // 1d
+
 export default async function Home() {
   const [
     content,

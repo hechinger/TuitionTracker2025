@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { setContent } from "@/db/content";
+import { revalidateContent } from "@/cache";
 
 export async function POST(request: Request) {
   try {
     const content = await request.json();
     await setContent(content);
+    revalidateContent();
     return NextResponse.json({
       message: "Content updated",
     });

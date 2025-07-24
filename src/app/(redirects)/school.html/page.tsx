@@ -1,6 +1,8 @@
 import { permanentRedirect, notFound } from "next/navigation";
 import { queryRows } from "@/db/pool";
 
+export const revalidate = 31536000; // 1y
+
 export default async function OldSchool({
   searchParams,
 }: {

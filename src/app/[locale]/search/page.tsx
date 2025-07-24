@@ -9,6 +9,9 @@ import ContactUs from "@/components/ContactUs";
 import Recirculation from "@/components/Recirculation";
 import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
+// Gets purged when content changes
+export const revalidate = 86400; // 1d
+
 export default async function Search() {
   const [
     content,

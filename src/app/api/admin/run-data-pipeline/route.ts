@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { pipeline } from "@/pipeline";
+import { revalidateSchools } from "@/cache";
 
 export async function POST(request: Request) {
   try {
@@ -11,7 +12,8 @@ export async function POST(request: Request) {
       throw new Error("Specify year in query parameter");
     }
 
-    pipeline({ year });
+    // Do not await this promise so that it runs in the background
+    pipeline({ year }).then(() => revalidateSchools());
 
     return NextResponse.json({
       message: "Success",

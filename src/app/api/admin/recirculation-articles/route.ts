@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getRecirculationArticles, setRecirculationArticles } from "@/db/recirculationArticles";
+import { revalidateRecirculation } from "@/cache";
 
 export async function GET() {
   const articles = await getRecirculationArticles();
@@ -11,6 +12,8 @@ export async function POST(request: Request) {
     const articles = await request.json();
 
     await setRecirculationArticles(articles);
+    revalidateRecirculation();
+
     return NextResponse.json({
       message: "Content updated",
     });

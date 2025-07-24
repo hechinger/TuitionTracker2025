@@ -18,6 +18,16 @@ export type RecommendedSchoolsSection = {
   school_ids: string[];
 };
 
+export const getRecommendedSchoolSlugs = async () => {
+  const slugs = await queryRows<{ slug: string }>(`
+    SELECT slug
+    FROM recommended_school_ids
+    INNER JOIN schools
+    ON recommended_school_ids.id = schools.id;
+  `);
+  return slugs;
+};
+
 export const getRecommendedSchools = async () => {
   const sectionSchools = await queryRows<RecommendedSchoolsRow>(`
     SELECT recommended_schools.db_id, page_order, title, title_spanish, school_id
