@@ -117,6 +117,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="<PUBLISHABLE KEY FROM CLERK>"
 CLERK_SECRET_KEY="<SECRET KEY FROM CLERK>"
 NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
 BLOB_READ_WRITE_TOKEN="<VERCEL BLOB TOKEN>"
+VERCEL_ENV="development"
 ```
 
 For local development, especially if you're doing something that requires updating content, you may want to use a local database (e.g., run a local postgres server).
