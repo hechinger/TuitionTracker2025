@@ -1,3 +1,7 @@
+# Tuition Tracker
+
+This project contains all the font-end and back-end code for the Tuition Tracker built by The Hechinger Report.
+
 ## ⚙️ Framework overview
 
 This project is built with [Next.js](https://nextjs.org/) using the [App Router](https://nextjs.org/docs/app), which enables a file-based routing system along with support for layouts, nested routes, and React Server Components.
@@ -68,7 +72,7 @@ The database for this project consists of the following tables:
 
 ## Admin configuration
 
-This project includes an admin dashboard section in addition to the main, public pages of the site. All of the admin pages and endpoints are protected with Clerk, so you can manage which users have access through Clerk's web portal.
+This project includes an admin dashboard section (mounted at the path `/admin`) in addition to the main, public pages of the site. All of the admin pages and endpoints are protected with Clerk, so you can manage which users have access through Clerk's web portal.
 
 The admin dashboard lets users do a number of things, including:
 
@@ -100,6 +104,12 @@ This means that in order to add a new piece of content to the site and make it e
 This app provides an automated data pipeline for downloading bulk data from IPEDS, processing it, and loading it into the database. IPEDS provides [bulk data files](https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx?gotoReportId=7&fromIpeds=true&sid=f4816230-1dce-424f-9fef-73d4260c6c68&rtid=7), which we download, parse, and synthesize into our internal representation of the data for a school. This includes some specific analysis, like calculating graduation or retention rates, or projecting future years of price data.
 
 You can find the relevant code in the `src/pipeline/` directory. Refer to the comments in the code for more information on how it works.
+
+## Caching
+
+This project leverages Vercel's edge caching to provide a quick and speedy user experience. Because the site's content is primarily static and will likely change very infrequently, we set agressive cache times on most of the endpoints (with the exception of admin-related endpoints, which should have a tiny amount of traffic) and explicitly invalidate endpoints when content changes.
+
+Note that Vercel's cache can be purged through the Vercel admin, and each deployment on Vercel has its own set of cache keys, so if for some reason you find content stuck in Vercel's cache and you need to remove it quickly, you can either purge manually or promote a new deployment to production. In theory that shouldn't be necessary, but good to know as a last resort.
 
 ## Local development
 
@@ -133,3 +143,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Deploy on Vercel
 
 This project is deployed through Vercel. New preview deployments are automatically created from pushes to GitHub.
+
+## Credit
+
+This project was originally built by [The Andrew McGill Company](https://www.mcgill.cool/) :heart:
