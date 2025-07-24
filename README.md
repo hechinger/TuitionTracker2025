@@ -2,6 +2,16 @@
 
 This project contains all the font-end and back-end code for the Tuition Tracker built by The Hechinger Report.
 
+**Tech stack**: Next.js 15, React, PostgreSQL (via Neon), Clerk (auth), next-intl (i18n), SCSS
+
+## 🚀 Quick start
+
+1. Clone the repo
+2. Copy `.env.example` to `.env.local` and fill in secrets
+3. Run `npm install`
+4. Run `npm run dev`
+5. Open [localhost:3000](http://localhost:3000)
+
 ## ⚙️ Framework overview
 
 This project is built with [Next.js](https://nextjs.org/) using the [App Router](https://nextjs.org/docs/app), which enables a file-based routing system along with support for layouts, nested routes, and React Server Components.
@@ -44,13 +54,15 @@ The code organization of this project is pretty standard for a Next project, but
 
 This project integrates most notably with the following external services/libraries:
 
-- **[Clerk](https://clerk.com/)** for authentication and user management. Clerk handles sign-in, sign-up, and session management with full React and Next.js support. See their guide for integrating [Clerk + Next.js Guide](https://clerk.com/docs/quickstarts/nextjs). Which routes are protected is determined in `src/middleware.ts`.
+- **[Clerk](https://clerk.com/)** for authentication and user management. Clerk handles sign-in, sign-up, and session management with full React and Next.js support. See their guide for integrating [Clerk + Next.js Guide](https://clerk.com/docs/quickstarts/nextjs). Which routes are protected is determined in [`src/middleware.ts`](./src/middleware.ts).
 
-- **[next-intl](https://next-intl-docs.vercel.app/)** for internationalization (i18n). This library provides a simple way to manage translations and locale-based routing in Next.js projects. Check out their guide for [integrating with next-intl](https://next-intl-docs.vercel.app/getting-started/app-router). Which routes are localized is determined in `src/middleware.ts`. Note that all localized routes have to be under the `src/app/[locale]/` directory.
+- **[next-intl](https://next-intl-docs.vercel.app/)** for internationalization (i18n). This library provides a simple way to manage translations and locale-based routing in Next.js projects. Check out their guide for [integrating with next-intl](https://next-intl-docs.vercel.app/getting-started/app-router). Which routes are localized is determined in [`src/middleware.ts`](./src/middleware.ts). Note that all localized routes have to be under the [`src/app/[locale]/`](./src/app/[locale]) directory.
 
 - **[Neon](https://neon.tech/)** as a fully managed PostgreSQL database. Neon supports serverless connections and works well with edge functions and modern hosting platforms like Vercel. Check out the [Neon Docs](https://neon.tech/docs/introduction). For the purposes of this project, we just treat it like a managed PostgreSQL database ([their web dashboard is pretty handy though](https://console.neon.tech/)).
 
-These services are configured primarily using environment variables and `src/middleware.js`.
+- **[Vercel Blob](https://vercel.com/docs/vercel-blob)** for storing and serving uploaded images.
+
+These services are configured primarily using environment variables and [`src/middleware.js`](./src/middleware.ts).
 
 ## Database structure
 
@@ -84,7 +96,7 @@ The admin dashboard lets users do a number of things, including:
 
 ### Managing content
 
-One of the most expansive sections of the admin is the content editing section. The editable fields in the admin are configured in `src/content/schema.ts`, which contains a hierarchical structure of field configurations. You can reorganize fields as you see fit by reordering and regrouping fields in the schema file.
+One of the most expansive sections of the admin is the content editing section. The editable fields in the admin are configured in [`src/content/schema.ts`](./src/content/schema.ts), which contains a hierarchical structure of field configurations. You can reorganize fields as you see fit by reordering and regrouping fields in the schema file.
 
 Each field in the content schema controls one or two rows in the `content` table, depending on if the content is localized or not. There are some things (like image URLs) that don't require translation, but most of the dynamic content is translated text. The `path` in the schema file is the combination of the `component` and `path` columns of the `content` table.
 
@@ -103,7 +115,7 @@ This means that in order to add a new piece of content to the site and make it e
 
 This app provides an automated data pipeline for downloading bulk data from IPEDS, processing it, and loading it into the database. IPEDS provides [bulk data files](https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx?gotoReportId=7&fromIpeds=true&sid=f4816230-1dce-424f-9fef-73d4260c6c68&rtid=7), which we download, parse, and synthesize into our internal representation of the data for a school. This includes some specific analysis, like calculating graduation or retention rates, or projecting future years of price data.
 
-You can find the relevant code in the `src/pipeline/` directory. Refer to the comments in the code for more information on how it works.
+You can find the relevant code in the [`src/pipeline/`](./src/pipeline) directory. Refer to the comments in the code for more information on how it works.
 
 ## Caching
 
@@ -119,18 +131,24 @@ This project was built using Node v22.12 for local development, but most modern 
 npm install
 ```
 
-Set up a local `.env` file with the following configurations, providing the necessary values:
+Set up a local `.env` file with the following configurations, providing the necessary values (you can start from [`.env.example`](./.env.example)):
 
 ```bash
 DATABASE_URL="<YOUR DB URL>"
+BLOB_READ_WRITE_TOKEN="<VERCEL BLOB TOKEN>"
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="<PUBLISHABLE KEY FROM CLERK>"
 CLERK_SECRET_KEY="<SECRET KEY FROM CLERK>"
 NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
-BLOB_READ_WRITE_TOKEN="<VERCEL BLOB TOKEN>"
 VERCEL_ENV="development"
 ```
 
-For local development, especially if you're doing something that requires updating content, you may want to use a local database (e.g., run a local postgres server).
+For local development, especially if you're doing something that requires updating content, you may want to use a local database (e.g., run a local postgres server). The project should have a separate Vercel blob storage set up for the preview and development environments. You should be able to retrieve the corresponding token to use as `BLOB_READ_WRITE_TOKEN` for local development.
+
+If you're getting things started for the first time, you can bootstrap a local database. Note that this will truncate some tables to maintain its idempotency in a local environment, so **use caution if you are connected to a production database**. Double-check your database configuration just be be sure. (Also note that this pulls a lot of data, so it may take a few minutes to complete.)
+
+```bash
+npm run bootstrap
+```
 
 Run the development server:
 

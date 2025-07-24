@@ -44,3 +44,4 @@ src/data/*
 !src/data/.gitkeep
 
 public/api-static/*
+bin/bootstrap.js

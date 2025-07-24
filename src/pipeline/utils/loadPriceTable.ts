@@ -58,7 +58,7 @@ export const loadPriceTable = async <School = Record<string, unknown>>(schools: 
       INSERT INTO prices
         (${Object.keys(priceColumns).join(", ")})
       VALUES ${valueIdSets}
-      ON CONFLICT DO UPDATE SET ${updateColumns};
+      ON CONFLICT (school_id, year) DO UPDATE SET ${updateColumns};
     `,
     values: values.flat(),
   };

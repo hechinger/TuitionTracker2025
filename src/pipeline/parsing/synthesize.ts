@@ -141,38 +141,40 @@ export const synthesize = (
     // Because IPEDS doesn't have net price information for the latest year,
     // we calculate it based on the previous year's discount from the sticker
     // price.
-    years[0].netPricesByBracket = {
-      average: {
-        price: nullMult(years[1].netPricesByBracket.average.discount, years[0].stickerPrice.price),
-        min: minMaxDiscounts.average.min,
-        max: minMaxDiscounts.average.max,
-      },
-      "0_30000": {
-        price: nullMult(years[1].netPricesByBracket["0_30000"].discount, years[0].stickerPrice.price),
-        min: minMaxDiscounts["0_30000"].min,
-        max: minMaxDiscounts["0_30000"].max,
-      },
-      "30001_48000": {
-        price: nullMult(years[1].netPricesByBracket["30001_48000"].discount, years[0].stickerPrice.price),
-        min: minMaxDiscounts["30001_48000"].min,
-        max: minMaxDiscounts["30001_48000"].max,
-      },
-      "48001_75000": {
-        price: nullMult(years[1].netPricesByBracket["48001_75000"].discount, years[0].stickerPrice.price),
-        min: minMaxDiscounts["48001_75000"].min,
-        max: minMaxDiscounts["48001_75000"].max,
-      },
-      "75001_110000": {
-        price: nullMult(years[1].netPricesByBracket["75001_110000"].discount, years[0].stickerPrice.price),
-        min: minMaxDiscounts["75001_110000"].min,
-        max: minMaxDiscounts["75001_110000"].max,
-      },
-      "110001": {
-        price: nullMult(years[1].netPricesByBracket["110001"].discount, years[0].stickerPrice.price),
-        min: minMaxDiscounts["110001"].min,
-        max: minMaxDiscounts["110001"].max,
-      },
-    };
+    if (hasEnoughData) {
+      years[0].netPricesByBracket = {
+        average: {
+          price: nullMult(years[1].netPricesByBracket.average.discount, years[0].stickerPrice.price),
+          min: minMaxDiscounts.average.min,
+          max: minMaxDiscounts.average.max,
+        },
+        "0_30000": {
+          price: nullMult(years[1].netPricesByBracket["0_30000"].discount, years[0].stickerPrice.price),
+          min: minMaxDiscounts["0_30000"].min,
+          max: minMaxDiscounts["0_30000"].max,
+        },
+        "30001_48000": {
+          price: nullMult(years[1].netPricesByBracket["30001_48000"].discount, years[0].stickerPrice.price),
+          min: minMaxDiscounts["30001_48000"].min,
+          max: minMaxDiscounts["30001_48000"].max,
+        },
+        "48001_75000": {
+          price: nullMult(years[1].netPricesByBracket["48001_75000"].discount, years[0].stickerPrice.price),
+          min: minMaxDiscounts["48001_75000"].min,
+          max: minMaxDiscounts["48001_75000"].max,
+        },
+        "75001_110000": {
+          price: nullMult(years[1].netPricesByBracket["75001_110000"].discount, years[0].stickerPrice.price),
+          min: minMaxDiscounts["75001_110000"].min,
+          max: minMaxDiscounts["75001_110000"].max,
+        },
+        "110001": {
+          price: nullMult(years[1].netPricesByBracket["110001"].discount, years[0].stickerPrice.price),
+          min: minMaxDiscounts["110001"].min,
+          max: minMaxDiscounts["110001"].max,
+        },
+      };
+    }
 
     // For schools that have the full 11 years of sticker price data, we will
     // project the next two years of sticker and net price data by multiplying

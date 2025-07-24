@@ -1,6 +1,8 @@
 import { performance } from "node:perf_hooks";
 import { isNotUndefined } from "@/utils/isNotUndefined";
 import { loadSchools } from "./utils/loadSchools";
+import { getNationalAverages } from "./utils/getNationalAverages";
+import { loadNationalAverages } from "./utils/loadNationalAverages";
 import { parseIpedsFile } from "./utils/parseIpedsFile";
 import { parseHD } from "./parsing/hd";
 import { parseADM } from "./parsing/adm";
@@ -102,6 +104,12 @@ export const pipeline = async ({
   performance.mark("load-start");
   await loadSchools({ schools });
   performance.mark("load-end");
+
+  console.log("Computing and loading national averages...");
+  performance.mark("national-averages-start");
+  const nationalAverages = getNationalAverages(schools);
+  await loadNationalAverages(nationalAverages);
+  performance.mark("national-averages-end");
 
   console.log("Done.");
 

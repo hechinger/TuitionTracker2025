@@ -1,5 +1,4 @@
 import get from "lodash/get";
-import set from "lodash/set";
 
 /**
  * Compute the set of national averages from the whole set of schools. This
@@ -75,12 +74,22 @@ export const getNationalAverages = (schools: Record<string, unknown>[]) => {
     });
   });
 
-  Object.entries(averages).forEach(([level, avgs]) => {
-    Object.entries(avgs).forEach(([key, avg]) => {
-      const { sum, n } = avg;
-      set(averages, [level, key], sum / n);
-    });
-  });
+  const natAvgs = Object.fromEntries(
+    Object.entries(averages).map(([level, avgs]) => {
+      return [
+        level,
+        Object.fromEntries(
+          Object.entries(avgs).map(([key, avg]) => {
+            const { sum, n } = avg;
+            return [
+              key,
+              sum / n,
+            ];
+          }),
+        ),
+      ];
+    }),
+  );
 
-  return averages;
+  return natAvgs;
 };
