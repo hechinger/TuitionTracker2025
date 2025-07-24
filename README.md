@@ -7,7 +7,7 @@ This project contains all the font-end and back-end code for the Tuition Tracker
 ## 🚀 Quick start
 
 1. Clone the repo
-2. Copy `.env.example` to `.env.local` and fill in secrets
+2. Copy `env.example` to `.env.local` and fill in secrets
 3. Run `npm install`
 4. (Optional, requires local database setup) Bootstrap local data with `npm run bootstrap`
 5. Run `npm run dev`
@@ -132,7 +132,7 @@ This project was built using Node v22.12 for local development, but most modern 
 npm install
 ```
 
-Set up a local `.env` file with the following configurations, providing the necessary values (you can start from [`.env.example`](./.env.example)):
+Set up a local `.env` file with the following configurations, providing the necessary values (you can start from [`env.example`](./env.example)):
 
 ```bash
 DATABASE_URL="<YOUR DB URL>"
