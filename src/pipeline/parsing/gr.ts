@@ -1,18 +1,22 @@
 import { sum } from "d3-array";
 import type { ParseContext } from "../utils/parseIpedsFile";
 
+/**
+ * This file separates people into "cohorts" by graduation type (`GRTYPE`),
+ * and breaks down the demographic makeup of each cohort.
+ */
 export type RowGR = {
-  GRTYPE: number;
-  GRTOTLT: number;
-  GRUNKNT: number;
-  GR2MORT: number;
-  GRWHITT: number;
-  GRHISPT: number;
-  GRNHPIT: number;
-  GRBKAAT: number;
-  GRASIAT: number;
-  GRAIANT: number;
-  GRNRALT: number;
+  GRTYPE: number; // cohort graduation type
+  GRTOTLT: number; // total in the cohort
+  GRUNKNT: number; // unknown race
+  GR2MORT: number; // mulitple races
+  GRWHITT: number; // white
+  GRHISPT: number; // hispanic
+  GRNHPIT: number; // native hawaiian / pacific islander
+  GRBKAAT: number; // black
+  GRASIAT: number; // asian
+  GRAIANT: number; // american indian / alaskan native
+  GRNRALT: number; // nonresident
 };
 
 export const parseGR = (
@@ -20,7 +24,11 @@ export const parseGR = (
   { registerError }: ParseContext,
 ) => {
   const rows = years.flat();
+
+  // The cohorts that completed their degree
   const numeratorRows = rows.filter((row) => ["9", "30"].includes(`${row.GRTYPE}`));
+
+  // The complete, super-set cohorts
   const denominatorRows = rows.filter((row) => ["8", "29"].includes(`${row.GRTYPE}`));
   const gradRate = (key: keyof RowGR) => {
     const numerator = sum(numeratorRows, (row) => row[key]);

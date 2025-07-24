@@ -1,18 +1,18 @@
 export type RowEFFY = {
-  EFYTOTLT: number;
-  EFYTOTLM: number;
-  EFYTOTLW: number;
-  EFYGUUN: number;
-  EFYGUAN: number;
-  EFYUNKNT: number;
-  EFY2MORT: number;
-  EFYWHITT: number;
-  EFYHISPT: number;
-  EFYNHPIT: number;
-  EFYBKAAT: number;
-  EFYASIAT: number;
-  EFYAIANT: number;
-  EFYNRALT: number;
+  EFYTOTLT: number; // total enrollment count
+  EFYTOTLM: number; // male
+  EFYTOTLW: number; // female
+  EFYGUUN: number; // unknown gender
+  EFYGUAN: number; // another gender
+  EFYUNKNT: number; // unknown race
+  EFY2MORT: number; // multiple races
+  EFYWHITT: number; // white
+  EFYHISPT: number; // hispanic
+  EFYNHPIT: number; // native hawaiian / pacific islander
+  EFYBKAAT: number; // black
+  EFYASIAT: number; // asian
+  EFYAIANT: number; // american indian / alaskan native
+  EFYNRALT: number; // nonresident
 };
 
 export const parseEFFY = (

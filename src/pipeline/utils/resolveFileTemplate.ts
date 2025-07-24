@@ -1,3 +1,6 @@
+/**
+ * Helper for resolving the templated file names for IPEDS bulk data file.
+ */
 export const resolveFileTemplate = ({
   template,
   year,

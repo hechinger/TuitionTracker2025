@@ -1,6 +1,12 @@
 import AdmZip from "adm-zip";
 import { fetchWithRetries } from "./fetchWithRetries";
 
+/**
+ * Download and unzip a bulk data file from IPEDS. Note that the zip files
+ * can contain multiple entries when the data has been revised. We prefer
+ * the revised data by looking for entries that end in the suffix `_rv`. If
+ * the data hasn't been revised, we just use what we get.
+ */
 export const fetchAndUnzipIpeds = async ({
   file,
   baseUrl,

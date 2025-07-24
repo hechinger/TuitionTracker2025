@@ -1,6 +1,11 @@
 import get from "lodash/get";
 import set from "lodash/set";
 
+/**
+ * Compute the set of national averages from the whole set of schools. This
+ * computes national averages for 2-year and 4-year institutions for retention
+ * and graduation rates.
+ */
 export const getNationalAverages = (schools: Record<string, unknown>[]) => {
   const averages = {
     "2-year": {

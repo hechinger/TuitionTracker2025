@@ -1,6 +1,6 @@
 export type RowADM = {
-  APPLCN: number;
-  ADMSSN: number;
+  APPLCN: number; // number of applications
+  ADMSSN: number; // number admitted
 };
 
 export const parseADM = (

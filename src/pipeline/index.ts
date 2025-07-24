@@ -11,6 +11,14 @@ import { parseICAY } from "./parsing/icay";
 import { parseSFA } from "./parsing/sfa";
 import { synthesize } from "./parsing/synthesize";
 
+/**
+  * This function runs the data pipeline for a specific year. It pulls bulk
+  * data from IPEDS ([1][]), parses it, performs the necessary analysis, and
+  * loads it into the database. The separate parsers here are named for the
+  * IPEDS bulk files that they parse.
+  *
+  * [1]: https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx?gotoReportId=7&fromIpeds=true&sid=f4816230-1dce-424f-9fef-73d4260c6c68&rtid=7
+  */
 export const pipeline = async ({
   year,
 }: {
@@ -30,13 +38,13 @@ export const pipeline = async ({
   console.log("Fetching and parsing data files...");
   performance.mark("fetch-start");
   const [
-    hd,
-    adm,
-    gr,
-    effy,
-    efd,
-    icay,
-    sfa,
+    hd, // institutional characteristics
+    adm, // admissions
+    gr, // graduation rates
+    effy, // 12-month enrollment
+    efd, // fall enrollment
+    icay, // sticker price
+    sfa, // net price
   ] = await Promise.all([
     parseIpedsFile({
       file: "HD{YEAR}",

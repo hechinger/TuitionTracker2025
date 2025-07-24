@@ -4,6 +4,13 @@ type ParseContext = {
   year: number;
 };
 
+/**
+ * This function takes the combination of all of the parsed data for one
+ * school at a time and synthesizes that into one final representation
+ * of the school. This is the step where we can do things like project
+ * out net and sticker price, filter out price data for schools that don't
+ * have enough years available, etc.
+ */
 export const synthesize = (
   school: SchoolData,
   { year: baseYear }: ParseContext,
@@ -17,6 +24,7 @@ export const synthesize = (
   if (!school.id) return null;
 
   try {
+    // we keep track of the "discount" for each income bracket
     const minMaxDiscounts = {
       average: {
         min: undefined as (number | undefined),
@@ -44,13 +52,17 @@ export const synthesize = (
       },
     };
 
+    // we keep track of which years this school has so that we know if
+    // it has enough price data to include
     const startYears = new Set();
+
     const years = stickerPriceYears.map((stickerYear, i) => {
       const yearNum = baseYear - i;
       const netYear = netPriceYears[i - 1];
 
       const stickerPrice = stickerYear.prices;
       const sticker = stickerPrice.price;
+
       const getNetPrice = (bracket: keyof typeof minMaxDiscounts) => {
         if (!netYear) {
           return {
@@ -90,6 +102,9 @@ export const synthesize = (
 
       const avgPrice = getNetPrice("average");
 
+      // We count this year as having price data if it includes both the
+      // sticker price and the average net price. IPEDS won't have the net
+      // price for the most recent year, so we overlook that one.
       if (stickerPrice && (avgPrice.price || i === 0)) {
         startYears.add(yearNum);
       }
@@ -109,18 +124,23 @@ export const synthesize = (
       };
     });
 
+    // Here we're making sure the school has the 7 most recent years worth of
+    // price data.
     const needYears = new Set([...Array(7)].map((_, i) => baseYear - i));
     const hasEnoughData = startYears.intersection(needYears).size >= needYears.size;
 
-      const nullMult = (
-        a: number | null = null,
-        b: number | null = null,
-      ) => {
-        if (!a && a !== 0) return null;
-        if (!b && b !== 0) return null;
-        return a * b;
-      };
+    const nullMult = (
+      a: number | null = null,
+      b: number | null = null,
+    ) => {
+      if (!a && a !== 0) return null;
+      if (!b && b !== 0) return null;
+      return a * b;
+    };
 
+    // Because IPEDS doesn't have net price information for the latest year,
+    // we calculate it based on the previous year's discount from the sticker
+    // price.
     years[0].netPricesByBracket = {
       average: {
         price: nullMult(years[1].netPricesByBracket.average.discount, years[0].stickerPrice.price),
@@ -154,6 +174,16 @@ export const synthesize = (
       },
     };
 
+    // For schools that have the full 11 years of sticker price data, we will
+    // project the next two years of sticker and net price data by multiplying
+    // the most recent year by the growth rate:
+    //
+    // ```
+    // (t_n / t_0) ** (1 / 11)
+    // ```
+    //
+    // where `t_n` is the sticker price for the most recent year and `t_0` is
+    // the sticker price for the oldest year we have.
     if (
       years.length === 11
       && years.every((y) => !!y.stickerPrice.price)
@@ -176,6 +206,7 @@ export const synthesize = (
         g: number | null = growth,
       ) => nullMult(n, g);
 
+      // Here we're projecting out _two_ years.
       [...Array(2)].forEach((_, i) => {
         const newYear = baseYear + 1 + i;
         years.unshift({
@@ -222,6 +253,8 @@ export const synthesize = (
       });
     }
 
+    // If a school does not have enough price data, we return an empty array
+    // for its yearly price data, omitting the sparse data entirely.
     return {
       ...restSchool,
       years: hasEnoughData ? years : [],

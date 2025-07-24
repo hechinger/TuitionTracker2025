@@ -2,19 +2,19 @@ import kebabCase from "lodash/kebabCase";
 import type { ParseContext } from "../utils/parseIpedsFile";
 
 export type RowHD = {
-  UNITID: number;
-  INSTNM: string;
-  IALIAS: string;
-  CITY: string;
-  STABBR: string;
-  ZIP: number;
-  LONGITUD: number;
-  LATITUDE: number;
-  HBCU: number;
-  TRIBAL: number;
-  SECTOR: number;
-  CONTROL: number;
-  ICLEVEL: number;
+  UNITID: number; // ID of the school in IPEDS
+  INSTNM: string; // name
+  IALIAS: string; // alias (for searching)
+  CITY: string; // city
+  STABBR: string; // state
+  ZIP: number; // zip code
+  LONGITUD: number; // longitude
+  LATITUDE: number; // latitude
+  HBCU: number; // whether this is an HBCU
+  TRIBAL: number; // whether this is a tribal college
+  SECTOR: number; // combination of control and level
+  CONTROL: number; // public, private, for-profit
+  ICLEVEL: number; // 2-year, 4-year
 };
 
 export const parseHD = (

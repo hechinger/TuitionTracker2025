@@ -27,6 +27,10 @@ export type IpedsFileConfig<FileRow = unknown> = Pick<
   "file" | "years" | "schoolIdKey" | "parseSchoolRows"
 >;
 
+/**
+ * Dowload and parse an IPEDS bulk data file for a particular year. This
+ * supports downloading multiple years worth of the same bulk file.
+ */
 export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
   config: {
     file: string;
@@ -53,8 +57,11 @@ export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
     registerError = () => {},
   } = context;
 
+  // We organize data by school ID. Each school may result in multiple rows
+  // depending on the bulk data file or if we're downloading multiple years.
   const schoolYears = new Map<string, FileRow[][]>();
 
+  // Fetch and parse all the files, organizing the rows by school
   await [...Array(years)].reduce(async (promise, _, i) => {
     await promise;
 
@@ -72,6 +79,7 @@ export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
     });
   }, Promise.resolve());
 
+  // Parse the rows for each school using the provided parsing function
   const parsed = new Map([...schoolYears].map(([schoolId, data]) => {
     const parsedData = parseSchoolRows(data, {
       schoolId,

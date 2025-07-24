@@ -1,3 +1,21 @@
+/**
+ * This controls how fields show up in the admin content dashboard. The top-level
+ * sections correspond to the tabs in the dashboard, and the field groups are
+ * groups of related fields. Each individual field gets rendered with the `Field`
+ * component in `src/admin/components/Field`, so the valid types are:
+ *
+ * - `string`: a simple text input for non-localized strings
+ * - `copy`: a bit of localized text
+ * - `richCopy`: multi-paragraph, localized text
+ * - `autotext`: multi-paragraph, localized text with dynamic variables
+ * - `select`: a select menu with explicit options
+ * - `boolean`: a checkbox
+ * - `image`: a file input to upload an imaage
+ *
+ * By setting `presentation` to `"collapsed"` on a field group, you can make that
+ * group render pre-collapsed in the tool. That can be handy for more "advanced"
+ * controls that likely won't be used with any kind of regularity.
+ */
 export const contentSections = [
   {
     title: "Landing Page Content",
@@ -1132,6 +1150,11 @@ export const contentSections = [
   },
 ];
 
+/**
+ * This defines the set of fields that are editable in the school admin.
+ * We're keeping this pretty simple for now, because the main use case
+ * is just for managing school images.
+ */
 export const schoolFields = [
   {
     type: "string",

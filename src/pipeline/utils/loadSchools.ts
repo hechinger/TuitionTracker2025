@@ -2,6 +2,10 @@ import chunk from "lodash/chunk";
 import { loadSchoolTable } from "./loadSchoolTable";
 import { loadPriceTable } from "./loadPriceTable";
 
+/**
+ * Take the whole set of parsed school data and load it into the `schools`
+ * and `prices` tables of the database.
+ */
 export const loadSchools = async <School = Record<string, unknown>>({
   schools,
   chunkSize = 100,

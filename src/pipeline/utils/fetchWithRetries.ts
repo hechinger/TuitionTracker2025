@@ -1,3 +1,8 @@
+/**
+ * Every once in a while, the IPEDS bulk data download times out (some
+ * of the files are relatively large), so we include a little bit of
+ * light retrying logic here.
+ */
 export const fetchWithRetries = async (url: string, retries = 3) => {
   try {
     const rsp = await fetch(url);

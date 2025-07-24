@@ -47,6 +47,9 @@ const schoolColumns = {
   percent_sticker: "percentSticker", 
 };
 
+/**
+ * Load the parsed school data into the database.
+ */
 export const loadSchoolTable = async <School = Record<string, unknown>>(schools: School[]) => {
   // Update schools table
   const values = [] as unknown[];
@@ -63,8 +66,16 @@ export const loadSchoolTable = async <School = Record<string, unknown>>(schools:
   });
 
   const valueIdSets = valueIds.map((v) => v.join(", ")).map((v) => `(${v})`).join(", ");
+  const updateColumns = Object.keys(schoolColumns)
+    .map((c) => `${c} = EXCLUDED.${c}`)
+    .join(", ");
   const query = {
-    text: `INSERT INTO schools (${Object.keys(schoolColumns).join(", ")}) VALUES ${valueIdSets} ON CONFLICT DO NOTHING;`,
+    text: `
+      INSERT INTO schools
+        (${Object.keys(schoolColumns).join(", ")})
+      VALUES ${valueIdSets}
+      ON CONFLICT DO UPDATE SET ${updateColumns};
+    `,
     values: values.flat(),
   };
 

@@ -28,6 +28,9 @@ const priceColumns = {
   net_price_bracket4_max: "netPricesByBracket.110001.max", 
 };
 
+/**
+ * Load the parsed price data into the database.
+ */
 export const loadPriceTable = async <School = Record<string, unknown>>(schools: School[]) => {
   const values = [] as unknown[];
   let valueId = 0;
@@ -47,8 +50,16 @@ export const loadPriceTable = async <School = Record<string, unknown>>(schools: 
   });
 
   const valueIdSets = valueIds.map((v) => v.join(", ")).map((v) => `(${v})`).join(", ");
+  const updateColumns = Object.keys(priceColumns)
+    .map((c) => `${c} = EXCLUDED.${c}`)
+    .join(", ");
   const query = {
-    text: `INSERT INTO prices (${Object.keys(priceColumns).join(", ")}) VALUES ${valueIdSets} ON CONFLICT DO NOTHING;`,
+    text: `
+      INSERT INTO prices
+        (${Object.keys(priceColumns).join(", ")})
+      VALUES ${valueIdSets}
+      ON CONFLICT DO UPDATE SET ${updateColumns};
+    `,
     values: values.flat(),
   };
 

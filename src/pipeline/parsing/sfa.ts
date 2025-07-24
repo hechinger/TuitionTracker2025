@@ -1,10 +1,10 @@
 import type { ParseContext } from "../utils/parseIpedsFile";
 
 export type RowSFA = {
-  UAGRNTP: number;
-  NPIST2: number;
-  NPGRN2: number;
-  NPIS412: number;
+  UAGRNTP: number; // percent paying less than sticker price (0 - 100)
+  NPIST2: number; // average on-campus net price
+  NPGRN2: number; // average off-campus net price
+  NPIS412: number; // the rest are on-campus, off-campus net for income brackets
   NPT412: number;
   NPIS422: number;
   NPT422: number;

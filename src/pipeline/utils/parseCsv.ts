@@ -1,5 +1,8 @@
 import Papa from "papaparse";
 
+/**
+ * Parse a CSV file downloaded from IPEDS.
+ */
 export const parseCsv = async <T = unknown>(text: string) => {
   const data =  new Promise<Papa.ParseResult<T>>((resolve, reject) => {
     try {
