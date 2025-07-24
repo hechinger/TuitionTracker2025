@@ -23,7 +23,7 @@ export const getRecommendedSchoolSlugs = async () => {
     SELECT slug
     FROM recommended_school_ids
     INNER JOIN schools
-    ON recommended_school_ids.id = schools.id;
+    ON recommended_school_ids.school_id = schools.id;
   `);
   return slugs;
 };
