@@ -94,7 +94,7 @@ export const setContent = async (rows: ContentRow[]) => {
 
   if (updates.length > 0) {
     const updateValueIds = getValueIdSet({
-      rows: creations,
+      rows: updates,
       columns: ["db_id", "locale", "component", "path", "value"],
     });
     const updateValues = updates.map((row) => [
