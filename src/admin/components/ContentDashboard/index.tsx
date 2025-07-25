@@ -113,7 +113,7 @@ export default function ContentDashboard(props: {
           const blob = await rsp.json();
 
           if (!rsp.ok) {
-            throw new Error("image upload failed");
+            throw new Error("Image upload failed");
           }
 
           const idKey = `${img.component}.${img.path}.${img.locale}`;
@@ -137,7 +137,7 @@ export default function ContentDashboard(props: {
         });
 
         if (!rsp.ok) {
-          throw new Error("post failed");
+          throw new Error("Failed to update content");
         }
       }
 

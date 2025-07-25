@@ -1,8 +1,8 @@
 "use client";
 
 import chunk from "lodash/chunk";
-import { useSearchState } from "@/hooks/useSearchState";
 import { useSchools } from "@/hooks/useSchools";
+import { useReadSearchState } from "@/hooks/useSearchState";
 import Well from "@/components/Well";
 import SchoolCard from "@/components/SchoolCard";
 import Pagination from "./Pagination";
@@ -22,9 +22,7 @@ export default function SearchResults() {
     setSorting,
   } = useSearchUi();
 
-  const { search } = useSearchState({
-    autoload: true,
-  });
+  const search = useReadSearchState();
 
   const {
     isPending,

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getContent } from "@/db/content";
 import { getRecirculationArticles } from "@/db/recirculationArticles";
 import DataProvider from "@/components/DataProvider";
@@ -27,7 +28,9 @@ export default async function Search() {
         <SearchBar autoload withNav />
       </PageTopOverlap>
       <AdSlot />
-      <SearchResults />
+      <Suspense>
+        <SearchResults />
+      </Suspense>
       <ContactUs />
       <Recirculation articles={articles} />
       <SavedSchoolsNav />

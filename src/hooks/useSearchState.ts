@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { useRouter } from "@/i18n/navigation";
 
@@ -23,13 +24,28 @@ export type SearchOptions = z.infer<typeof SearchSchema>;
 
 export type UpdateSearch = (key: string, value: unknown) => void;
 
+export function useReadSearchState({
+  param = "search",
+} = {}) {
+  const searchParams = useSearchParams();
+  const q = searchParams.get(param) || "{}";
+  return useMemo(() => {
+    try {
+      const parsed = JSON.parse(q);
+      return SearchSchema.parse(parsed)
+    } catch (error) {
+      console.error(error);
+      return SearchSchema.parse({});
+    }
+  }, [q]);
+}
+
 export function useSearchState({
   autoload = false,
   param = "search",
-}) {
+} = {}) {
   const router = useRouter();
 
-  const [cacheClear, setCacheClear] = useState({});
   const [search, setSearch] = useState(SearchSchema.parse({}));
 
   useEffect(() => {
@@ -45,7 +61,7 @@ export function useSearchState({
       console.error("Error loading search state from URL query parameters");
       console.error(error);
     }
-  }, [param, autoload, cacheClear]);
+  }, [param, autoload]);
 
   const searchQueryString = useMemo(() => {
     const query = new URLSearchParams();
@@ -80,9 +96,8 @@ export function useSearchState({
   }, []);
 
   const runSearch = useCallback(() => {
-    setCacheClear({ ...cacheClear });
     router.push(`/search?${searchQueryString}`);
-  }, [cacheClear, searchQueryString, router]);
+  }, [searchQueryString, router]);
 
   return {
     search,
