@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import SocialLogo from "./SocialLogo";
+import TranslationLink from "./TranslationLink";
 import styles from "./styles.module.scss";
 
 const footerLinks = [
@@ -43,11 +45,25 @@ const footerLinks = [
 /**
  * A copy of the standardard footer on hechingerreport.org
  */
-export default function HechingerFooter() {
+export default function HechingerFooter(props: {
+  locale: string;
+}) {
   const copyrightYear = new Date().getFullYear();
 
   return (
     <footer className={styles.footer}>
+      <Suspense>
+        <TranslationLink locale={props.locale} />
+      </Suspense>
+
+      <div>
+        Design and development:
+        {" "}
+        <a href="https://mcgill.cool">
+          The Andrew McGill Company
+        </a>
+      </div>
+
       <aside role="complementary" aria-label="Below Footer">
         <ul className={styles.footerLinks}>
           {footerLinks.map((link) => (

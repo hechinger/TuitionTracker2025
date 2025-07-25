@@ -122,6 +122,7 @@ export type SchoolDetail = {
     priceOutState?: number;
   };
   image: string;
+  imageCredit: string;
   netPricesByBracket: {
     average: number;
     "0_30000": number;

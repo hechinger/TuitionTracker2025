@@ -25,6 +25,7 @@ const main = async () => {
       id VARCHAR(10) UNIQUE NOT NULL,
       slug VARCHAR(255) UNIQUE NOT NULL,
       image VARCHAR(255),
+      image_credit TEXT,
       name VARCHAR(255) NOT NULL,
       alias TEXT,
       city VARCHAR(255),

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { GoogleTagManager, GoogleTagManagerNoScript } from "@/analytics";
 import { routing } from "@/i18n/routing";
 import HechingerTopper from "@/components/HechingerTopper";
 import HechingerFooter from "@/components/HechingerFooter";
@@ -45,35 +45,17 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <head>
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-2DBQW0NLND"
-        />
-        <Script id="gtag-loader">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-P7263Q9H');`}
-        </Script>
-        <Script
-          async
-          src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
-        />
-        <Script id="gpt-loader">
-          {`
-            window.googletag = window.googletag || {cmd: []};
-            googletag.cmd.push(function() {
-              googletag.defineSlot('/6160094/tuition-tracker-top-001', [728, 90], 'div-gpt-ad-1732288624207-0').addService(googletag.pubads());
-              googletag.pubads().enableSingleRequest();
-              googletag.enableServices();
-            });
-          `}
-        </Script>
+        <GoogleTagManager />
       </head>
       <body>
+        <GoogleTagManagerNoScript />
+
         <NextIntlClientProvider>
           <HechingerTopper />
           <div>
             {children}
           </div>
-          <HechingerFooter />
+          <HechingerFooter locale={locale} />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -6,6 +6,7 @@ export type SchoolsRow = {
   id: string;
   slug: string;
   image: string;
+  image_credit: string;
   name: string;
   alias: string;
   city: string;
@@ -131,6 +132,7 @@ export const getSchoolsIndex = async (opts: {
     id: school.id,
     slug: school.slug,
     image: school.image,
+    imageCredit: school.image_credit,
     name: school.name,
     alias: school.alias,
     city: school.city,
@@ -254,6 +256,7 @@ export const getSchoolsDetail = async (opts: {
       id: school.id,
       slug: school.slug,
       image: school.image,
+      imageCredit: school.image_credit,
       name: school.name,
       alias: school.alias,
       city: school.city,
@@ -323,6 +326,7 @@ export const setSchool = async (opts: {
   name: string;
   alias: string;
   image: string;
+  imageCredit: string;
   city: string;
   state: string;
   schoolControl: string;
@@ -337,12 +341,13 @@ export const setSchool = async (opts: {
         name = $2,
         alias = $3,
         image = $4,
-        city = $5,
-        state = $6,
-        school_control = $7,
-        degree_level = $8,
-        hbcu = $9,
-        tribal_college = $10
+        image_credit = $5,
+        city = $6,
+        state = $7,
+        school_control = $8,
+        degree_level = $9,
+        hbcu = $10,
+        tribal_college = $11
       WHERE
         id = $1;
     `,
@@ -351,6 +356,7 @@ export const setSchool = async (opts: {
       opts.name,
       opts.alias,
       opts.image,
+      opts.imageCredit,
       opts.city,
       opts.state,
       opts.schoolControl,

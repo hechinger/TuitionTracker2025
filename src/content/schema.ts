@@ -1173,6 +1173,11 @@ export const schoolFields = [
   },
   {
     type: "string",
+    title: "Image Credit",
+    path: "imageCredit",
+  },
+  {
+    type: "string",
     title: "City",
     path: "city",
   },

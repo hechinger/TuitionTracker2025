@@ -1,5 +1,7 @@
 import { cache } from "react";
 import { notFound } from "next/navigation";
+import { DataLayer } from "@/analytics";
+import { LAST_MODIFIED } from "@/constants";
 import { getContent } from "@/db/content";
 import { getSchoolsDetail } from "@/db/schools";
 import { getNationalAverages } from "@/db/nationalAverages";
@@ -15,6 +17,7 @@ import SchoolGraduationRate from "@/components/SchoolGraduationRate";
 import SchoolRetention from "@/components/SchoolRetention";
 import SchoolDemographics from "@/components/SchoolDemographics";
 import ContactUs from "@/components/ContactUs";
+import SchoolImageCredit from "@/components/SchoolImageCredit";
 import Recirculation from "@/components/Recirculation";
 import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
@@ -31,9 +34,12 @@ const getSchool = cache(async (id: string) => {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ school: string }>;
+  params: Promise<{
+    locale: string;
+    school: string,
+  }>;
 }) {
-  const { school: schoolSlug } = await params;
+  const { locale, school: schoolSlug } = await params;
   const schoolId = `${schoolSlug.split('-').at(-1)}`;
   const school = await getSchool(schoolId);
 
@@ -42,6 +48,7 @@ export async function generateMetadata({
   const fallbackImage = (school.schoolControl === "public")
     ? "https://tuitiontracker.org/public.jpg"
     : "https://tuitiontracker.org/private.jpg";
+  const img = school.image || fallbackImage;
 
   return {
     title: `${school.name} Real Tuition Costs (What You’ll Pay After Assistance)`,
@@ -50,7 +57,7 @@ export async function generateMetadata({
       description: "What You’ll Pay After Assistance",
       url: `https://tuitiontracker.org/schools/${schoolSlug}`,
       siteName: "Tuition Tracker",
-      images: school.image || fallbackImage,
+      images: img,
       type: "website",
     },
     icons: {
@@ -64,14 +71,24 @@ export async function generateMetadata({
         es: `https://tuitiontracker.org/es/schools/${schoolSlug}`,
       },
     },
+    other: {
+      "parsely-title": school.name,
+      "parsely-link": `https://tuitiontracker.org/schools/${schoolSlug}`,
+      "parsely-type": "post",
+      "parsely-image-url": img,
+      "parsely-pub-date": LAST_MODIFIED.toISOString(),
+      "parsely-section": locale,
+      "parsely-author": school.state,
+      "parsely-tags": [school.schoolControl, school.degreeLevel].join(", "),
+    },
   };
 }
 
 export default async function School(props: {
-  params: Promise<{ school: string }>;
+  params: Promise<{ locale: string, school: string }>;
 }) {
   const [
-    { school: schoolSlug },
+    { locale, school: schoolSlug },
     content,
     nationalAverages,
   ] = await Promise.all([
@@ -89,6 +106,11 @@ export default async function School(props: {
 
   return (
     <DataProvider content={content}>
+      <DataLayer
+        school={school}
+        locale={locale}
+      />
+
       <PageTopOverlap>
         <ErrorBoundary>
           <SearchBar withNav />
@@ -127,6 +149,10 @@ export default async function School(props: {
 
       <ErrorBoundary>
         <SchoolDemographics school={school} />
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <SchoolImageCredit school={school} />
       </ErrorBoundary>
 
       <Recirculation />

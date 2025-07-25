@@ -1,8 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllSchoolNames } from "@/db/schools";
-
-// Edit this to change the `lastMod` in the sitemap
-const lastModified = new Date("2025-08-01T09:34:05.522Z");
+import { LAST_MODIFIED } from "@/constants";
 
 const baseUrl = "https://tuitiontracker.org/";
 const localizedRoutes = [
@@ -20,7 +18,7 @@ const getRoute = ({
 }) => {
   const base = {
     url: new URL(route, baseUrl).href,
-    lastModified,
+    lastModified: LAST_MODIFIED,
     changeFrequency: 'yearly' as const,
     priority: 1,
   };
