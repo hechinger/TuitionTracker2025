@@ -264,7 +264,7 @@ const main = async () => {
     await db.query(query);
   }
 
-  if (false) {
+  if (true) {
     console.log("Creating recommended school records...");
     await db.query("TRUNCATE TABLE recommended_school_ids CASCADE;");
     await db.query("TRUNCATE TABLE recommended_schools CASCADE;");
