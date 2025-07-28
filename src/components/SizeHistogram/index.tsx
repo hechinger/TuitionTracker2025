@@ -113,9 +113,9 @@ export default function SizeHistogram(props: {
           />
 
           <line
-            x1={x(props.size)}
+            x1={x(dataLabelPosition)}
             y1={margin.top - 10}
-            x2={x(props.size)}
+            x2={x(dataLabelPosition)}
             y2={height - margin.bottom}
             className={styles.dataLine}
           />
