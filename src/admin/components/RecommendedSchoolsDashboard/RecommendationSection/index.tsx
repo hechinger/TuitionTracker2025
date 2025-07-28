@@ -9,12 +9,12 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Field from "@/admin/components/Field";
 import SelectSchool from "@/admin/components/SelectSchool";
-import type { RecommendationSection } from "@/types";
+import type { RecommendationSectionAdmin } from "@/types";
 
 export default function RecommendationSection(props: {
-  section: Partial<RecommendationSection>;
+  section: Partial<RecommendationSectionAdmin>;
   pageOrder: number;
-  onChange: (section: RecommendationSection) => void;
+  onChange: (section: RecommendationSectionAdmin) => void;
   removeSection: () => void;
 }) {
   const {

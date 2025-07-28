@@ -198,4 +198,14 @@ export type RecommendationSection = {
   schools: SchoolIndex[];
 };
 
+export type RecommendationSectionAdmin = {
+  dbId?: number;
+  pageOrder: number;
+  title: {
+    en: string;
+    es: string;
+  },
+  schoolIds: string[];
+};
+
 export type NationalAverages = Record<DegreeLevel, Record<string, number>>;

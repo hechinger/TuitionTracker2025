@@ -4,7 +4,11 @@ import { revalidateRecommendedSchools } from "@/cache";
 
 export async function GET() {
   const sections = await getRecommendedSchools();
-  return Response.json(sections);
+  const adminSections = sections.map(({ schools, ...section }) => ({
+    ...section,
+    schoolIds: schools.map((school) => school.id),
+  }));
+  return Response.json(adminSections);
 }
 
 export async function POST(request: Request) {

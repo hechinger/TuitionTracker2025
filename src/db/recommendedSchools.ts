@@ -1,4 +1,4 @@
-import type { SchoolIndex } from "@/types";
+import type { SchoolIndex, RecommendationSectionAdmin } from "@/types";
 import { queryRows, run } from "./pool";
 import { getValueIdSet } from "./getValueIdSet";
 import { getSchoolsIndex } from "./schools";
@@ -17,16 +17,6 @@ export type RecommendedSchoolsSection = {
   title: string;
   title_spanish: string;
   schools: SchoolIndex[];
-};
-
-export type RecommendationSectionAdmin = {
-  dbId: number;
-  pageOrder: number;
-  title: {
-    en: string;
-    es: string;
-  },
-  schoolIds: string[];
 };
 
 export const getRecommendedSchoolSlugs = async () => {

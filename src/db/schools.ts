@@ -1,4 +1,4 @@
-import { max, bin, extent, mean, median } from "d3-array";
+import { max, bin } from "d3-array";
 import type { SchoolIndex, SchoolDetail, YearData } from "@/types";
 import { queryRows, run } from "./pool";
 
