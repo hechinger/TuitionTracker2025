@@ -1,3 +1,6 @@
+"use client";
+
+import { useContent } from "@/hooks/useContent";
 import type { SuggestionSet } from "../useSuggestions";
 import SuggestionEntry from "./Suggestion";
 import styles from "./styles.module.scss";
@@ -23,6 +26,8 @@ export default function WhereSuggestions(props: {
     onSelectState,
   } = props;
 
+  const content = useContent();
+
   if (states.length < 1 && schools.length < 1) return null;
 
   return (
@@ -30,7 +35,7 @@ export default function WhereSuggestions(props: {
       {states.length > 0 && (
         <div className={styles.section}>
           <div className={styles.title}>
-            States
+            {content("SearchBar.where.states")}
           </div>
           <div className={styles.options}>
             {states.map((suggestion) => (
@@ -47,7 +52,7 @@ export default function WhereSuggestions(props: {
       {schools.length > 0 && (
         <div className={styles.section}>
           <div className={styles.title}>
-            Schools
+            {content("SearchBar.where.schools")}
           </div>
           <div className={styles.options}>
             {schools.map((suggestion) => (

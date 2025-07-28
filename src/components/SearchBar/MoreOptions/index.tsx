@@ -1,5 +1,6 @@
 "use client";
 
+import { useContent } from "@/hooks/useContent";
 import type { SearchOptions } from "@/hooks/useSearchState";
 import { formatDollars } from "@/utils/formatDollars";
 import styles from "./styles.module.scss";
@@ -25,6 +26,8 @@ export default function MoreOptions(props: {
     hbcu = false,
   } = props.search;
 
+  const content = useContent();
+
   const text = [
     (minPrice !== 0 || !!maxPrice) && `${formatDollars(minPrice)} to ${formatDollars(maxPrice)}`,
     schoolType.join(", "),
@@ -36,7 +39,7 @@ export default function MoreOptions(props: {
   return (
     <div className={styles.moreOptions}>
       <div className={styles.label}>
-        Total cost and more
+        {content("SearchBar.more.title")}
       </div>
 
       <button
@@ -44,7 +47,7 @@ export default function MoreOptions(props: {
         className={styles.placeholder}
         onClick={() => props.onFocus()}
       >
-        {text || "More search options"}
+        {text || content("SearchBar.more.placeholder")}
       </button>
     </div>
   );

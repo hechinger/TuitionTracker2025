@@ -26,8 +26,6 @@ export default function PriceHistogram(props: {
 
   const { data: bracketBins } = usePriceHistogram();
 
-  console.log(bracketBins);
-
   const id = useId();
 
   const ref = useRef<HTMLDivElement>(null);

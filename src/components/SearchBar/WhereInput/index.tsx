@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 import us from "us";
+import { useContent } from "@/hooks/useContent";
 import styles from "./styles.module.scss";
 
 /**
@@ -26,16 +27,18 @@ export default function WhereInput(props: {
   onRemoveState: (state: string) => void;
   onFocus: () => void;
 }) {
+  const content = useContent();
+
   const id = `where-input-${useId()}`;
   const placeholder = (props.states.length < 1)
-    ? "Find a school or pick a state"
+    ? content("SearchBar.where.placeholder")
     : "";
 
   return (
     <div className={styles.whereInput}>
       <label htmlFor={id}>
         <div className={styles.label}>
-          Where
+          {content("SearchBar.where.title")}
         </div>
 
         <div className={styles.inputWrapper}>
