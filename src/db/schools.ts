@@ -479,3 +479,145 @@ export const getSizeHistogram = async (opts: {
     x1: b.x1,
   }));
 };
+
+export const getStickerPriceDataset = async () => {
+  type Row = {
+    school_id: string;
+    name: string;
+    year: string;
+    sticker_price_in_state: number;
+    sticker_price_out_state: number;
+  };
+  const prices = await queryRows<Row>(`
+    SELECT
+      school_id,
+      name,
+      year,
+      sticker_price_in_state,
+      sticker_price_out_state
+    FROM
+      prices
+    LEFT JOIN schools
+    ON prices.school_id = schools.id;
+  `);
+  return prices.map((price) => ({
+    unitid: price.school_id,
+    name: price.name,
+    year: price.year,
+    inStateStickerPrice: price.sticker_price_in_state,
+    outOfStateStickerPrice: price.sticker_price_out_state,
+  }));
+};
+
+export const getNetPriceDataset = async () => {
+  type Row = {
+    school_id: string;
+    name: string;
+    year: string;
+    net_price_average: number;
+    net_price_bracket0: number;
+    net_price_bracket1: number;
+    net_price_bracket2: number;
+    net_price_bracket3: number;
+    net_price_bracket4: number;
+  };
+  const prices = await queryRows<Row>(`
+    SELECT
+      school_id,
+      name,
+      year,
+      net_price_average,
+      net_price_bracket0,
+      net_price_bracket1,
+      net_price_bracket2,
+      net_price_bracket3,
+      net_price_bracket4
+    FROM
+      prices
+    LEFT JOIN schools
+    ON prices.school_id = schools.id;
+  `);
+  return prices.map((price) => ({
+    unitid: price.school_id,
+    name: price.name,
+    year: price.year,
+    averageNetPrice: price.net_price_average,
+    netPriceIncome0to30000: price.net_price_bracket0,
+    netPriceIncome30001to48000: price.net_price_bracket1,
+    netPriceIncome48001to75000: price.net_price_bracket2,
+    netPriceIncome75001to110000: price.net_price_bracket3,
+    netPriceIncome110001: price.net_price_bracket4,
+  }));
+};
+
+export const getGraduationRateDataset = async () => {
+  type Row = {
+    id: string;
+    name: string;
+    graduation_total: number;
+    graduation_race_unknown: number;
+    graduation_race_multiple: number;
+    graduation_race_white: number;
+    graduation_race_hisp: number;
+    graduation_race_nathawpacisl: number;
+    graduation_race_black: number;
+    graduation_race_asian: number;
+    graduation_race_amerindalasknat: number;
+    graduation_race_nonresident: number;
+  };
+  const schools = await queryRows<Row>(`
+    SELECT
+      id,
+      name,
+      graduation_total,
+      graduation_race_unknown,
+      graduation_race_multiple,
+      graduation_race_white,
+      graduation_race_hisp,
+      graduation_race_nathawpacisl,
+      graduation_race_black,
+      graduation_race_asian,
+      graduation_race_amerindalasknat,
+      graduation_race_nonresident
+    FROM
+      schools;
+  `);
+  return schools.map((school) => ({
+    unitid: school.id,
+    name: school.name,
+    graduationTotal: school.graduation_total,
+    graduationRaceUnknown: school.graduation_race_unknown,
+    graduationRaceMultiple: school.graduation_race_multiple,
+    graduationRaceWhite: school.graduation_race_white,
+    graduationRaceHisp: school.graduation_race_hisp,
+    graduationRaceNathawpacisl: school.graduation_race_nathawpacisl,
+    graduationRaceBlack: school.graduation_race_black,
+    graduationRaceAsian: school.graduation_race_asian,
+    graduationRaceAmerindalasknat: school.graduation_race_amerindalasknat,
+    graduationRaceNonresident: school.graduation_race_nonresident,
+  }));
+};
+
+export const getRetentionRateDataset = async () => {
+  type Row = {
+    id: string;
+    name: string;
+    retention_full_time: number;
+    retention_part_time: number;
+  };
+  const schools = await queryRows<Row>(`
+    SELECT
+      id,
+      name,
+      retention_full_time,
+      retention_part_time
+    FROM
+      schools;
+  `);
+  return schools.map((school) => ({
+    unitid: school.id,
+    name: school.name,
+    retentionFullTime: school.retention_full_time,
+    retentionPartTime: school.retention_part_time,
+  }));
+};

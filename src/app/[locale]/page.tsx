@@ -11,6 +11,7 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 import ContactUs from "@/components/ContactUs";
 import Recirculation from "@/components/Recirculation";
 import LandingPageTextSection from "@/components/LandingPageTextSection";
+import DownloadData from "@/components/DownloadData";
 import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
 // Gets purged when content changes
@@ -59,6 +60,7 @@ export default async function Home({
         titleKey="DownloadData.title"
         textKey="DownloadData.copy"
       />
+      <DownloadData />
       <SavedSchoolsNav />
     </DataProvider>
   );

@@ -10,6 +10,14 @@ export async function GET(
   const [school] = await getSchoolsDetail({
     schoolIds: [id],
   });
+
+  if (!school) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Bad request",
+    });
+  }
+
   return NextResponse.json(school, {
     headers: cacheControl({
       maxAge: "5m",
