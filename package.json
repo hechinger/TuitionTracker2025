@@ -9,7 +9,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "check": "npm run lint; npm run type-check",
-    "bootstrap": "esbuild --bundle bin/bootstrap.ts --platform=node --outfile=bin/bootstrap.js && node bin/bootstrap.js"
+    "bootstrap": "esbuild --bundle bin/bootstrap.ts --platform=node --outfile=bin/.bootstrap.js && node bin/.bootstrap.js"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.33.0",

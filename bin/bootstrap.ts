@@ -161,8 +161,8 @@ const main = async () => {
     );
   `);
 
-  // console.log("Running data pipeline...");
-  // await pipeline({ year });
+  console.log("Running data pipeline...");
+  await pipeline({ year });
 
   if (true) {
     console.log("Creating content records...");
