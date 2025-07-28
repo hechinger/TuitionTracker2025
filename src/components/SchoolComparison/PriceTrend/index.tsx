@@ -21,12 +21,21 @@ function Chart(props: {
   return (
     <div className={styles.chartContainer}>
       <h3>{school.name}</h3>
-      <PriceTrendChart
-        school={school}
-        max={props.priceMax}
-        legend={false}
-        lineLabels={false}
-      />
+
+      {school.years.length > 0 && (
+        <PriceTrendChart
+          school={school}
+          max={props.priceMax}
+          legend={false}
+          lineLabels={false}
+        />
+      )}
+
+      {school.years.length < 1 && (
+        <div className={styles.noData}>
+          No data
+        </div>
+      )}
     </div>
   );
 }

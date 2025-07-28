@@ -35,6 +35,15 @@
   min-height: 100px;
 }
 
+.noData {
+  background: colors.$bg-light;
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
 .sticker {
   color: colors.$brand-blue-dark;
   font-weight: bold;

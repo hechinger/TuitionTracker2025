@@ -30,6 +30,25 @@
   }
 }
 
+.noDataContainer {
+  display: inline-block;
+
+  h3 {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .noData {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: colors.$bg-light;
+    padding: 10px;
+  }
+}
+
 .placeholder {
   background: colors.$bg-light;
   min-height: 100px;

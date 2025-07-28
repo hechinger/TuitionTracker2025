@@ -18,6 +18,18 @@ function Chart(props: {
   }
 
   const graduation = getGraduation(school);
+
+  if (!graduation.total) {
+    return (
+      <div className={styles.noDataContainer}>
+        <h3>{school.name}</h3>
+        <div className={styles.noData}>
+          No data
+        </div>
+      </div>
+    );
+  }
+
   return (
     <DonutChart
       value={graduation.total}
