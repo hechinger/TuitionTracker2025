@@ -1,0 +1,153 @@
+Path,English,Spanish
+GeneralPurpose.schoolControl.public,Public,Pública
+GeneralPurpose.schoolControl.private,Private,Privada
+GeneralPurpose.schoolControl.for-profit,For-profit,Con fines de lucro
+GeneralPurpose.degreeLevel.2-year,2-year,2 años
+GeneralPurpose.degreeLevel.4-year,4-year,4 años
+GeneralPurpose.hbcu,HBCU,HBCU
+GeneralPurpose.tribalCollege,Tribal college,Universidad tribal
+GeneralPurpose.incomeSelection.110001,>$110K income,Ingresos de >$100.000
+GeneralPurpose.incomeSelection.average,any income,Cualquier nivel de ingreso
+GeneralPurpose.incomeSelection.0_30000,<$30K income,Ingresos  <$30.000
+GeneralPurpose.incomeSelection.30001_48000,$30K-$48K income,Ingresos entre $30.000 y $48.000
+GeneralPurpose.incomeSelection.48001_75000,$48K-$75K income,Ingresos entre $48.000 to $75.000
+GeneralPurpose.incomeSelection.75001_110000,$75K-$110K income,Ingresos entre $75.000 y $110.000
+GeneralPurpose.demographicCategories.amerindalasknat,American Indian/Alaska Native,Indígena americano/ Nativo de Alaska
+GeneralPurpose.demographicCategories.asian,Asian,Asiática
+GeneralPurpose.demographicCategories.black,Black,Negro
+GeneralPurpose.demographicCategories.hisp,Hispanic,Hispana
+GeneralPurpose.demographicCategories.nathawpacisl,Native Hawaiian/Pacific Islander,Nativo de Hawaii/ Isleño del pacífico
+GeneralPurpose.demographicCategories.white,White,Blanca
+GeneralPurpose.demographicCategories.multiple,Multiple races,Múltiples razas
+GeneralPurpose.demographicCategories.nonresident,Nonresident,No residente
+GeneralPurpose.demographicCategories.unknown,Unknown race,Raza desconocida
+AdSlot.title,Advertisement,Publicidad
+HeroSplash.subtitle,Revealing the true cost of college,Revelando el verdadero costo de la universidad
+SearchBar.where.title,Where,Dónde
+SearchBar.where.placeholder,Find a school or pick a state,Buscar una institución o escoger un estado
+SearchBar.where.states,States,Estados
+SearchBar.where.schools,Schools,Instituciones
+SearchBar.more.title,Total cost and more,Costo total y más
+SearchBar.more.placeholder,More search options,Más opciones de búsqueda
+SearchBar.advanced.cost.title,What it will cost,Cuánto costará
+SearchBar.advanced.cost.instructions,Optionally select your hosuehold income to get a better price estimate,Opcionalmente seleccione el ingreso de su hogar para obtener un estimado más exacto
+SearchBar.advanced.cost.anyIncome,Any,Cualquiera
+SearchBar.advanced.cost.histogramTitle,Net price for,Precio neto
+SearchBar.advanced.cost.minimum,Minimum,Mínimo
+SearchBar.advanced.cost.maximum,Maximum,Máximo
+SearchBar.advanced.schoolType.title,School type,Tipo de institución
+SearchBar.advanced.degreeType.title,Degree type,Tipo de diploma
+SearchBar.advanced.degreeType.anyType,Any type,Cualquier tipo
+SearchBar.advanced.other.title,Other school attributes,Otros atributos de la escuela
+SearchBar.advanced.other.tribalCollege,Tribal college,Universidad tribal
+SearchBar.advanced.other.hbcu,Historically black (HBCU),Colegios e Universidades Históricamente Negros (HBCU)
+SearchBar.advanced.controls.clear,Clear all,Borrar todo
+SearchBar.advanced.controls.search,Search,Buscar
+Newsletter.title,Sign up for our newsletter,Suscríbase a nuestro boletín informativo.
+Newsletter.blurb,We will help you understand the true cost of college.,Lo ayudaremos a entender el verdadero costo de la educación superior.
+ContactUs.title,Contact,Contacto
+ContactUs.blurb,Get in touch with us if you have a question. Reach us at editor@hechingerreport.org.,"Si tiene alguna pregunta, póngase en contacto con nosotros. Escríbanos a editor@hechingerreport.org."
+Recirculation.title,Read more,Más información
+About.title,About,Acerca
+About.copy,"<p>Tuition Tracker is an interactive tool that shows the relationship between published tuition and the actual costs of a given college. You can compare colleges by using your household income level to see what students like you have paid in the past and might be expected to pay now. The tool uses historical data to estimate of what you may pay to attend in the 2025-26 academic year.</p><p>You can also compare colleges based on graduation rates, which shows the likelihood of a student successfully completing their degree on time — a significant factor in affordability. For individual schools, you can also find out demographic information and retention rates.</p><p>Tuition Tracker uses cookies for optimal performance. Neither Tuition Tracker nor The Hechinger Report retain records of your personal data or answers to your income questions.</p>
+","<p>Tuition Tracker es una herramienta interactiva que muestra la relación entre la matrícula publicada u oficial y los costos reales de una universidad determinada. Puede comparar instituciones utilizando el nivel de ingresos de su hogar para ver lo que han pagado en el pasado estudiantes como usted y lo que se espera que paguen ahora. La herramienta utiliza datos históricos para estimar lo que podría pagar para asistir en el año académico 2025-26.</p><p>También puede comparar universidades en función de las tasas de graduación, que muestran la probabilidad de que un estudiante complete con éxito sus estudios a tiempo, un factor importante en la asequibilidad. Para cada centro educativo, también puede encontrar información demográfica y tasas de retención.</p><p>Tuition Tracker utiliza cookies para optimizar su rendimiento. Ni Tuition Tracker ni The Hechinger Report conservan registros de sus datos personales ni de sus respuestas a las preguntas sobre sus ingresos.</p>
+"
+DownloadData.title,Download the data,Descargar la información
+DownloadData.copy,"<p>Tuition Tracker is powered by U.S. Department of Education data from IPEDS, the Integrated Postsecondary Education Data System, a service provided by the National Center for Education Statistics. The institutions analyzed are all U.S.-based, degree-granting colleges and universities that have first-time, full-time undergraduates.</p><p>Net prices are for first-time, full-time students (and, for public institutions, in-state students). The projected prices for each institution were calculated by taking the compound annual growth rate over the period of 2013-14 to 2023-24 using raw IPEDS data, then projecting that rate from the 2023-24 sticker price up to the 2025-26 academic year. Institutions without consecutive years of data going back to 2012-13 will not have projected prices. Average net price projections are determined by applying the discount rate for each income level in the last historical year these data were available. The percentage of students paying sticker price is derived from IPEDS data on first-time, first-year students.</p><p>Graduation rates and retention rates are calculated from the last five years of available data.</p><p>The data on institutional characteristics, acceptance rates and enrollment by race/ethnicity and gender are published as they are provided in IPEDS. The tool was last updated in April 2025.</p>
+","<p>Tuition Tracker se basa en datos del Departamento de Educación de los Estados Unidos procedentes del IPEDS, el Sistema Integrado de Datos sobre Educación Postsecundaria, un servicio prestado por el Centro Nacional de Estadísticas Educativas. Las instituciones analizadas son todas universidades y centros universitarios con sede en los Estados Unidos que otorgan títulos y cuentan con estudiantes a tiempo completo que cursan estudios por primera vez.</p><p>Los precios netos son para estudiantes de primer año a tiempo completo (y, en el caso de las instituciones públicas, para estudiantes residentes en el estado). Los precios proyectados para cada institución se calcularon tomando la tasa de crecimiento anual compuesta durante el período 2013-14 a 2023-24 utilizando datos brutos del IPEDS, y luego proyectando esa tasa desde el precio oficial de 2023-24 hasta el año académico 2025-26. Las instituciones que no dispongan de datos consecutivos desde 2012-13 no tendrán precios previstos. Las previsiones del precio neto medio se determinan aplicando la tasa de descuento para cada nivel de ingresos en el último año histórico en el que se dispone de estos datos. El porcentaje de estudiantes que pagan el precio oficial se obtiene a partir de los datos del IPEDS sobre los estudiantes de primer año que se matriculan por primera vez.</p><p>Las tasas de graduación y retención se calculan a partir de los últimos cinco años de datos disponibles.</p><p>Los datos sobre las características institucionales, las tasas de aceptación y la matriculación por raza/etnia y género se publican tal y como se proporcionan en el IPEDS. La herramienta se actualizó por última vez en abril de 2025.</p>
+"
+SearchResults.schoolsFound,{FOUND} schools found out of {TOTAL_SCHOOLS},{FOUND} escuelas encontradas de {TOTAL_SCHOOLS}
+SearchResults.sortBy.title,Sort by,Ordenar
+SearchResults.sortBy.name,Name,Nombre
+SearchResults.sortBy.priceAscending,Price $ - $$$,Precio $ - $$$
+SearchResults.sortBy.priceDescending,Price $$$ - $,Precio $$$ - $
+SchoolComparison.title,Compare your favorite schools,Compare sus escuelas favoritas
+SchoolComparison.savedSchools.title,Your saved schools,Escuelas seleccionadas
+SchoolComparison.savedSchools.copyLink,Copy link to saved schools,Copiar enlace a escuelas guardadas
+SchoolComparison.compareSchools.title,Compare schools,Comparar escuelas
+SchoolComparison.compareSchools.clear,Clear,Borrar
+SchoolComparison.compareSchools.card.typeTitle,Type,Tipo
+SchoolComparison.compareSchools.card.stickerPriceTitle,Sticker price,Precio oficial
+SchoolComparison.compareSchools.card.netPriceTitle,Average net price,Precio neto promedio
+SchoolComparison.compareSchools.dragPrompt,Click or drag a school here to compare,Haga clic o arrastre una escuela aquí para comparar
+SchoolComparison.priceTrend.title,Historical price trend,Tendencia histórica de precios
+SchoolComparison.priceTrend.fallbackText,Select schools above to see how their prices compare over time.,Seleccione escuelas arriba para ver cómo han variado sus precios a lo largo del tiempo.
+SchoolComparison.priceTrend.comparisonText,<p>See how the sticker price and net price trends of {SCHOOLS} compare.</p>,<p>Compare las tendencias del precio oficial y el precio neto de {SCHOOLS}.</p>
+SchoolComparison.graduationRate.title,Graduation Rates,Tasas de graduación
+SchoolComparison.graduationRate.fallbackText,Select schools above to see how their graduation rates compare.,Seleccione escuelas arriba para ver cómo se comparan sus tasas de graduación.
+SchoolComparison.graduationRate.comparisonText,<p>Past graduation rates can be an indicator of how likely students are to complete their degree. See how the graduation rates of {SCHOOLS} compare.</p>,<p>Las tasas de graduación anteriores pueden ser un indicador de la probabilidad de que los estudiantes completen su título. Vea una comparación de las tasas de graduación de {SCHOOLS}.</p>
+SchoolComparison.graduationRate.graphLabel,graduation rate,Tasa de graduación
+SchoolComparison.schoolSizes.title,School Sizes,Tamaño de la institución
+SchoolComparison.schoolSizes.fallbackText,Select schools above to see how their sizes compare.,Seleccione escuelas arriba para ver cómo se comparan sus tamaños.
+SchoolComparison.schoolSizes.comparisonText,<p>School size can have a large impact on a student’s college experience. See how the sizes of {SCHOOLS} compare.</p>,<p>El tamaño de la escuela puede tener un gran impacto en la experiencia universitaria de un estudiante. Compara el tamaño de las {ESCUELAS}.</p>
+SchoolComparison.schoolSizes.students,students,Estudiantes
+SchoolPage.SchoolTopper.schoolInfo,{SCHOOL_CONTROL} {DEGREE_LEVEL} school,{SCHOOL_CONTROL} {DEGREE_LEVEL} institución
+SchoolPage.SchoolTopper.stickerPriceLabel,projected sticker price,Precio oficial projectado
+SchoolPage.SchoolTopper.netPriceLabel,projected average net price for,precio neto promedio previsto para
+SchoolPage.SchoolTopper.saveButton.saveThisSchool,Save this school,Guardar esta escuela
+SchoolPage.SchoolTopper.saveButton.saved,Saved,Guardado
+SchoolPage.SchoolTopper.noDataMessage,This institution doesn’t have enough data for us to  calculate its sticker or net price. Learn more by visiting its official College Navigator page.,Esta institución no dispone de datos suficientes para que podamos calcular su precio oficial o precio neto. Para obtener más información, visite su página oficial en College Navigator.
+SchoolPage.SchoolTopper.collegeNavigatorLink,Go to College Navigator,Ir a College Navigator
+SchoolPage.Prices.priceTrendTemplate,"<p>This year at <strong>{SCHOOL_NAME}</strong>, we project that on average {STUDENT_TYPE} will pay <u>{NET_PRICE}</u>, while the advertised price of attendance is {STICKER_PRICE}. That’s a difference of {PRICE_DIFFERENCE}.</p>","<p>Este año, en <strong>{SCHOOL_NAME}</strong>, prevemos que, en promedio, un  {STUDENT_TYPE} pagará <u>{NET_PRICE}</u>, mientras que el precio anunciado de la matrícula es {STICKER_PRICE}. Eso supone una diferencia de {PRICE_DIFFERENCE}.</p>"
+SchoolPage.Prices.priceTrendChartTitle,Prices at {SCHOOL_NAME} over time for,Precios en {SCHOOL_NAME} a lo largo del tiempo para
+SchoolPage.Prices.outOfStateStickerLabel,out-of-state sticker price,Precio para residentes fuera del estado
+SchoolPage.Prices.inStateStickerLabel,in-state sticker price,Precio para residentes del estado
+SchoolPage.Prices.inStateNetPriceLabel,in-state net price,Precio neto para residentes del estado
+SchoolPage.Prices.stickerLabel,sticker price,Precio oficial
+SchoolPage.Prices.netPriceLabel,net price,Precio neto
+SchoolPage.Prices.upperEstimateLabel,Upper net price estimation,Estimación del precio neto superior
+SchoolPage.Prices.estimateLabel,Projected net price,Precio neto previsto
+SchoolPage.Prices.lowerEstimateLabel,Lower net price estimation,Estimación del precio neto más bajo
+SchoolPage.Prices.incomeBracketTemplate,"<p>How much a student actually pays usually depends, at least in part, on their family's household income. At <strong>{SCHOOL_NAME}</strong> this year, we project {MAX_BRACKET_STUDENTS} will pay around {MAX_BRACKET_PRICE}, while {MIN_BRACKET_STUDENTS} will pay around {MIN_BRACKET_PRICE}. That's a difference of {PRICE_DIFFERENCE}.</p>","<p>Cuánto termina pagando cada estudiante depende, al menos en parte, de los ingresos familiares. En <strong>{SCHOOL_NAME}</strong>, este año, prevemos que {MAX_BRACKET_STUDENTS} pagarán alrededor de {MAX_BRACKET_PRICE}, mientras que {MIN_BRACKET_STUDENTS} pagarán alrededor de {MIN_BRACKET_PRICE}. Eso supone una diferencia de {PRICE_DIFFERENCE}.</p>"
+SchoolPage.Prices.incomeBracketChartTitle,"Net price by income bracket, {SCHOOL_YEAR} school year","Precio neto por nivel de ingresos, año escolar {SCHOOL_YEAR}"
+SchoolPage.Prices.incomeBracketChartAxisLabel,Family income bracket,Rango de ingresos familiares
+SchoolPage.Prices.priceTrendTemplateStudentsAverage,students,estudiantes
+SchoolPage.Prices.priceTrendTemplateStudents030K,students with incomes below $30K,estudiantes con ingresos inferiores a $30.000
+SchoolPage.Prices.priceTrendTemplateStudents3048,students with incomes between $30K and $48K,estudiantes con ingresos entre $30.000 y $48.000
+SchoolPage.Prices.priceTrendTemplateStudents4875,students with incomes between $48K and $75K,estudiantes con ingresos entre $48.000 y $75.000 
+SchoolPage.Prices.priceTrendTemplateStudents75110,students with incomes between $75K and $110K,estudiantes con ingresos entre $75.000 y $110.000
+SchoolPage.Prices.priceTrendTemplateStudents110,students with incomes over $110K,estudiantes con ingresos superiores a $110.000
+SchoolPage.SchoolDetails.title,School details,Detalles de la institución
+SchoolPage.SchoolDetails.location,Located in {LOCATION},Ubicada en {LOCATION}
+SchoolPage.SchoolDetails.schoolType,{SCHOOL_CONTROL} {DEGREE_LEVEL} school,{SCHOOL_CONTROL} {DEGREE_LEVEL} escuela
+SchoolPage.SchoolDetails.acceptanceRate,{ACCEPTANCE_RATE} acceptance rate,{ACCEPTANCE_RATE} tasa de aceptación
+SchoolPage.SchoolDetails.graduationRate,{GRADUATION_RATE} graduation rate,{GRADUATION_RATE} tasa de graduación
+SchoolPage.SchoolDetails.aboutTheData,"<p>Historical sticker-price data up to 2022-23 and net price data up to 2021-22 come from the National Center for Education Statistics. Data for the following years are projected from Hechinger Report analyses. Projections are only provided for schools with complete historical data.</p><p>Net price is calculated by subtracting federal, state, local and institutional grants and scholarships from the total cost of attendance for first-time, full-time (and, at public universities, in-state) undergraduates. The data includes only families of students who received some form of federal student aid, including loans, since others are not tracked.</p><p>The shaded area provides a projected range of cost and is calculated using the highest and lowest discount rate in each income bracket over the last decade.</p>
+","<p>Los datos históricos sobre precios oficiales hasta 2022-23 y los datos sobre precios netos hasta 2021-22 proceden del Centro Nacional de Estadísticas Educativas. Los datos para los años siguientes son proyecciones basadas en análisis del Hechinger Report. Las proyecciones sólo están disponibles para las escuelas con datos históricos completos.</p><p>El precio neto se calcula restando las subvenciones y becas federales, estatales, locales e institucionales del costo total de la asistencia para los estudiantes universitarios de primer año, a tiempo completo (y, en las universidades públicas, residentes en el estado). La data sólo incluye a las familias de los estudiantes que recibieron algún tipo de ayuda federal, incluidos  préstamos, ya que no se hace un seguimiento de los demás casos.</p><p>El área sombreada refleja un rango de costos proyectado y se calcula utilizando la tasa de descuento más alta y más baja en cada banda de ingresos durante la última década.</p>
+"
+SchoolPage.GraduationRates.title,Graduation Rates,Tasas de graduación
+SchoolPage.GraduationRates.overallTemplate.template,"<p>A school’s graduation rate can indicate how likely a student is to complete their degree. At <strong>{SCHOOL_NAME}</strong>, over the last five years <u>{GRADUATION_RATE}</u> of students earned their {DEGREE_TYPE} within {DEGREE_YEARS} of enrolling.</p>","<p>La tasa de graduación de una escuela indica la probabilidad de que un estudiante complete su título. En <strong>{SCHOOL_NAME}</strong>, durante los últimos cinco años, el <u>{GRADUATION_RATE}</u> de los estudiantes obtuvieron su {DEGREE_TYPE} en un plazo de {DEGREE_YEARS} desde su matriculación.</p>"
+SchoolPage.GraduationRates.overallTemplate.degreeTypes.2-year,associate’s degree,título de asociado
+SchoolPage.GraduationRates.overallTemplate.degreeTypes.4-year,bachelor’s degree,título de licenciatura
+SchoolPage.GraduationRates.overallTemplate.degreeYearsCompletionLimit.2-year,four years,cuatro años
+SchoolPage.GraduationRates.overallTemplate.degreeYearsCompletionLimit.4-year,six years,seis años
+SchoolPage.GraduationRates.overallBarLabel,{GRADUATION_RATE} overall grad rate,{GRADUATION_RATE} tasa de graduación general
+SchoolPage.GraduationRates.nationalAverageBarLabel,Nat’l average,Promedio nacional
+SchoolPage.GraduationRates.demographicTemplate,"<p>Students from different demographic backgrounds often graduate at different rates, so it can be helpful to look beyond the overall graduation rate. This chart shows how students of different races and ethnicities fare earning their degrees at <strong>{SCHOOL_NAME}</strong>.</p>","<p>Los estudiantes de distintos orígenes demográficos suelen graduarse a ritmos diferentes, por lo que puede ser útil mver más allá de la tasa de graduación general. Este gráfico muestra cómo les va a los estudiantes de diferentes razas y etnias en la obtención de sus títulos en <strong>{SCHOOL_NAME}</strong>.</p>"
+SchoolPage.StudentRetention.title,Student Retention,Retención de estudiantes
+SchoolPage.StudentRetention.fullTimeStudents,Full-time students,Estudiantes a tiempo completo
+SchoolPage.StudentRetention.partTimeStudents,Part-time students,Estudiantes a tiempo parcial
+SchoolPage.StudentRetention.chartLabel,retention,Retención
+SchoolPage.StudentRetention.nationalAverageLabel,Nat’l average,Promedio nacional
+SchoolPage.StudentRetention.template,"<p>Student retention, or how often students return to continue their degree after completing their first year, is another helpful indicator. Over the last five years, at <strong>{SCHOOL_NAME}</strong>, about <u>{FULL_TIME_RETENTION_RATE}</u> of full-time students returned the following fall to continue their degree.</p>","<p>La retención de estudiantes, o la frecuencia con la que los estudiantes regresan para continuar sus estudios después de completar su primer año, es otro indicador útil. En los últimos cinco años, en <strong>{SCHOOL_NAME}</strong>, aproximadamente el <u>{FULL_TIME_RETENTION_RATE}</u> de los estudiantes a tiempo completo regresaron el otoño siguiente para continuar sus estudios.</p>"
+SchoolPage.StudentDemographics.title,Student Demographics,Datos demográficos de los estudiantes
+SchoolPage.StudentDemographics.size.template,"<p>The size and demographic makeup of a school’s student body can have a large impact on a student’s experience. <strong>{SCHOOL_NAME}</strong> has {ENROLLMENT} students, which puts it in the <u>{SIZE_PERCENTILE} percentile</u> of {SCHOOL_TYPE} schools.</p>","<p>El tamaño y la composición demográfica del alumnado de un centro educativo pueden influir considerablemente en la experiencia de los alumnos. <strong>{SCHOOL_NAME}</strong> cuenta con {ENROLLMENT} alumnos, lo que lo sitúa en el <u>{SIZE_PERCENTILE} percentil</u> de los centros educativos de tipo {SCHOOL_TYPE}.</p>"
+SchoolPage.StudentDemographics.size.students,students,Estudiantes
+SchoolPage.StudentDemographics.gender.template,<p>About <u>{GENDER_PERCENT_MAX}</u> of students are {GENDER_NAME_MAX}.</p>,<p>Aproximadamente el <u>{GENDER_PERCENT_MAX}</u> de los estudiantes son {GENDER_NAME_MAX}.</p>
+SchoolPage.StudentDemographics.gender.genderTextNames.men,male,masculino
+SchoolPage.StudentDemographics.gender.genderTextNames.women,female,femenino
+SchoolPage.StudentDemographics.gender.genderTextNames.unknown,of unknown gender,de género desconocido
+SchoolPage.StudentDemographics.gender.genderTextNames.other,of a gender other than male or female,de género distinto al masculino o femenino
+SchoolPage.StudentDemographics.gender.genderChartLabels.men,male,masculino
+SchoolPage.StudentDemographics.gender.genderChartLabels.women,female,femenino
+SchoolPage.StudentDemographics.gender.genderChartLabels.other,other,otro
+SchoolPage.StudentDemographics.race.template,<p>And about <u>{DEMOGRAPHIC_PERCENT_MAX}</u> of students are {DEMOGRAPHIC_NAME_MAX}.</p>,<p>Y aproximadamente el <u>{DEMOGRAPHIC_PERCENT_MAX}</u> de los estudiantes son {DEMOGRAPHIC_NAME_MAX}.</p>
+SchoolPage.StudentDemographics.race.demographicTextNames.unknown,of an unknown demographic background,de origen demográfico desconocido
+SchoolPage.StudentDemographics.race.demographicTextNames.multiple,of multiple races,de múltiples razas
+SchoolPage.StudentDemographics.race.demographicTextNames.white,white,Blanco
+SchoolPage.StudentDemographics.race.demographicTextNames.hisp,hispanic,Hispano
+SchoolPage.StudentDemographics.race.demographicTextNames.nathawpacisl,Native Hawaiian or Pacific Islanders,Nativo de Hawaii o islas del Pacífico
+SchoolPage.StudentDemographics.race.demographicTextNames.black,black,Negro
+SchoolPage.StudentDemographics.race.demographicTextNames.asian,Asian,Asiático
+SchoolPage.StudentDemographics.race.demographicTextNames.amerindalasknat,American Indians or Alaskan Natives,Indígenas americanos o nativos de Alaska
+SchoolPage.StudentDemographics.race.demographicTextNames.nonresident,not U.S. residents,No residentes en EE. UU
