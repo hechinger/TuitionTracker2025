@@ -35,6 +35,7 @@ export const revalidateSchools = (ids?: string[]) => {
   revalidatePath("/api/schools/names", "page");
   revalidatePath("/api/schools/price-histogram", "page");
   revalidatePath("/api/schools/download-data/[dataset]", "page");
+  revalidatePath("/admin", "layout");
   if (ids) {
     ids.forEach((id) => {
       revalidatePath(`/api/schools/${id}`);
@@ -47,14 +48,17 @@ export const revalidateSchools = (ids?: string[]) => {
 export const revalidateContent = () => {
   // revalidate all pages under the [locale] layout
   revalidatePath("/[locale]", "layout");
+  revalidatePath("/admin", "layout");
 };
 
 export const revalidateRecirculation = () => {
   // revalidate all pages under the [locale] layout
   revalidatePath("/[locale]", "layout");
+  revalidatePath("/admin", "layout");
 };
 
 export const revalidateRecommendedSchools = () => {
   // only used on the landing page
   revalidatePath("/[locale]", "page");
+  revalidatePath("/admin", "layout");
 };

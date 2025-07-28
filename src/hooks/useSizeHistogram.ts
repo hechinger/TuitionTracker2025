@@ -10,13 +10,16 @@ export function useSizeHistogram(opts: {
     schoolControl,
     degreeLevel,
   } = opts;
-  return useQuery<HistogramData[]>({
+  return useQuery<{ percentiles: number[], bins: HistogramData[] }>({
     queryKey: ['sizeHistogram', schoolControl, degreeLevel],
     queryFn: async () => {
       const rsp = await fetch(api.sizeHistogram({ schoolControl, degreeLevel }));
       const data = await rsp.json();
       return data;
     },
-    initialData: [],
+    initialData: {
+      percentiles: [],
+      bins: [],
+    },
   });
 }

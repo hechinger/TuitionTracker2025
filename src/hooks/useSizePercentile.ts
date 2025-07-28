@@ -1,13 +1,20 @@
-import { useSchools } from "./useSchools";
+import { useSizeHistogram } from "@/hooks/useSizeHistogram";
+import type { SchoolControl, DegreeLevel } from "@/types";
 
-export function useSizePercentile(size: number) {
-  const { data: schools = [] } = useSchools();
-  let numBelow = 0;
-  schools.forEach((school) => {
-    const n = school.enrollment;
-    if (n <= size) {
-      numBelow += 1;
-    }
+export function useSizePercentile({
+  size,
+  schoolControl,
+  degreeLevel,
+}: {
+  size: number;
+  schoolControl?: SchoolControl;
+  degreeLevel?: DegreeLevel;
+}) {
+  const { data: { percentiles } } = useSizeHistogram({
+    schoolControl,
+    degreeLevel,
   });
-  return numBelow / (schools.length || 1);
+  console.log(percentiles);
+  const percentile = percentiles.findLastIndex((d) => d < size);
+  return percentile / 100;
 }

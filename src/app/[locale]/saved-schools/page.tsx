@@ -12,6 +12,10 @@ import Recirculation from "@/components/Recirculation";
 export const revalidate = 86400; // 1d
 
 export const metadata: Metadata = {
+  title: "Tuition Tracker - Your Saved Schools",
+  openGraph: {
+    url: "https://tuitiontracker.org/saved-schools",
+  },
   other: {
     "parsely-title": "saved-schools",
     "parsely-link": "https://tuitiontracker.org/saved-schools",

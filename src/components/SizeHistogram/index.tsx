@@ -38,7 +38,7 @@ export default function SizeHistogram(props: {
     degreeLevel,
   } = props;
 
-  const { data: bins } = useSizeHistogram({
+  const { data: { bins } } = useSizeHistogram({
     schoolControl,
     degreeLevel,
   });
@@ -52,26 +52,24 @@ export default function SizeHistogram(props: {
   const {
     x,
     y,
-    // bins,
     areaPath,
     points,
   } = useMemo(() => {
-    const binMax = get(bins, [bins.length - 1, "x0"], 1);
-    const binSize = 500;
+    const binMax = get(bins, [bins.length - 1, "x1"], 1);
 
     const x = scaleLinear()
-      .domain([0, binMax + binSize])
+      .domain([0, binMax])
       .range([margin.left, width - margin.right]);
     const y = scaleLinear()
       .domain([0, max(bins, (d) => d.length) || 0])
       .range([height - margin.bottom, margin.top]);
 
     const points = [[0, 0]];
-    bins.forEach((bin, i) => {
-      points.push([i * binSize, bin.length]);
-      points.push([(i + 1) * binSize, bin.length]);
+    bins.forEach((bin) => {
+      points.push([bin.x0, bin.length]);
+      points.push([bin.x1, bin.length]);
     });
-    points.push([binMax + binSize, 0]);
+    points.push([binMax, 0]);
 
     const areaPath = line<number[]>()
       .x((d) => x(d[0]))
@@ -80,7 +78,6 @@ export default function SizeHistogram(props: {
     return {
       x,
       y,
-      bins,
       points,
       areaPath,
     };
@@ -148,7 +145,7 @@ export default function SizeHistogram(props: {
               transform: `translateX(${x(lab2)}px) translateX(-100%)`,
             }}
           >
-            {lab2.toLocaleString()} students
+            {`${lab2.toLocaleString()}+`} students
           </div>
 
           <div

@@ -1,4 +1,4 @@
-import { max, bin } from "d3-array";
+import { bin, quantileSorted } from "d3-array";
 import type { SchoolIndex, SchoolDetail, YearData } from "@/types";
 import { queryRows, run } from "./pool";
 
@@ -451,7 +451,7 @@ export const getSizeHistogram = async (opts: {
   type SizeRow = {
     enrollment_total: number;
   };
-  const prices = await queryRows<SizeRow>({
+  const schools = await queryRows<SizeRow>({
     text: `
       SELECT
         enrollment_total
@@ -463,21 +463,29 @@ export const getSizeHistogram = async (opts: {
     values: conditions.map((c) => c.value),
   });
 
-  const sizes = prices.map((school) => school.enrollment_total);
+  const sizes = schools
+    .map((school) => school.enrollment_total)
+    .sort((a, b) => a - b);
 
-  const binSize = 500;
-  const binMax = max(sizes) || 0;
-  const binN = Math.ceil(binMax / binSize);
+  const percentiles = [...Array(100)].map((_, i) => quantileSorted(
+    sizes,
+    i / 100,
+  ));
+
+  const upperLimit = quantileSorted(sizes, 0.96)!;
+  const binValues = sizes.map((s) => Math.min(s, upperLimit));
 
   const binner = bin()
-    .value((d) => Math.min(d, binMax))
-    .thresholds([...Array(binN)].map((_, i) => binSize * (i + 1)));
+    .thresholds(100);
 
-  return binner(sizes).map((b) => ({
-    length: b.length,
-    x0: b.x0,
-    x1: b.x1,
-  }));
+  return {
+    percentiles,
+    bins: binner(binValues).map((b) => ({
+      length: b.length,
+      x0: b.x0,
+      x1: b.x1,
+    })),
+  };
 };
 
 export const getStickerPriceDataset = async () => {

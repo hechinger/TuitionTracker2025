@@ -23,7 +23,11 @@ export default function SchoolDemographics(props: {
   } = props;
 
   const content = useContent();
-  const sizePercentile = useSizePercentile(school?.enrollment.total || 0);
+  const sizePercentile = useSizePercentile({
+    size: school.enrollment.total || 0,
+    schoolControl: school.schoolControl,
+    degreeLevel: school.degreeLevel,
+  });
 
   if (!school) return null;
 
@@ -31,7 +35,10 @@ export default function SchoolDemographics(props: {
     SCHOOL_NAME: school.name,
     ENROLLMENT: school.enrollment?.total.toLocaleString(),
     SIZE_PERCENTILE: formatOrdinal(Math.round(sizePercentile * 100)),
-    SCHOOL_TYPE: `${school.schoolControl}, ${school.degreeLevel}`, // FIXME
+    SCHOOL_TYPE: [
+      content(`GeneralPurpose.schoolControl.${school.schoolControl}`),
+      content(`GeneralPurpose.degreeLevel.${school.degreeLevel}`),
+    ].join(", ").toLowerCase(),
   };
 
   const majorityGender = Object.entries(school.enrollment.byGender)
