@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef, useEffect } from "react";
+import get from "lodash/get";
 import { useContent } from "@/hooks/useContent";
 import Well from "@/components/Well";
 import styles from "./styles.module.scss";
@@ -29,6 +31,29 @@ const mailchimpHtml = `
 export default function Newsletter() {
   const content = useContent();
 
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const submit = ref.current.querySelector("input[type=submit][name=subscribe]");
+    const email = ref.current.querySelector("input[type=email]") as HTMLInputElement;
+
+    if (!submit || !email) return;
+
+    const track = () => {
+      const dl = get(window, "dataLayer", []) as unknown[];
+      dl.push({
+        event: "newsletter",
+        newsletterName: "Tuition Tracker",
+        email: email.value,
+      });
+    };
+    submit.addEventListener("click", track);
+    return () => {
+      submit.removeEventListener("click", track);
+    };
+  }, []);
+
   return (
     <Well width="text">
       <div className={styles.newsletter}>
@@ -41,6 +66,7 @@ export default function Newsletter() {
         </p>
 
         <div
+          ref={ref}
           className={styles.mailchimp}
           dangerouslySetInnerHTML={{ __html: mailchimpHtml }}
         />

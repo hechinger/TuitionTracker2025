@@ -1,25 +1,39 @@
 /* eslint-disable @next/next/no-before-interactive-script-outside-document */
+"use client";
+
+import { useEffect, useRef } from "react";
 import Script from "next/script";
-import type { SchoolDetail } from "@/types";
+import get from "lodash/get";
 
 export default function DataLayer(props: {
-  locale: string;
-  school?: SchoolDetail;
+  dataLayerKey: string;
+  dataLayer?: unknown;
 }) {
-  const { school, locale } = props;
-  if (!school) return null;
-  const j = (val: unknown) => JSON.stringify(val);
+  const {
+    dataLayerKey,
+    dataLayer,
+  } = props;
+
+  const ref = useRef<string>(null);
+
+  useEffect(() => {
+    if (ref.current === dataLayerKey) return;
+
+    ref.current = dataLayerKey;
+
+    const datalayer = () => get(window, "dataLayer", []) as (unknown)[];
+    datalayer().push(dataLayer);
+    return () => {
+      datalayer().push(function(this: { reset: () => void; }) {
+        this.reset();
+      });
+    };
+  }, [dataLayerKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <Script id="data-layer" strategy="beforeInteractive">
       {`
          window.dataLayer = window.dataLayer || [];
-         dataLayer.push({
-           schoolName: ${j(school.name)},
-           schoolType: ${j(school.schoolControl)},
-           schoolDuration: ${j(school.degreeLevel)},
-           schoolState: ${j(school.state)},
-           language: ${j(locale)},
-         });
       `}
     </Script>
   );

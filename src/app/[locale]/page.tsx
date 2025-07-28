@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { getContent } from "@/db/content";
 import { getRecirculationArticles } from "@/db/recirculationArticles";
 import { getRecommendedSchools } from "@/db/recommendedSchools";
+import { DataLayer } from "@/analytics";
 import DataProvider from "@/components/DataProvider";
 import AdSlot from "@/components/AdSlot";
 import PageTopOverlap from "@/components/PageTopOverlap";
@@ -16,6 +18,16 @@ import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
 // Gets purged when content changes
 export const revalidate = 86400; // 1d
+
+export const metadata: Metadata = {
+  other: {
+    "parsely-title": "index",
+    "parsely-link": "https://tuitiontracker.org",
+    "parsely-type": "index",
+    "parsely-section": "homepage",
+    "parsely-author": "Tuition Tracker",
+  },
+};
 
 export default async function Home({
   params,
@@ -35,6 +47,13 @@ export default async function Home({
 
   return (
     <DataProvider locale={locale} content={content}>
+      <DataLayer
+        dataLayerKey="index"
+        dataLayer={{
+          language: locale,
+        }}
+      />
+
       <PageTopOverlap>
         <HeroSplash />
       </PageTopOverlap>

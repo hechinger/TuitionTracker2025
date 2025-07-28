@@ -108,8 +108,14 @@ export default async function School({
   return (
     <DataProvider locale={locale} content={content}>
       <DataLayer
-        school={school}
-        locale={locale}
+        dataLayerKey={school.id}
+        dataLayer={{
+          schoolName: school.name,
+          schoolType: school.schoolControl,
+          schoolDuration: school.degreeLevel,
+          schoolState: school.state,
+          language: locale,
+        }}
       />
 
       <PageTopOverlap>
