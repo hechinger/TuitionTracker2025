@@ -84,7 +84,7 @@ export default function SizeHistogram(props: {
   }, [bins, width, height]);
 
   const [lab1, lab2] = x.domain();
-  const dataLabelPosition = props.size;
+  const dataLabelPosition = Math.min(lab2, props.size);
   const dataLabelAlignment = getAlignmentTransform({
     min: x.domain()[1] * 0.2,
     value: dataLabelPosition,
