@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { GoogleTagManager, GoogleTagManagerNoScript } from "@/analytics";
+import { GooglePublisherTag } from "@/ads";
 import { routing } from "@/i18n/routing";
 import HechingerTopper from "@/components/HechingerTopper";
 import HechingerFooter from "@/components/HechingerFooter";
@@ -46,6 +47,7 @@ export default async function RootLayout({
     <html lang={locale}>
       <head>
         <GoogleTagManager />
+        <GooglePublisherTag />
       </head>
       <body>
         <GoogleTagManagerNoScript />

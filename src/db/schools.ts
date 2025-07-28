@@ -1,4 +1,5 @@
-import type { SchoolDetail, YearData } from "@/types";
+import { max, bin, extent, mean, median } from "d3-array";
+import type { SchoolIndex, SchoolDetail, YearData } from "@/types";
 import { queryRows, run } from "./pool";
 
 export type SchoolsRow = {
@@ -154,7 +155,7 @@ export const getSchoolsIndex = async (opts: {
       "75001_110000": school.net_price_bracket3,
       "110001": school.net_price_bracket4,
     },
-  }));
+  })) as SchoolIndex[];
 };
 
 const getDetailQueries = (ids: string[]) => {
@@ -365,4 +366,116 @@ export const setSchool = async (opts: {
       opts.tribalCollege,
     ],
   });
+};
+
+export const getPriceHistogram = async () => {
+  type PriceHistogramPrices = {
+    sticker_price_in_state: number;
+    net_price_average: number;
+    net_price_bracket0: number;
+    net_price_bracket1: number;
+    net_price_bracket2: number;
+    net_price_bracket3: number;
+    net_price_bracket4: number;
+  };
+
+  const prices = await queryRows<PriceHistogramPrices>(`
+    SELECT
+      sticker_price_in_state,
+      net_price_average,
+      net_price_bracket0,
+      net_price_bracket1,
+      net_price_bracket2,
+      net_price_bracket3,
+      net_price_bracket4
+    FROM
+      prices
+    INNER JOIN (
+      SELECT
+        school_id as max_school_id,
+        max(start_year) as start_year
+      FROM prices
+      GROUP BY school_id
+    ) as years
+    ON
+      prices.school_id = years.max_school_id
+      AND prices.start_year = years.start_year;
+  `);
+
+  const getBins = (key: keyof PriceHistogramPrices) => {
+    const binPrices = prices
+      .map((p) => p[key])
+      .filter((p) => p && p > 0 && Number.isFinite(p));
+    const binner = bin().thresholds(50);
+    return binner(binPrices).map((b) => ({
+      length: b.length,
+      x0: b.x0,
+      x1: b.x1,
+    }));
+  };
+
+  return {
+    sticker: getBins("sticker_price_in_state"),
+    average: getBins("net_price_average"),
+    "0_30000": getBins("net_price_bracket0"),
+    "30001_48000": getBins("net_price_bracket1"),
+    "48001_75000": getBins("net_price_bracket2"),
+    "75001_110000": getBins("net_price_bracket3"),
+    "110001": getBins("net_price_bracket4"),
+  };
+};
+
+export const getSizeHistogram = async (opts: {
+  schoolControl?: string;
+  degreeLevel?: string;
+} = {}) => {
+  const {
+    schoolControl,
+    degreeLevel,
+  } = opts;
+
+  let i = 1;
+  const conditions = [
+    (typeof schoolControl === "string") && {
+      condition: `school_control = $${i++}`,
+      value: schoolControl,
+    },
+    (typeof degreeLevel === "string") && {
+      condition: `degree_level = $${i++}`,
+      value: degreeLevel,
+    },
+  ].filter((d) => d !== false);
+
+  const where = ["enrollment_total IS NOT NULL", ...conditions.map((c) => c.condition)];
+
+  type SizeRow = {
+    enrollment_total: number;
+  };
+  const prices = await queryRows<SizeRow>({
+    text: `
+      SELECT
+        enrollment_total
+      FROM
+        schools
+      WHERE
+        ${where.join(" AND ")};
+    `,
+    values: conditions.map((c) => c.value),
+  });
+
+  const sizes = prices.map((school) => school.enrollment_total);
+
+  const binSize = 500;
+  const binMax = max(sizes) || 0;
+  const binN = Math.ceil(binMax / binSize);
+
+  const binner = bin()
+    .value((d) => Math.min(d, binMax))
+    .thresholds([...Array(binN)].map((_, i) => binSize * (i + 1)));
+
+  return binner(sizes).map((b) => ({
+    length: b.length,
+    x0: b.x0,
+    x1: b.x1,
+  }));
 };

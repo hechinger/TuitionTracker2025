@@ -3,16 +3,17 @@
 import { useId, useRef, useMemo } from "react";
 import * as Slider from "@radix-ui/react-slider";
 import { useResizeObserver } from "usehooks-ts";
+import get from "lodash/get";
 import { scaleLinear } from "d3-scale";
-import { max, bin } from "d3-array";
+import { max } from "d3-array";
 import { line } from "d3-shape";
-import type { IncomeBracketKey, SchoolIndex } from "@/types";
+import { usePriceHistogram } from "@/hooks/usePriceHistogram";
+import type { IncomeBracketKey } from "@/types";
 import styles from "./styles.module.scss";
 
 const margin = { top: 1, right: 10, bottom: 1, left: 10 };
 
 export default function PriceHistogram(props: {
-  schools: SchoolIndex[];
   bracket?: IncomeBracketKey;
   minPrice: number;
   maxPrice?: number;
@@ -20,9 +21,12 @@ export default function PriceHistogram(props: {
   updateMaxPrice: (price: number) => void;
 }) {
   const {
-    schools,
     bracket = "average",
   } = props;
+
+  const { data: bracketBins } = usePriceHistogram();
+
+  console.log(bracketBins);
 
   const id = useId();
 
@@ -35,20 +39,15 @@ export default function PriceHistogram(props: {
     y,
     path,
   } = useMemo(() => {
-    const validSchools = schools
-      .filter((school) => !!school.netPricesByBracket[bracket]);
+    const bins = bracketBins[bracket];
+    console.log(bracket, bins);
 
-    const binner = bin<SchoolIndex, number>()
-      .value((school) => school.netPricesByBracket[bracket])
-      .thresholds(50);
-    const bins = binner(validSchools);
-
-    const binMax = bins[bins.length - 1].x1!;
+    const binMax = get(bins, [bins.length - 1, "x1"], 1);
     const x = scaleLinear()
       .domain([0, binMax])
       .range([margin.left, width - margin.right]);
     const y = scaleLinear()
-      .domain([0, max(bins, (d) => d.length) || 0])
+      .domain([0, max(bins, (d) => d.length) || 1])
       .range([height - margin.bottom, margin.top]);
 
     const points = [[0, 0]];
@@ -67,7 +66,7 @@ export default function PriceHistogram(props: {
       y,
       path: areaPath(points) || "",
     };
-  }, [schools, width, height, bracket]);
+  }, [bracketBins, width, height, bracket]);
 
   const maxPriceValue = props.maxPrice || x.domain()[1];
 

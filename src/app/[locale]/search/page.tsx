@@ -13,17 +13,22 @@ import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 // Gets purged when content changes
 export const revalidate = 86400; // 1d
 
-export default async function Search() {
+export default async function Search({
+  params,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
   const [
     content,
     articles,
   ] = await Promise.all([
-    getContent(),
+    getContent({ locale }),
     getRecirculationArticles({ page: "search" }),
   ]);
 
   return (
-    <DataProvider content={content}>
+    <DataProvider locale={locale} content={content}>
       <PageTopOverlap>
         <SearchBar autoload withNav />
       </PageTopOverlap>

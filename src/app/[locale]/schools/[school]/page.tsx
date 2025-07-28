@@ -84,28 +84,29 @@ export async function generateMetadata({
   };
 }
 
-export default async function School(props: {
+export default async function School({
+  params,
+}: {
   params: Promise<{ locale: string, school: string }>;
 }) {
+  const { locale, school: schoolSlug } = await params;
+  const schoolId = `${schoolSlug.split('-').at(-1)}`;
   const [
-    { locale, school: schoolSlug },
     content,
+    school,
     nationalAverages,
   ] = await Promise.all([
-    props.params,
-    getContent(),
+    getContent({ locale }),
+    getSchool(schoolId),
     getNationalAverages(),
   ]);
-
-  const schoolId = `${schoolSlug.split('-').at(-1)}`;
-  const school = await getSchool(schoolId);
 
   if (!school) {
     return notFound();
   }
 
   return (
-    <DataProvider content={content}>
+    <DataProvider locale={locale} content={content}>
       <DataLayer
         school={school}
         locale={locale}

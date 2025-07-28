@@ -42,7 +42,7 @@ export default function SchoolTopper(props: {
 
   return (
     <Well>
-      <div className={styles.topper}>
+      <div className={clsx(styles.topper, { [styles.withImage]: !!school.image })}>
         <SchoolImage
           className={styles.schoolImage}
           school={school}

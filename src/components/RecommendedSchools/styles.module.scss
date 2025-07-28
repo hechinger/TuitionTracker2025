@@ -1,3 +1,5 @@
+@use "@/styles/colors.scss";
+
 $scroll-hint-width: 32px;
 
 .recommendedSection {
@@ -26,5 +28,10 @@ $scroll-hint-width: 32px;
     column-gap: 1em;
     padding-bottom: 12px;
     padding-right: $scroll-hint-width;
+  }
+
+  .placeholder {
+    height: 200px;
+    background: colors.$bg-light;
   }
 }

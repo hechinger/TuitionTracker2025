@@ -8,14 +8,16 @@ export default function SchoolImageCredit(props: {
     school,
   } = props;
 
-  // if (!school.image || !school.imageCredit) {
-  //   return null;
-  // }
+  if (!school.image || !school.imageCredit) {
+    return null;
+  }
 
   return (
-    <Well section>
+    <Well section width="text">
       <div>
-        Photo: {school.imageCredit}
+        Photo credit:
+        {" "}
+        <span dangerouslySetInnerHTML={{ __html: school.imageCredit }} />
       </div>
     </Well>
   );

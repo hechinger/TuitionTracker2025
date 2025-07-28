@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import ScrollArea from "@/components/ScrollArea";
@@ -36,6 +37,12 @@ export default function SchoolSelection(props: {
     props.setCompareSchoolIds(newIds);
   };
 
+  const count = props.savedSchools.schools.length;
+  const title = useMemo(() => {
+    if (count < 1) return "Your saved schools";
+    return `Your saved schools (${count})`;
+  }, [count]);
+
   return (
     <DndProvider backend={HTML5Backend}>
       <Well>
@@ -43,7 +50,7 @@ export default function SchoolSelection(props: {
           <div className={styles.savedSchools}>
             <div className={styles.header}>
               <h2 className={styles.title}>
-                Your saved schools
+                {title}
               </h2>
 
               <button

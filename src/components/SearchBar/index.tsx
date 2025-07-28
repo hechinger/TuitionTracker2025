@@ -6,7 +6,6 @@ import { MagnifyingGlassIcon, SlidersHorizontalIcon } from "@phosphor-icons/reac
 import ClickAwayListener from "react-click-away-listener";
 import { Link } from "@/i18n/navigation";
 import { useSearchState } from "@/hooks/useSearchState";
-import { useSchools } from "@/hooks/useSchools";
 import TuitionTrackerLogo from "@/components/TuitionTrackerLogo";
 import { useSuggestions } from "./useSuggestions";
 import WhereInput from "./WhereInput";
@@ -43,7 +42,6 @@ export default function SearchBar(props: {
 }) {
   const [inputState, setInputState] = useState<string>();
 
-  const { data: schools = [] } = useSchools();
   const {
     search,
     toggleState,
@@ -57,7 +55,6 @@ export default function SearchBar(props: {
 
   const whereSuggestions = useSuggestions({
     value: search.where,
-    schools: schools,
   });
 
   const doSearch = () => {
@@ -83,6 +80,10 @@ export default function SearchBar(props: {
               [styles.active]: !!inputState,
               [styles.mobileDialog]: inputState === "more",
             })}
+            onKeyDown={(e) => {
+              if (e.key !== "Enter") return;
+              doSearch();
+            }}
           >
             <div
               className={clsx({
@@ -96,7 +97,6 @@ export default function SearchBar(props: {
                 onChange={(value: string) => updateSearch("where", value)}
                 onRemoveState={toggleState}
                 onFocus={() => setInputState("where")}
-                schools={schools}
               />
             </div>
 
@@ -140,7 +140,6 @@ export default function SearchBar(props: {
 
               {inputState === "more" && (
                 <AdvancedSearch
-                  schools={schools}
                   search={search}
                   resetAdvanced={resetAdvanced}
                   updateSearch={updateSearch}

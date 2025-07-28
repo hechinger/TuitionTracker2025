@@ -16,19 +16,24 @@ import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 // Gets purged when content changes
 export const revalidate = 86400; // 1d
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
   const [
     content,
     articles,
     schoolSections,
   ] = await Promise.all([
-    getContent(),
+    getContent({ locale }),
     getRecirculationArticles({ page: "landing" }),
     getRecommendedSchools(),
   ]);
 
   return (
-    <DataProvider content={content}>
+    <DataProvider locale={locale} content={content}>
       <PageTopOverlap>
         <HeroSplash />
       </PageTopOverlap>
@@ -39,7 +44,7 @@ export default async function Home() {
         <RecommendedSchools
           key={section.key}
           title={section.title.en}
-          schoolIds={section.schoolIds}
+          schools={section.schools}
         />
       ))}
       <AdSlot />

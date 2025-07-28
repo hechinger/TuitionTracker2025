@@ -35,6 +35,11 @@ export default function Slot(props: {
     }),
   }), [props.setSlot]);
 
+  const formatPrice = (price: number | null) => {
+    if (price) return formatDollars(price);
+    return "No data";
+  };
+
   return (
     <div
       ref={dndRef(drop)}
@@ -77,7 +82,7 @@ export default function Slot(props: {
               </div>
 
               <div className={styles.value}>
-                {formatDollars(props.school.stickerPrice.price)}
+                {formatPrice(props.school.stickerPrice.price)}
               </div>
             </div>
 
@@ -88,7 +93,7 @@ export default function Slot(props: {
 
               <div className={styles.value}>
                 <span>
-                  {formatDollars(props.school.netPricesByBracket[incomeBracket])}
+                  {formatPrice(props.school.netPricesByBracket[incomeBracket])}
                 </span>
                 {' '}
                 <span>

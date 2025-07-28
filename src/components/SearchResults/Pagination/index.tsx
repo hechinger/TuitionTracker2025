@@ -23,7 +23,7 @@ export default function Pagination(props: {
   const showLast = end < (totalPages - 1);
   const showEndEllipsis = end < (totalPages - 2);
 
-  const pageButtons = [...Array(Math.max(0, end - start))].map((_, i) => start + i);
+  const pageButtons = [...Array(Math.max(0, end - start + 1))].map((_, i) => start + i);
 
   return (
     <div className={styles.pagination}>

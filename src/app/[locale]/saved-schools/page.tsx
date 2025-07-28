@@ -9,17 +9,22 @@ import Recirculation from "@/components/Recirculation";
 // Gets purged when content changes
 export const revalidate = 86400; // 1d
 
-export default async function SavedSchools() {
+export default async function SavedSchools({
+  params,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
   const [
     content,
     articles,
   ] = await Promise.all([
-    getContent(),
+    getContent({ locale }),
     getRecirculationArticles({ page: "comparison" }),
   ]);
 
   return (
-    <DataProvider content={content}>
+    <DataProvider locale={locale} content={content}>
       <PageTopOverlap>
         <SearchBar withNav />
       </PageTopOverlap>

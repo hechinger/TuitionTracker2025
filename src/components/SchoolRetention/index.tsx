@@ -21,7 +21,8 @@ export default function StudentRetentionSection(props: {
 
   const content = useContent();
 
-  if (!school) return null;
+  if (!school || !school.retention) return null;
+  if (!school.retention.fullTime || !school.retention.partTime) return null;
 
   const nationalAverages = props.nationalAverages[school.degreeLevel];
 

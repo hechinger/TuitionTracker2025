@@ -2,7 +2,6 @@
 
 import { useId } from "react";
 import us from "us";
-import type { SchoolIndex } from "@/types";
 import styles from "./styles.module.scss";
 
 /**
@@ -19,8 +18,6 @@ import styles from "./styles.module.scss";
  *   Function to call when the user de-selects a state
  * @param props.onFocus
  *   Function to call when the user clicks into the "where" input
- * @param props.schools
- *   The set of schools
  */
 export default function WhereInput(props: {
   value: string;
@@ -28,7 +25,6 @@ export default function WhereInput(props: {
   onChange: (value: string) => void;
   onRemoveState: (state: string) => void;
   onFocus: () => void;
-  schools: SchoolIndex[];
 }) {
   const id = `where-input-${useId()}`;
   const placeholder = (props.states.length < 1)

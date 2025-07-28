@@ -39,6 +39,8 @@ export default function SchoolGraduationRate(props: {
     SCHOOL_NAME: school.name,
   };
 
+  if (!school || !school.graduation || !school.graduation.total) return null;
+
   return (
     <Well width="text" section>
       <h2 className={styles.sectionTitle}>

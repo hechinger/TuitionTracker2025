@@ -1,6 +1,6 @@
-import type { SchoolIndex } from "@/types";
+import type { SchoolIndex, SchoolControl, DegreeLevel } from "@/types";
 
-export function getSchoolRoute(school: SchoolIndex) {
+export function getSchoolRoute(school: Pick<SchoolIndex, "slug">) {
   return `/schools/${school.slug}`;
 }
 
@@ -9,9 +9,22 @@ export function getCompareRoute() {
 }
 
 export const api = {
-  index: () => '/api/schools/',
-  // index: () => '/api-static/schools_index.json',
-  names: () => '/api/schools/names/',
-  school: (id: string) => `/api/schools/${id}/`,
-  // school: (id: string) => `/api-static/split/school_${id}.json`,
+  index: () => "/api/schools",
+  names: () => "/api/schools/names",
+  priceHistogram: () => "/api/schools/price-histogram",
+  sizeHistogram: ({
+    schoolControl,
+    degreeLevel,
+  }: {
+    schoolControl?: SchoolControl;
+    degreeLevel?: DegreeLevel;
+  } = {}) => {
+    const base = "/api/schools/size-histogram"
+    if (!schoolControl && !degreeLevel) return base;
+    const q = new URLSearchParams();
+    if (schoolControl) q.set("schoolControl", schoolControl);
+    if (degreeLevel) q.set("degreeLevel", degreeLevel);
+    return `${base}?${q}`;
+  },
+  school: (id: string) => `/api/schools/${id}`,
 };

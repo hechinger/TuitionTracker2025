@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import debounce from "lodash/debounce";
 import us from "us";
 import { getSchoolRoute } from "@/utils/routes";
-import type { SchoolIndex } from "@/types";
+import { useSchoolNames } from "@/hooks/useSchoolNames";
 
 export type Suggestion<Type = "school" | "state"> = {
   type: Type;
@@ -23,13 +23,12 @@ export type SuggestionSet = {
  * @param opts.value
  *   The current input value of the "where" search input, used to filter
  *   matching results.
- * @param opts.schools
- *   The set of schools to match against.
  */
 export function useSuggestions(opts: {
   value: string;
-  schools: SchoolIndex[];
 }) {
+  const { data: schools = [] } = useSchoolNames();
+
   const [suggestions, setSuggestions] = useState<SuggestionSet>({
     states: [],
     schools: [],
@@ -60,7 +59,7 @@ export function useSuggestions(opts: {
 
       // Collect the matching school names
       const matchingSchools = [] as Suggestion<"school">[];
-      opts.schools.forEach((school) => {
+      schools.forEach((school) => {
         const schoolSearch = `${school.name} ${school.alias}`.toLowerCase();
         if (!schoolSearch.includes(search)) return;
         matchingSchools.push({
@@ -83,7 +82,7 @@ export function useSuggestions(opts: {
     }, 500);
 
     updateSuggestions();
-  }, [opts.value, opts.schools]);
+  }, [opts.value, schools]);
 
   return suggestions;
 }

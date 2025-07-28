@@ -146,7 +146,7 @@ export default function RadarChart(props: {
     const pos = getXY(labelAngle, labelR);
     if (
       data[0].value > natAvgData[0].value
-        || data[data.length - 1].value > natAvgData[natAvgData.length - 1].value
+      && data[data.length - 1].value > natAvgData[natAvgData.length - 1].value
     ) {
       return [
         `translate(${width / 2}px, ${height / 2}px)`,

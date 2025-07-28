@@ -3,7 +3,7 @@
 import { useId, useCallback } from "react";
 import { BuildingApartmentIcon, CertificateIcon, CurrencyCircleDollarIcon, GraduationCapIcon } from "@phosphor-icons/react";
 import { useIncomeBracket } from "@/hooks/useIncomeBracket";
-import type { IncomeBracketKey, SchoolIndex } from "@/types";
+import type { IncomeBracketKey } from "@/types";
 import type { SearchOptions, UpdateSearch } from "@/hooks/useSearchState";
 import PriceHistogram from "./PriceHistogram";
 import styles from "./styles.module.scss";
@@ -70,8 +70,6 @@ const degreeTypes = [
 
 /**
  * 
- * @param props.schools
- *   The set of schools
  * @param props.search
  *   The current state of the user's search inputs
  * @param props.resetAdvanced
@@ -83,7 +81,6 @@ const degreeTypes = [
  *   Function that will execute the current search
  */
 export default function AdvancedSearch(props: {
-  schools: SchoolIndex[];
   search: SearchOptions;
   resetAdvanced: () => void;
   updateSearch: UpdateSearch;
@@ -138,7 +135,6 @@ export default function AdvancedSearch(props: {
           <div>
             <div className={styles.priceHistogram}>
               <PriceHistogram
-                schools={props.schools}
                 bracket={incomeBracket.bracket}
                 minPrice={search.minPrice}
                 maxPrice={search.maxPrice}

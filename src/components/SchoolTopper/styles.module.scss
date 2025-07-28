@@ -5,13 +5,18 @@
 .topper {
   position: relative;
   border: 1px solid colors.$border-main;
-  padding: 50px 20px;
+  padding: 30px 20px 50px;
   max-width: 780px;
   margin: 40px auto;
   text-align: center;
 
   @include breakpoints.at-least("md") {
-    padding: 50px 40px;
+    padding: 30px 40px 50px;
+  }
+
+  &.withImage {
+    padding: 50px 20px;
+    margin-top: 80px;
   }
 
   .schoolImage {

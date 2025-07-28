@@ -1,6 +1,7 @@
-import type { RecommendationSection } from "@/types";
+import type { SchoolIndex } from "@/types";
 import { queryRows, run } from "./pool";
 import { getValueIdSet } from "./getValueIdSet";
+import { getSchoolsIndex } from "./schools";
 
 export type RecommendedSchoolsRow = {
   db_id: number;
@@ -15,7 +16,17 @@ export type RecommendedSchoolsSection = {
   page_order: number;
   title: string;
   title_spanish: string;
-  school_ids: string[];
+  schools: SchoolIndex[];
+};
+
+export type RecommendationSectionAdmin = {
+  dbId: number;
+  pageOrder: number;
+  title: {
+    en: string;
+    es: string;
+  },
+  schoolIds: string[];
 };
 
 export const getRecommendedSchoolSlugs = async () => {
@@ -36,15 +47,24 @@ export const getRecommendedSchools = async () => {
     ON recommended_schools.db_id = recommended_school_ids.section_id;
   `);
 
+  const ids = sectionSchools.map((s) => s.school_id);
+  const schools = await getSchoolsIndex({
+    schoolIds: ids,
+  });
+  const schoolsById = new Map(schools.map((school) => [
+    school.id,
+    school,
+  ]));
+
   const sections = new Map<number, RecommendedSchoolsSection>();
   sectionSchools.forEach((row) => {
     const { db_id, school_id, ...rest } = row;
     const section = sections.get(db_id) || {
       db_id,
       ...rest,
-      school_ids: [],
+      schools: [],
     };
-    section.school_ids.push(school_id);
+    section.schools.push(schoolsById.get(school_id)!);
     sections.set(db_id, section);
   });
 
@@ -57,21 +77,21 @@ export const getRecommendedSchools = async () => {
         en: section.title,
         es: section.title_spanish,
       },
-      schoolIds: section.school_ids,
+      schools: section.schools,
     }))
     .sort((a, b) => a.pageOrder - b.pageOrder);
 
   return sortedSections;
 };
 
-export const setRecommendedSchools = async (sections: RecommendationSection[]) => {
+export const setRecommendedSchools = async (sections: RecommendationSectionAdmin[]) => {
   const newIds = new Set(sections.map((s) => s.dbId).filter(Boolean));
 
   const existing = await getRecommendedSchools();
   const toDelete = existing.map((d) => d.dbId).filter((id) => !newIds.has(id));
 
-  const updates = [] as RecommendationSection[];
-  const creations = [] as RecommendationSection[];
+  const updates = [] as RecommendationSectionAdmin[];
+  const creations = [] as RecommendationSectionAdmin[];
   sections.forEach((section) => {
     if (section.dbId) {
       updates.push(section);

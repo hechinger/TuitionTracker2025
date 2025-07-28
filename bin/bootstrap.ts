@@ -1,9 +1,15 @@
 import "dotenv/config";
+import nodePath from "node:path";
+import nodeFs from "node:fs";
 import { Pool } from "pg";
+import Papa from "papaparse";
+import { put } from "@vercel/blob";
 import { pipeline } from "../src/pipeline";
 
 const year = 2023;
 const dbUrl = process.env.DATABASE_URL;
+
+const rootDir = nodePath.dirname(__dirname);
 
 const getValueIdSet = (nRows: number, nCols: number) => {
   return [...Array(nRows)].map((_, row) => {
@@ -155,310 +161,66 @@ const main = async () => {
     );
   `);
 
-  console.log("Running data pipeline...");
-  await pipeline({ year });
+  // console.log("Running data pipeline...");
+  // await pipeline({ year });
 
   if (true) {
     console.log("Creating content records...");
     await db.query("TRUNCATE TABLE content;");
 
-    const txt = (s: string) => ({ en: s, es: s });
-
-    const content = {
-      GeneralPurpose: {
-        schoolControl:{
-          public: txt("Public"),
-          private: txt("Private"),
-          "for-profit": txt("For-profit"),
-        },
-        degreeLevel: {
-          "2-year": txt("2-year"),
-          "4-year": txt("4-year"),
-        },
-        hbcu: txt("HBCU"),
-        tribalCollege: txt("Tribal college"),
-        incomeSelection: {
-          average: txt("any income"),
-          "0_30000": txt("<$30K income"),
-          "30001_48000": txt("$30K-$48K income"),
-          "48001_75000": txt("$48K-$75K income"),
-          "75001_110000": txt("$75K-$110K income"),
-          "110001": txt(">$110K income"),
-        },
-        demographicCategories: {
-          amerindalasknat: txt("American Indian/Alaska Native"),
-          asian: txt("Asian"),
-          black: txt("Black"),
-          hisp: txt("Hispanic"),
-          nathawpacisl: txt("Native Hawaiian/Pacific Islander"),
-          white: txt("White"),
-          multiple: txt("Multiple races"),
-          unknown: txt("Unknown race"),
-          nonresident: txt("Nonresident"),
-        },
-      },
-      AdSlot: {
-        title: txt("Advertisement"),
-      },
-      HeroSplash: {
-        subtitle: txt("Revealing the true cost of college"),
-        sponsor: {
-          text: txt("In partnership with"),
-          image: "/partner.png",
-          imageAlt: txt("Big Charitable Group logo"),
-        },
-      },
-      SearchBar: {
-        where: {
-          title: txt("Where"),
-          placeholder: txt("Find a school or pick a state"),
-          states: txt("States"),
-          schools: txt("Schools"),
-        },
-        more: {
-          title: txt("Total cost and more"),
-          placeholder: txt("More search options"),
-        },
-        advanced: {
-          cost: {
-            title: txt("What it will cost"),
-            instructions: txt("Optionally select your hosuehold income to get a better price estimate"),
-            anyIncome: txt("Any"),
-            histogramTitle: txt("Net price for {INCOME} income"),
-            minimum: txt("Minimum"),
-            maximum: txt("Maximum"),
-          },
-          schoolType: {
-            title: txt("School type"),
-          },
-          degreeType: {
-            title: txt("Degree type"),
-            anyType: txt("Any type"),
-          },
-          other: {
-            title: txt("Other school attributes"),
-            tribalCollege: txt("Tribal college"),
-            hbcu: txt("Historically black (HBCU)"),
-          },
-          controls: {
-            clear: txt("Clear all"),
-            search: txt("Search"),
-          },
-        },
-      },
-      Newsletter: {
-        title: txt("Sign up for our newsletter"),
-        blurb: txt("We will help you understand the true cost of college."),
-      },
-      ContactUs: {
-        title: txt("Have a question?"),
-        blurb: txt("Get in touch with us if you have a question. Reach us at editor@hechingerreport.org."),
-        url: "https://hechingerreport.org/contact/",
-      },
-      Recirculation: {
-        title: txt("Read more"),
-      },
-      About: {
-        title: txt("About"),
-        copy: txt("<p>Tuition Tracker is an interactive tool that shows the relationship between published tuition and the actual costs of a given college. You can compare colleges by using your household income level to see what students like you have paid in the past and might be expected to pay now. The tool uses historical data to estimate of what you may pay to attend in the 2025-26 academic year.</p><p>You can also compare colleges based on graduation rates, which shows the likelihood of a student successfully completing their degree on time — a significant factor in affordability. For individual schools, you can also find out demographic information and retention rates.</p><p>Tuition Tracker uses cookies for optimal performance. Neither Tuition Tracker nor The Hechinger Report retain records of your personal data or answers to your income questions.</p>"),
-      },
-      DownloadData: {
-        title: txt("Download the data"),
-        copy: txt("<p>Tuition Tracker is powered by U.S. Department of Education data from IPEDS, the Integrated Postsecondary Education Data System, a service provided by the National Center for Education Statistics. The institutions analyzed are all U.S.-based, degree-granting colleges and universities that have first-time, full-time undergraduates.</p><p>Net prices are for first-time, full-time students (and, for public institutions, in-state students). The projected prices for each institution were calculated by taking the compound annual growth rate over the period of 2013-14 to 2023-24 using raw IPEDS data, then projecting that rate from the 2023-24 sticker price up to the 2025-26 academic year. Institutions without consecutive years of data going back to 2012-13 will not have projected prices. Average net price projections are determined by applying the discount rate for each income level in the last historical year these data were available. The percentage of students paying sticker price is derived from IPEDS data on first-time, first-year students.</p><p>Graduation rates and retention rates are calculated from the last five years of available data.</p><p>The data on institutional characteristics, acceptance rates and enrollment by race/ethnicity and gender are published as they are provided in IPEDS. The tool was last updated in April 2025.</p>"),
-      },
-      SearchResults: {
-        schoolsFound: txt("{FOUND} schools found out of {TOTAL_SCHOOLS}"),
-        sortBy: {
-          title: txt("Sort by"),
-          name: txt("Name"),
-          priceAscending: txt("Price $ - $$$"),
-          priceDescending: txt("Price $$$ - $"),
-        },
-      },
-      SchoolComparison: {
-        title: txt("Compare your favorite schools"),
-        savedSchools: {
-          title: txt("Your saved schools"),
-          copyLink: txt("Copy link to saved schools"),
-        },
-        compareSchools: {
-          title: txt("Compare schools"),
-          clear: txt("Clear"),
-          card: {
-            typeTitle: txt("Type"),
-            stickerPriceTitle: txt("Sticker price"),
-            netPriceTitle: txt("Average net price"),
-          },
-          dragPrompt: txt("Click or drag a school here to compare"),
-        },
-        priceTrend: {
-          title: txt("Historical price trend"),
-          fallbackText: txt("Select schools above to see how their prices compare over time."),
-          comparisonText: txt("See how the sticker price and net price trends of {SCHOOLS} compare."),
-        },
-        graduationRate: {
-          title: txt("Graduation Rates"),
-          fallbackText: txt("Select schools above to see how their graduation rates compare."),
-          comparisonText: txt("Past graduation rates can be an indicator of how likely students are to complete their degree. See how the graduation rates of {SCHOOLS} compare."),
-          graphLabel: txt("graduation rate"),
-        },
-        schoolSizes: {
-          title: txt("School Sizes"),
-          fallbackText: txt("Select schools above to see how their sizes compare."),
-          comparisonText: txt("School size can have a large impact on a student’s college experience. See how the sizes of {SCHOOLS} compare."),
-          students: txt("students"),
-        },
-      },
-      SchoolPage: {
-        SchoolTopper: {
-          schoolInfo: txt("{SCHOOL_CONTROL} {DEGREE_LEVEL} school"),
-          stickerPriceLabel: txt("projected sticker price"),
-          netPriceLabel: txt("projected average net price for"),
-          saveButton: {
-            saveThisSchool: txt("Save this school"),
-            saved: txt("Saved"),
-          },
-          noDataMessage: txt("This institution doesn’t have enough data for us to  calculate its sticker or net price. Learn more by visiting its official College Navigator page."),
-          collegeNavigatorLink: txt("Go to College Navigator"),
-        },
-        Prices: {
-          priceTrendTemplate: txt("<p>This year at <strong>{SCHOOL_NAME}</strong>, we project that on average {STUDENT_TYPE} will pay <u>{NET_PRICE}</u>, while the advertised price of attendance is {STICKER_PRICE}. That’s a difference of {PRICE_DIFFERENCE}.</p>"),
-          priceTrendTemplateStudentsAverage: "students",
-          priceTrendTemplateStudents030K: "students with incomes below $30K",
-          priceTrendTemplateStudents3048: "students with incomes between $30K and $48K",
-          priceTrendTemplateStudents4875: "students with incomes between $48K and $75K",
-          priceTrendTemplateStudents75110: "students with incomes between $75K and $110K",
-          priceTrendTemplateStudents110: "students with incomes over $110K",
-          priceTrendChartTitle: txt("Prices at {SCHOOL_NAME} over time for"),
-          outOfStateStickerLabel: txt("out-of-state sticker price"),
-          inStateStickerLabel: txt("in-state sticker price"),
-          inStateNetPriceLabel: txt("in-state net price"),
-          stickerLabel: txt("sticker price"),
-          netPriceLabel: txt("net price"),
-          upperEstimateLabel: txt("Upper net price estimation"),
-          estimateLabel: txt("Projected net price"),
-          lowerEstimateLabel: txt("Lower net price estimation"),
-          incomeBracketTemplate: txt("<p>How much a student actually pays usually depends, at least in part, on their family's household income. At <strong>{SCHOOL_NAME}</strong> this year, we project {MAX_BRACKET_STUDENTS} will pay around {MAX_BRACKET_PRICE}, while {MIN_BRACKET_STUDENTS} will pay around {MIN_BRACKET_PRICE}. That's a difference of {PRICE_DIFFERENCE}.</p>"),
-          incomeBracketChartTitle: txt("Net price by income bracket, {SCHOOL_YEAR} school year"),
-          incomeBracketChartAxisLabel: txt("Family income bracket"),
-        },
-        SchoolDetails: {
-          title: txt("School details"),
-          location: txt("Located in {LOCATION}"),
-          schoolType: txt("{SCHOOL_CONTROL} {DEGREE_LEVEL} school"),
-          acceptanceRate: txt("{ACCEPTANCE_RATE} acceptance rate"),
-          graduationRate: txt("{GRADUATION_RATE} graduation rate"),
-          aboutTheData: txt("<p>Historical sticker-price data up to 2022-23 and net price data up to 2021-22 come from the National Center for Education Statistics. Data for the following years are projected from Hechinger Report analyses. Projections are only provided for schools with complete historical data.</p><p>Net price is calculated by subtracting federal, state, local and institutional grants and scholarships from the total cost of attendance for first-time, full-time (and, at public universities, in-state) undergraduates. The data includes only families of students who received some form of federal student aid, including loans, since others are not tracked.</p><p>The shaded area provides a projected range of cost and is calculated using the highest and lowest discount rate in each income bracket over the last decade.</p>"),
-        },
-        GraduationRates: {
-          title: txt("Graduation Rates"),
-          overallTemplate: {
-            template: txt("<p>A school’s graduation rate can indicate how likely a student is to complete their degree. At <strong>{SCHOOL_NAME}</strong>, over the last five years <u>{GRADUATION_RATE}</u> of students earned their {DEGREE_TYPE} within {DEGREE_YEARS} of enrolling.</p>"),
-            degreeTypes: {
-              "2-year": txt("associate’s degree"),
-              "4-year": txt("bachelor’s degree"),
-            },
-            degreeYearsCompletionLimit: {
-              "2-year": txt("four years"),
-              "4-year": txt("six years"),
-            },
-          },
-          overallBarLabel: txt("{GRADUATION_RATE} overall grad rate"),
-          nationalAverageBarLabel: txt("Nat’l average"),
-          demographicTemplate: txt("<p>Students from different demographic backgrounds often graduate at different rates, so it can be helpful to look beyond the overall graduation rate. This chart shows how students of different races and ethnicities fare earning their degrees at <strong>{SCHOOL_NAME}</strong>.</p>"),
-        },
-        StudentRetention: {
-          title: txt("Student Retention"),
-          fullTimeStudents: txt("Full-time students"),
-          partTimeStudents: txt("Part-time students"),
-          chartLabel: txt("retention"),
-          nationalAverageLabel: txt("Nat’l average: {NATIONAL_AVERAGE}"),
-          template: txt("<p>Student retention, or how often students return to continue their degree after completing their first year, is another helpful indicator. Over the last five years, at <strong>{SCHOOL_NAME}</strong>, about <u>{FULL_TIME_RETENTION_RATE}</u> of full-time students returned the following fall to continue their degree.</p>"),
-        },
-        StudentDemographics: {
-          title: txt("Student Demographics"),
-          size: {
-            template: txt("<p>The size and demographic makeup of a school’s student body can have a large impact on a student’s experience. <strong>{SCHOOL_NAME}</strong> has {ENROLLMENT} students, which puts it in the {SIZE_PERCENTILE} percentile of {SCHOOL_TYPE} schools.</p>"),
-            students: txt("students"),
-          },
-          gender: {
-            template: txt("<p>About {GENDER_PERCENT_MAX} of students are {GENDER_NAME_MAX}.</p>"),
-            genderTextNames: {
-              men: txt("male"),
-              women: txt("female"),
-              unknown: txt("of unknown gender"),
-              other: txt("of a gender other than male or female"),
-            },
-            genderChartLabels: {
-              men: txt("male"),
-              women: txt("female"),
-              other: txt("other"),
-            },
-          },
-          race: {
-            template: txt("<p>And about {DEMOGRAPHIC_PERCENT_MAX} of students are {DEMOGRAPHIC_NAME_MAX}.</p>"),
-            demographicTextNames: {
-              unknown: txt("of an unknown demographic background"),
-              multiple: txt("of multiple races"),
-              white: txt("white"),
-              hisp: txt("hispanic"),
-              nathawpacisl: txt("Native Hawaiian or Pacific Islanders"),
-              black: txt("black"),
-              asian: txt("Asian"),
-              amerindalasknat: txt("American Indians or Alaskan Natives"),
-              nonresident: txt("not U.S. residents"),
-            },
-          },
-        },
-      },
+    type ContentField = {
+      component: string;
+      path: string;
+      locale: null | string;
+      value: string;
     };
-    const contentRows = [] as { locale: null | string, component: string, path: string, value: string }[];
-    Object.entries(content).forEach(([component, info]) => {
-      const decompose = (component: string, path: string, value: unknown) => {
-        if (
-          value
-          && typeof value === "object"
-          && "en" in value
-          && "es" in value
-          && Object.keys(value).length === 2
-        ) {
-          contentRows.push({
-            locale: "en",
-            component,
-            path,
-            value: `${value.en}`,
-          });
-          contentRows.push({
-            locale: "es",
-            component,
-            path,
-            value: `${value.es}`,
-          });
-          return;
-        }
+    const fields = [
+      {
+        component: "HeroSplash",
+        path: "sponsor.image",
+        locale: null,
+        value: null,
+      },
+      {
+        component: "ContactUs",
+        path: "url",
+        locale: null,
+        value: "https://hechingerreport.org/contact/",
+      },
+    ] as ContentField[];
 
-        if (typeof value === "string") {
-          contentRows.push({
-            locale: null,
-            component,
-            path,
-            value,
-          });
-          return;
-        }
-
-        if (!value) return;
-
-        const pref = path ? `${path}.` : "";
-        Object.entries(value).forEach(([k, v]) => {
-          decompose(component, `${pref}${k}`, v);
-        });
-      };
-      decompose(component, "", info);
+    type TranslationRow = {
+      Path: string;
+      English: string;
+      Spanish: string;
+    };
+    const translationsFile = nodePath.join(rootDir, "src", "data", "translations.csv");
+    const translationText = nodeFs.readFileSync(translationsFile).toString();
+    const translations = Papa.parse<TranslationRow>(translationText, {
+      header: true,
+      skipEmptyLines: true,
+      dynamicTyping: true,
     });
 
-    const valueIdSets = getValueIdSet(contentRows.length, 4);
-    const values = contentRows.map((r) => [r.locale, r.component, r.path, r.value]).flat();
+    translations.data.forEach((row) => {
+      const [component, ...restPath] = row.Path.split(".");
+      const path = restPath.join(".");
+      fields.push({
+        component,
+        path,
+        locale: "es",
+        value: row.Spanish,
+      });
+      fields.push({
+        component,
+        path,
+        locale: "en",
+        value: row.English,
+      });
+    });
+
+    const valueIdSets = getValueIdSet(fields.length, 4);
+    const values = fields.map((r) => [r.locale, r.component, r.path, r.value]).flat();
     const query = {
       text: `INSERT INTO content (locale, component, path, value) VALUES ${valueIdSets};`,
       values,
@@ -502,35 +264,134 @@ const main = async () => {
     await db.query(query);
   }
 
-  if (true) {
+  if (false) {
     console.log("Creating recommended school records...");
     await db.query("TRUNCATE TABLE recommended_school_ids CASCADE;");
     await db.query("TRUNCATE TABLE recommended_schools CASCADE;");
 
+    const stateSchools = [
+      {
+        id: "110653", // University of California-Irvine
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/UCI_Student_Center.jpg/1600px-UCI_Student_Center.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:UCI_Student_Center.jpg">SinisterLizard</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "178396", // University of Missouri-Columbia
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Jesse_Hall_Aerial.jpg/2560px-Jesse_Hall_Aerial.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Jesse_Hall_Aerial.jpg">Lectrician2</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "163286", // University of Maryland-College Park
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Mckeldin_Mall.jpg/1599px-Mckeldin_Mall.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Mckeldin_Mall.jpg">Radhika Kshirsagar</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "216339", // Temple University
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Temple_University_Performing_Arts_Center_in_2017.jpg/1600px-Temple_University_Performing_Arts_Center_in_2017.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Temple_University_Performing_Arts_Center_in_2017.jpg">ImagineerJC</a>, CC0, via Wikimedia Commons`,
+      },
+      {
+        id: "209542", // Oregon State University
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cf/OSU_by_air.jpg?20080526185312",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:OSU_by_air.jpg">saml123</a>, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "230728", // Utah State University
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Jon-M-Huntsman-School-of-Business-2016.jpg/1599px-Jon-M-Huntsman-School-of-Business-2016.jpg?20160613050640",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Jon-M-Huntsman-School-of-Business-2016.jpg">TaffyPuller1832</a>, Public domain, via Wikimedia Commons`,
+      },
+      {
+        id: "100751", // The University of Alabama
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Amelia_Gayle_Gorgas_Library_and_Flags%2C_UA%2C_Tuscaloosa%2C_South_view_20160714_1.jpg/1600px-Amelia_Gayle_Gorgas_Library_and_Flags%2C_UA%2C_Tuscaloosa%2C_South_view_20160714_1.jpg?20160721135736",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Amelia_Gayle_Gorgas_Library_and_Flags,_UA,_Tuscaloosa,_South_view_20160714_1.jpg">DXR</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "198464", // East Carolina University
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Joyner-Library-Clock-Tower.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Joyner-Library-Clock-Tower.jpg">Ecu2020</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "204796", // Ohio State University-Main Campus
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Columbus%2C_Ohio_JJ_79.jpg/2560px-Columbus%2C_Ohio_JJ_79.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Columbus,_Ohio_JJ_79.jpg">Jsjessee</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "183071", // University of New Hampshire at Manchester
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0d/University_of_New_Hampshire_Urban_Campus_%28August_2015%29.jpg?20151025202831",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:University_of_New_Hampshire_Urban_Campus_(August_2015).jpg">Millyard800</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+    ]
+
+    const liberalArtsSchools = [
+      {
+        id: "115409", // Harvey Mudd College
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Hmc-dartmouth_entrance.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Hmc-dartmouth_entrance.jpg">The original uploader was Imagine at English Wikipedia.</a>, <a href="https://creativecommons.org/licenses/by/2.5">CC BY 2.5</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "212577", // Franklin and Marshall College
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/FnM_NewCollegeHouse.jpg/1600px-FnM_NewCollegeHouse.jpg?20200423115002",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:FnM_NewCollegeHouse.jpg">Pâmella Ferrari</a>, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "156295", // Berea College
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/20140310_CampusShots_CAC_%284%29_%2813090607645%29.jpg/1920px-20140310_CampusShots_CAC_%284%29_%2813090607645%29.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:20140310_CampusShots_CAC_(4)_(13090607645).jpg">IMCBerea College</a>, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "141060", // Spelman College
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/SCNew2.jpg/1600px-SCNew2.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:SCNew2.jpg">OneofaKind25</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "211291", // Bucknell University
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Bertrand_Winter.jpg/1600px-Bertrand_Winter.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Bertrand_Winter.jpg">Dbl228</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "189088", // Bard College
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Stone_Row_Dorm.jpg/1600px-Stone_Row_Dorm.jpg?20230531162044",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Stone_Row_Dorm.jpg">S6336s</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "149781", // Wheaton College
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Wheaton_College_%28MA%29_Sign.jpg/1280px-Wheaton_College_%28MA%29_Sign.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Wheaton_College_(MA)_Sign.jpg">Kenneth C. Zirkel</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "234207", // Washington and Lee University
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/2008-0831-WashingtonandLeeUniversity.jpg/1599px-2008-0831-WashingtonandLeeUniversity.jpg?20080910001325",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:2008-0831-WashingtonandLeeUniversity.jpg">Bobak Ha&#039;Eri</a>, <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "197133", // Vassar College
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Thompson_Library_%28Vassar_College%29.jpg/1600px-Thompson_Library_%28Vassar_College%29.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Thompson_Library_(Vassar_College).jpg">Noteremote</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "164465", // Amherst College
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Amherst_College_Main_Quad.jpg?20100524002501",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Amherst_College_Main_Quad.jpg">David Emmerman</a>, <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>, via Wikimedia Commons`,
+      },
+      {
+        id: "190099", // Colgate University
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Colgate_University_Campus_Aerial.jpg/1600px-Colgate_University_Campus_Aerial.jpg",
+        imageCredit: `<a href="https://commons.wikimedia.org/wiki/File:Colgate_University_Campus_Aerial.jpg">Colgate University</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons`,
+      },
+    ]
+
     const sections = [
       {
         pageOrder: 0,
-        title: "Big State Schools",
-        titleSpanish: "Big State Schools",
-        schoolIds: [
-          "100724", // Alabama State University
-          "134097", // Florida State University
-          "134130", // University of Florida
-          "187985", // University of New Mexico-Main Campus
-          "236939", // Washington State University
-        ],
+        title: "State Schools",
+        titleSpanish: "Escuelas Públicas",
+        schoolIds: stateSchools.map((school) => school.id),
       },
       {
         pageOrder: 1,
         title: "Liberal Arts Schools",
-        titleSpanish: "Liberal Arts Schools",
-        schoolIds: [
-          "166027", // Harvard University
-          "186131", // Princeton University
-          "243744", // Stanford University
-          "130794", // Yale University
-          "182670", // Dartmouth College
-        ],
+        titleSpanish: "Escuelas de Artes Liberales",
+        schoolIds: liberalArtsSchools.map((school) => school.id),
       },
     ];
 
@@ -560,6 +421,27 @@ const main = async () => {
         `,
         values: section.schoolIds.map((s) => [row.db_id, s]).flat(),
       });
+    }
+
+    for (const school of [...stateSchools, ...liberalArtsSchools]) {
+      console.log(`Fetching image for school ${school.id}...`);
+      try {
+        const rsp = await fetch(school.imageUrl);
+        if (!rsp.ok || !rsp.body) {
+          throw new Error(`Failed to download image for school ${school.id} from ${school.imageUrl}`);
+        }
+        const blob = await put(`school-image-${school.id}`, rsp.body, {
+          access: "public",
+          addRandomSuffix: true,
+        });
+        await db.query({
+          text: "UPDATE schools SET image = $2, image_credit = $3 WHERE id = $1;",
+          values: [school.id, blob.url, school.imageCredit],
+        });
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
     }
   }
 };

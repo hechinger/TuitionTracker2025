@@ -16,6 +16,16 @@ export type IncomeBracketKey = "average"
   | "75001_110000"
   | "110001";
 
+export type HistogramData = {
+  length: number;
+  x0: number;
+  x1: number;
+};
+
+export type PriceHistogramData = {
+  [Property in IncomeBracketKey | "sticker"]: HistogramData[];
+};
+
 export type Graduation = {
   total: number;
   byRace: {
@@ -185,7 +195,7 @@ export type RecommendationSection = {
     en: string;
     es: string;
   };
-  schoolIds: string[];
+  schools: SchoolIndex[];
 };
 
 export type NationalAverages = Record<DegreeLevel, Record<string, number>>;

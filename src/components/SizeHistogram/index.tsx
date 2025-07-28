@@ -2,10 +2,11 @@
 
 import { useRef, useMemo } from "react";
 import { useResizeObserver } from "usehooks-ts";
+import get from "lodash/get";
 import { scaleLinear } from "d3-scale";
-import { max, bin } from "d3-array";
+import { max } from "d3-array";
 import { line } from "d3-shape";
-import { useSchools } from "@/hooks/useSchools";
+import { useSizeHistogram } from "@/hooks/useSizeHistogram";
 import { getAlignmentTransform } from "@/utils/getAlignmentTransform";
 import type { SchoolControl, DegreeLevel } from "@/types";
 import styles from "./styles.module.scss";
@@ -37,7 +38,10 @@ export default function SizeHistogram(props: {
     degreeLevel,
   } = props;
 
-  const { data: schools = [] } = useSchools();
+  const { data: bins } = useSizeHistogram({
+    schoolControl,
+    degreeLevel,
+  });
 
   const ref = useRef<HTMLDivElement>(null);
   const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
@@ -52,23 +56,8 @@ export default function SizeHistogram(props: {
     areaPath,
     points,
   } = useMemo(() => {
-    const sizes = schools
-      .filter((school) => {
-        if (!school.enrollment) return false;
-        const isControl = !schoolControl || (schoolControl === school.schoolControl);
-        const isLevel = !degreeLevel || (degreeLevel === school.degreeLevel);
-        return isControl && isLevel;
-      })
-      .map((school) => school.enrollment);
-
+    const binMax = get(bins, [bins.length - 1, "x0"], 1);
     const binSize = 500;
-    const binMax = max(sizes) || 0;
-    const binN = Math.ceil(binMax / binSize);
-
-    const binner = bin()
-      .value((d) => Math.min(d, binMax))
-      .thresholds([...Array(binN)].map((_, i) => binSize * (i + 1)));
-    const bins = binner(sizes);
 
     const x = scaleLinear()
       .domain([0, binMax + binSize])
@@ -95,7 +84,7 @@ export default function SizeHistogram(props: {
       points,
       areaPath,
     };
-  }, [schools, width, height, schoolControl, degreeLevel]);
+  }, [bins, width, height]);
 
   const [lab1, lab2] = x.domain();
   const dataLabelPosition = props.size;
