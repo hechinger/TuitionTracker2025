@@ -127,7 +127,10 @@ This project leverages Vercel's edge caching to provide a quick and speedy user 
 
 Note that Vercel's cache can be purged through the Vercel admin, and each deployment on Vercel has its own set of cache keys, so if for some reason you find content stuck in Vercel's cache and you need to remove it quickly, you can either purge manually or promote a new deployment to production. In theory that shouldn't be necessary, but good to know as a last resort.
 
-When any content or data changes, usually because someone at The Hechinger Report updated something in the admin tool, we invalidate the corresponding routes in [`src/cache.ts`](./src/cache.ts). Note that if we add new routes in the future, we will need to make sure to invalidate them as necessary when data changes.
+When any content or data changes, usually because someone at The Hechinger Report updated something in the admin tool, we invalidate the corresponding routes in [`src/cache.ts`](./src/cache.ts).
+
+> [!WARNING]
+> If we add new routes in the future with similar caching policies, we will need to make sure to invalidate them as necessary when data changes in [`src/cache.ts`](./src/cache.ts).
 
 ## Local development
 
