@@ -34,6 +34,7 @@ export const revalidateSchools = (ids?: string[]) => {
   revalidatePath("/api/schools", "page");
   revalidatePath("/api/schools/names", "page");
   revalidatePath("/api/schools/price-histogram", "page");
+  revalidatePath("/api/schools/size-histogram", "page");
   revalidatePath("/api/schools/download-data/[dataset]", "page");
   revalidatePath("/admin", "layout");
   if (ids) {

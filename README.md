@@ -124,6 +124,8 @@ This project leverages Vercel's edge caching to provide a quick and speedy user 
 
 Note that Vercel's cache can be purged through the Vercel admin, and each deployment on Vercel has its own set of cache keys, so if for some reason you find content stuck in Vercel's cache and you need to remove it quickly, you can either purge manually or promote a new deployment to production. In theory that shouldn't be necessary, but good to know as a last resort.
 
+When any content or data changes, usually because someone at The Hechinger Report updated something in the admin tool, we invalidate the corresponding routes in [`src/cache.ts`](./src/cache.ts). Note that if we add new routes in the future, we will need to make sure to invalidate them as necessary when data changes.
+
 ## Local development
 
 This project was built using Node v22.12 for local development, but most modern versions of Node should work. Install dependencies:
@@ -161,7 +163,33 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Deploy on Vercel
 
-This project is deployed through Vercel. New preview deployments are automatically created from pushes to GitHub.
+This project is [deployed through Vercel](https://vercel.com/hechingers-projects/tuition-tracker-2025). You can create new deployments from the command line using the [Vercel CLI](https://vercel.com/docs/cli). You can either [install it globally](https://vercel.com/docs/cli#installing-vercel-cli) or run it with [`npx`](https://docs.npmjs.com/cli/v8/commands/npx) as shown below. If you are deploying the project for the first time from your machine, you will have to log into Vercel:
+
+```bash
+npx vercel login
+```
+
+Then you'll need to make sure the local repo is linked to [the Hechinger `tuition-tracker-2025`](https://vercel.com/hechingers-projects/tuition-tracker-2025) project:
+
+```bash
+npx vercel link
+```
+
+Select the correct organization (`Hechinger`) and project (`tuition-tracker-2025`).
+
+Finally, you can create new preview deployments:
+
+```bash
+npx vercel
+```
+
+Or production deployments, which will publish a new version of the site live to the world:
+
+```bash
+npx vercel --prod
+```
+
+Note that once you have created a preview deployment, you can also promote it to production through [the Vercel deployments dashboard](https://vercel.com/hechingers-projects/tuition-tracker-2025/deployments).
 
 ## Credit
 
