@@ -69,8 +69,6 @@ export default function IncomeBracketBarChart(props: {
     return { maxYearData, x, y };
   }, [school, width, height]);
 
-  console.log(maxYearData);
-
   return (
     <div className={styles.container}>
       {school && (

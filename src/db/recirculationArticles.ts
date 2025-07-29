@@ -124,7 +124,6 @@ export const setRecirculationArticles = async (articles: Article[]) => {
       `,
       values: updateValues,
     };
-    console.log(updateQuery);
     await run(updateQuery);
   }
 

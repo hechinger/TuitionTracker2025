@@ -14,7 +14,6 @@ export function useSizePercentile({
     schoolControl,
     degreeLevel,
   });
-  console.log(percentiles);
   const percentile = percentiles.findLastIndex((d) => d < size);
   return percentile / 100;
 }

@@ -38,7 +38,6 @@ export default function PriceHistogram(props: {
     path,
   } = useMemo(() => {
     const bins = bracketBins[bracket];
-    console.log(bracket, bins);
 
     const binMax = get(bins, [bins.length - 1, "x1"], 1);
     const x = scaleLinear()
