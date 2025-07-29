@@ -1,8 +1,11 @@
-# Tuition Tracker
+# Tuition Tracker 2025
 
 This project contains all the font-end and back-end code for the Tuition Tracker built by The Hechinger Report.
 
 **Tech stack**: Next.js 15, React, PostgreSQL (via Neon), Clerk (auth), next-intl (i18n), SCSS
+
+> [! WARNING]
+> If you are looking for the code from the original Tuition Tracker project, [that can be found here](https://github.com/hechinger/TuitionTracker).
 
 ## 🚀 Quick start
 
