@@ -23,17 +23,11 @@
 
     // Mailchimp indicates required label
     :global(.indicates-required) {
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 4px;
+      display: none;
     }
 
     :global(.asterisk) {
-      color: colors.$text-main;
-      font-weight: bold;
-      font-size: 150%;
+      display: none;
     }
 
     :global(.mc-field-group) {
