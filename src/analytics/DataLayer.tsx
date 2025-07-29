@@ -5,9 +5,13 @@ import { useEffect, useRef } from "react";
 import Script from "next/script";
 import get from "lodash/get";
 
+export const getDataLayer = () => {
+  return get(window, "dataLayer", []) as (unknown)[];
+};
+
 export default function DataLayer(props: {
   dataLayerKey: string;
-  dataLayer?: unknown;
+  dataLayer?: Record<string, unknown>;
 }) {
   const {
     dataLayerKey,
@@ -17,14 +21,14 @@ export default function DataLayer(props: {
   const ref = useRef<string>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (ref.current === dataLayerKey) return;
 
     ref.current = dataLayerKey;
 
-    const datalayer = () => get(window, "dataLayer", []) as (unknown)[];
-    datalayer().push(dataLayer);
+    getDataLayer().push({ ...dataLayer });
     return () => {
-      datalayer().push(function(this: { reset: () => void; }) {
+      getDataLayer().push(function(this: { reset: () => void; }) {
         this.reset();
       });
     };

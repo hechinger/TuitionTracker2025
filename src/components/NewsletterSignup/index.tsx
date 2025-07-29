@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import get from "lodash/get";
+import { isEmail } from "@/utils/isEmail";
 import { useContent } from "@/hooks/useContent";
+import { getDataLayer } from "@/analytics/DataLayer";
 import Well from "@/components/Well";
 import styles from "./styles.module.scss";
 
@@ -41,11 +42,12 @@ export default function Newsletter() {
     if (!submit || !email) return;
 
     const track = () => {
-      const dl = get(window, "dataLayer", []) as unknown[];
-      dl.push({
+      const emailValue = email.value;
+      if (!isEmail(emailValue)) return;
+      getDataLayer().push({
         event: "newsletter",
         newsletterName: "Tuition Tracker",
-        email: email.value,
+        email: emailValue,
       });
     };
     submit.addEventListener("click", track);
