@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Game of College",
+  title: "A Game of College | The Hechinger Report",
   openGraph: {
-    title: "Game of College",
+    title: "A Game of College: Can you get into college and finish a degree without taking on too much debt?",
     url: "https://tuitiontracker.org/game-of-college",
-    siteName: "Game of College",
-    images: "https://hechingerreport.org/wp-content/uploads/2020/07/THR-for-Cisco-wallpaper.jpg",
+    siteName: "A Game of College",
+    images: "https://kjxofjq2cxejjxiu.public.blob.vercel-storage.com/game-of-college-share.jpg",
     type: "website",
   },
   icons: {

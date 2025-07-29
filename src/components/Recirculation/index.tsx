@@ -1,5 +1,6 @@
 "use client";
 
+import { widont } from "@/utils/widont";
 import Well from "@/components/Well";
 import { useContent } from "@/hooks/useContent";
 import type { RecirculationArticle } from "@/types";
@@ -43,7 +44,7 @@ export default function Recirculation(props: {
                 alt={article.imageAlt || ""}
               />
               <div className={styles.headline}>
-                {article.headline}
+                {widont(article.headline)}
               </div>
             </a>
           ))}
