@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { useResizeObserver } from "usehooks-ts";
+import { useEffect, useRef } from "react";
 import get from "lodash/get";
 import { useContent } from "@/hooks/useContent";
 import styles from "./styles.module.scss";
@@ -16,14 +15,8 @@ type GoogleTag = {
  */
 export default function AdSlot() {
   const ref = useRef<HTMLDivElement>(null);
-  const { width = 0 } = useResizeObserver({ ref: ref as React.RefObject<HTMLElement> });
 
-  const id = useMemo(() => {
-    const baseId = 'div-gpt-ad-1732288624207-0';
-    const suffix = width > 300 ? "desktop" : "mobile";
-    return `${baseId}-${suffix}`;
-  }, [width]);
-
+  const id = 'div-gpt-ad-1732288624207-0';
   const content = useContent();
 
   useEffect(() => {

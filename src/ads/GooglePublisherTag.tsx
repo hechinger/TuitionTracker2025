@@ -13,8 +13,7 @@ export default function GooglePublisherTag() {
         {`
           window.googletag = window.googletag || {cmd: []};
           googletag.cmd.push(function() {
-            googletag.defineSlot('/6160094/tuition-tracker-top-001', [728, 90], 'div-gpt-ad-1732288624207-0-desktop').addService(googletag.pubads());
-            googletag.defineSlot('/6160094/tuition-tracker-top-001', [300, 250], 'div-gpt-ad-1732288624207-0-mobile').addService(googletag.pubads());
+            googletag.defineSlot('/6160094/tuition-tracker-top-001', [[300, 250], [728, 90]], 'div-gpt-ad-1732288624207-0').addService(googletag.pubads()).defineSizeMapping(googletag.sizeMapping().addSize([740, 600], [[728, 90]]).addSize([300, 250], [[300, 250]]).build());
             googletag.pubads().enableSingleRequest();
             googletag.enableServices();
           });
