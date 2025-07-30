@@ -1,0 +1,38 @@
+@use "@/styles/colors.scss";
+
+.wrapper {
+  padding-top: 16px;
+}
+
+.contactUs {
+  display: block;
+  position: relative;
+  background: colors.$brand-yellow;
+  border-top: 4px solid colors.$brand-yellow-dark;
+  padding: 20px;
+  text-align: center;
+
+  .icon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(-2px);
+    width: 32px;
+    height: 32px;
+    background: colors.$bg-dark;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h2 {
+    font-size: 28px;
+    margin-bottom: 0.6em;
+  }
+
+  p {
+    font-size: 22px;
+  }
+}

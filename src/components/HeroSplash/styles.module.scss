@@ -1,0 +1,28 @@
+@use "@/styles/colors.scss";
+
+.splash {
+  margin: 40px;
+  text-align: center;
+
+  .logo {
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    color: colors.$text-light;
+    font-size: 24px;
+  }
+
+  .sponsor {
+    margin-top: 24px;
+
+    .sponsorText {
+      color: colors.$text-light;
+      text-transform: uppercase;
+    }
+
+    .sponsorLogo {
+      margin-top: 10px;
+    }
+  }
+}

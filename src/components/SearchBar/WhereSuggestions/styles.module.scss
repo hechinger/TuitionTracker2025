@@ -1,0 +1,23 @@
+@use "@/styles/colors.scss";
+
+.suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.title {
+  font-weight: bold;
+  color: colors.$text-light;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

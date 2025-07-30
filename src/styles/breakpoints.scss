@@ -1,0 +1,40 @@
+@use "sass:map";
+
+$breakpoint-sm: 600px;
+$breakpoint-md: 782px;
+$breakpoint-lg: 900px;
+
+$breakpoint-floors: (
+  "sm": 0px,
+  "md": $breakpoint-sm,
+  "lg": $breakpoint-md,
+  "xl": $breakpoint-lg,
+);
+
+$breakpoint-ceilings: (
+  "sm": $breakpoint-sm,
+  "md": $breakpoint-md,
+  "lg": $breakpoint-lg,
+);
+
+@mixin at-least($breakpoint) {
+  @if not map.has-key($breakpoint-floors, $breakpoint) {
+    @error "Invalid breakpoint `#{$breakpoint}` provided to breakpoint-at-least. "
+      + "Available breakpoints are: #{map-keys($breakpoint-floors)}.";
+  }
+
+  @media screen and (min-width: map.get($breakpoint-floors, $breakpoint)) {
+    @content;
+  }
+}
+
+@mixin at-most($breakpoint) {
+  @if not map.has-key($breakpoint-ceilings, $breakpoint) {
+    @error "Invalid breakpoint `#{$breakpoint}` provided to breakpoint-at-least. "
+      + "Available breakpoints are: #{map-keys($breakpoint-floors)}.";
+  }
+
+  @media screen and (max-width: map.get($breakpoint-ceilings, $breakpoint)) {
+    @content;
+  }
+}

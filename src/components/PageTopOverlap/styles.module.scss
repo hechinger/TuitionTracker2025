@@ -1,0 +1,13 @@
+@use "@/styles/colors.scss";
+@use "@/styles/breakpoints.scss";
+
+.overlap {
+  background: white;
+
+  @include breakpoints.at-least("lg") {
+    border-top: 4px solid colors.$brand-yellow-dark;
+    padding: 1rem 2rem 0px;
+    margin-top: -6rem;
+    min-height: 6rem;
+  }
+}

@@ -1,0 +1,14 @@
+@use "@/styles/colors.scss";
+
+.text {
+  u {
+    font-weight: bold;
+    color: var(--highlight-color, #{colors.$text-main});
+    text-decoration: none;
+  }
+}
+
+.graf {
+  font-size: 22px;
+  line-height: 140%;
+}

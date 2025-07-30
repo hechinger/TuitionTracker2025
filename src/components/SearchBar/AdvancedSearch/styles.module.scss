@@ -1,0 +1,254 @@
+@use "@/styles/breakpoints.scss";
+@use "@/styles/colors.scss";
+
+.container {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 60vh auto;
+
+  @include breakpoints.at-most("sm") {
+    grid-template-rows: 1fr auto;
+  }
+}
+
+.sections {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.costSection,
+.schoolTypeSection,
+.degreeTypeSection,
+.otherSection {
+  padding: 20px;
+
+  h3 {
+    margin-bottom: 8px;
+  }
+}
+
+.bracket {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.instructions {
+  color: colors.$text-light;
+  margin-bottom: 12px;
+}
+
+.bracketLabel {
+  display: inline-block;
+  flex-grow: 1;
+  text-align: center;
+  padding: 4px 8px;
+  border: 1px solid colors.$border-main;
+  border-right-width: 0px;
+  background: white;
+  cursor: pointer;
+
+  &:last-child {
+    border-right-width: 1px;
+  }
+
+  &:has(input[type="radio"]:checked) + & {
+    border-left-width: 0px;
+  }
+
+  &:has(input[type="radio"]:checked) {
+    border: 1px solid colors.$text-light;
+    background: colors.$bg-light;
+    font-weight: bold;
+  }
+
+  input[type="radio"] {
+    clip: rect(1px, 1px, 1px, 1px);
+    word-wrap: normal;
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    overflow-wrap: normal;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+}
+
+.priceHistogram {
+  margin: 18px 0 12px;
+}
+
+.cost {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  label {
+    justify-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: colors.$text-light;
+
+    &:last-child {
+      justify-self: flex-end;
+    }
+  }
+
+  input {
+    border: 1px solid colors.$border-main;
+    padding: 6px 8px;
+    text-align: right;
+  }
+}
+
+.schoolTypes {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  label {
+    cursor: pointer;
+    text-align: center;
+
+    &:has(input[type="radio"]:checked) {
+      font-weight: bold;
+    }
+
+    input[type="radio"] {
+      clip: rect(1px, 1px, 1px, 1px);
+      word-wrap: normal;
+      border: 0;
+      clip-path: inset(50%);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      overflow-wrap: normal;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    .schoolTypeIcon {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid colors.$border-main;
+      background: white;
+      cursor: pointer;
+    }
+
+    &:has(input[type="radio"]:checked) > .schoolTypeIcon {
+      border: 1px solid colors.$text-light;
+      background: colors.$bg-light;
+      font-weight: bold;
+    }
+  }
+}
+
+.degreeTypes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.degreeTypeLabel {
+  display: inline-block;
+  flex-grow: 1;
+  text-align: center;
+  padding: 4px 8px;
+  border: 1px solid colors.$border-main;
+  border-right-width: 0px;
+  background: white;
+  cursor: pointer;
+
+  &:last-child {
+    border-right-width: 1px;
+  }
+
+  &:has(input[type="radio"]:checked) + & {
+    border-left-width: 0px;
+  }
+
+  &:has(input[type="radio"]:checked) {
+    border: 1px solid colors.$text-light;
+    background: colors.$bg-light;
+    font-weight: bold;
+  }
+
+  input[type="radio"] {
+    clip: rect(1px, 1px, 1px, 1px);
+    word-wrap: normal;
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    overflow-wrap: normal;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+}
+
+.other {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  label {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid colors.$border-main;
+    background: white;
+    cursor: pointer;
+
+    &:has(input[type="checkbox"]:checked) {
+      border: 1px solid colors.$text-light;
+      background: colors.$bg-light;
+      font-weight: bold;
+    }
+
+    input[type="checkbox"] {
+      clip: rect(1px, 1px, 1px, 1px);
+      word-wrap: normal;
+      border: 0;
+      clip-path: inset(50%);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      overflow-wrap: normal;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+  }
+}
+
+.controls {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid colors.$border-main;
+
+  .clearButton {
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+
+  .searchButton {
+    background: colors.$brand-yellow;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+}

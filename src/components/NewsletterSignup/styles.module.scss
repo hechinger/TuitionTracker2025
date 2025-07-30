@@ -1,0 +1,59 @@
+@use "@/styles/colors.scss";
+
+.newsletter {
+  background: colors.$brand-yellow;
+  border-top: 4px solid colors.$brand-yellow-dark;
+  padding: 20px;
+
+  .title {
+    font-size: 28px;
+    margin-bottom: 0.6em;
+  }
+
+  .blurb {
+    font-size: 22px;
+    margin-bottom: 0.6em;
+  }
+
+  .mailchimp {
+    // hide Mailchimp title
+    h2 {
+      display: none;
+    }
+
+    // Mailchimp indicates required label
+    :global(.indicates-required) {
+      display: none;
+    }
+
+    :global(.asterisk) {
+      display: none;
+    }
+
+    :global(.mc-field-group) {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    input:not([type=submit]) {
+      background: rgba(#fff, 33%);
+      border: 1px solid black;
+      padding: 10px 16px;
+
+      &:focus-visible {
+        outline: 2px solid colors.$brand-yellow-dark;
+      }
+    }
+
+    input[type=submit] {
+      margin-top: 1em;
+      padding: 9px;
+      background: black;
+      outline: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+@use "@/styles/breakpoints.scss";
+@use "@/styles/colors.scss";
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transform: translateY(12px);
+  z-index: 2;
+  background: white;
+  border: 1px solid colors.$text-light;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+
+  &:empty {
+    display: none;
+  }
+
+  &.right {
+    left: unset;
+    right: 0;
+  }
+
+  &.mobileDialog {
+    @include breakpoints.at-most("sm") {
+      position: fixed;
+      z-index: 10;
+      top: 2vh;
+      left: 2vw;
+      right: 2vw;
+      height: 92vh;
+      outline: 100vw solid rgba(black, 0.6);
+    }
+  }
+
+  .closeButton {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    display: block;
+    margin-left: auto;
+    background: white;
+    border: none;
+    padding: 10px 10px 0px 0px;
+    cursor: pointer;
+
+    @include breakpoints.at-least("md") {
+      display: none;
+    }
+  }
+}

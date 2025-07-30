@@ -1,0 +1,21 @@
+@use "@/styles/colors.scss";
+
+.school {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: grab;
+}
+
+.compareButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 18px;
+  background: white; // colors.$bg-light;
+  border: 1px solid colors.$border-main;
+  padding: 4px;
+  cursor: pointer;
+  background: colors.$bg-light;
+}

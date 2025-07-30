@@ -1,0 +1,50 @@
+@use "@/styles/breakpoints.scss";
+@use "@/styles/colors.scss";
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: colors.$text-main;
+  color: white;
+  padding: 20px 36px;
+  margin-top: 40px;
+  font-size: 0.8em;
+
+  .footerLinks {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @include breakpoints.at-least("md") {
+      flex-direction: row;
+      flex-wrap: wrap;
+      column-gap: 20px;
+    }
+  }
+
+  .siteInfo {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+
+    @include breakpoints.at-least("lg") {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .socialLinks {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}

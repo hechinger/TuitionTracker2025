@@ -1,0 +1,44 @@
+@use "@/styles/colors.scss";
+
+.plot {
+  position: relative;
+  margin: 20px 0 40px;
+}
+
+.bgBar {
+  fill: colors.$bg-light;
+}
+
+.dataBar {
+  &.male {
+    fill: black;
+  }
+
+  &.other {
+    fill: colors.$bg-light;
+  }
+
+  &.female {
+    fill: #888;
+  }
+}
+
+.annotation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  .label {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .otherLabel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+}

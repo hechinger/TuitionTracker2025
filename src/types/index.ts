@@ -1,0 +1,211 @@
+export type SchoolControl = "public" | "private" | "for-profit";
+export type DegreeLevel = "2-year" | "4-year";
+export type StickerPriceType = string;
+
+export type SchoolNameInfo = {
+  id: string;
+  name: string;
+  slug: string;
+  alias: string;
+};
+
+export type IncomeBracketKey = "average"
+  | "0_30000"
+  | "30001_48000"
+  | "48001_75000"
+  | "75001_110000"
+  | "110001";
+
+export type HistogramData = {
+  length: number;
+  x0: number;
+  x1: number;
+};
+
+export type PriceHistogramData = {
+  [Property in IncomeBracketKey | "sticker"]: HistogramData[];
+};
+
+export type Graduation = {
+  total: number;
+  byRace: {
+    unknown: number;
+    multiple: number;
+    white: number;
+    hisp: number;
+    nathawpacisl: number;
+    black: number;
+    asian: number;
+    amerindalasknat: number;
+    nonresident: number;
+  },
+};
+
+export type SchoolIndex = {
+  id: string;
+  slug: string;
+  image: string;
+  name: string;
+  alias: string;
+  city: string;
+  state: string;
+  hbcu: boolean;
+  tribalCollege: boolean;
+  schoolControl: SchoolControl;
+  degreeLevel: DegreeLevel;
+  enrollment: number;
+  stickerPrice: {
+    type: StickerPriceType;
+    price: number;
+    priceOutState?: number;
+  },
+  netPricesByBracket: {
+    average: number;
+    "0_30000": number;
+    "30001_48000": number;
+    "48001_75000": number;
+    "75001_110000": number;
+    "110001": number;
+  },
+};
+
+export type YearData = {
+  year: string;
+  startYear: number;
+  stickerPrice: {
+    type: StickerPriceType;
+    price: number;
+    priceOutState?: number;
+  },
+  netPricesByBracket: {
+    average: {
+      price: number;
+      min?: number;
+      max?: number;
+    },
+    "0_30000": {
+      price: number;
+      min?: number;
+      max?: number;
+    },
+    "30001_48000": {
+      price: number;
+      min?: number;
+      max?: number;
+    },
+    "48001_75000": {
+      price: number;
+      min?: number;
+      max?: number;
+    },
+    "75001_110000": {
+      price: number;
+      min?: number;
+      max?: number;
+    },
+    "110001": {
+      price: number;
+      min?: number;
+      max?: number;
+    },
+  },
+};
+
+export type SchoolDetail = {
+  id: string;
+  slug: string;
+  name: string;
+  alias: string;
+  city: string;
+  state: string;
+  hbcu: boolean;
+  tribalCollege: boolean;
+  schoolControl: SchoolControl;
+  degreeLevel: DegreeLevel;
+  stats: {
+    percentSticker: number;
+    percentAdmitted: number | null,
+  };
+  stickerPrice: {
+    type: string;
+    price: number;
+    priceOutState?: number;
+  };
+  image: string;
+  imageCredit: string;
+  netPricesByBracket: {
+    average: number;
+    "0_30000": number;
+    "30001_48000": number;
+    "48001_75000": number;
+    "75001_110000": number;
+    "110001": number;
+  };
+  enrollment: {
+    total: number;
+    byRace: {
+      unknown: number;
+      multiple: number;
+      white: number;
+      hisp: number;
+      nathawpacisl: number;
+      black: number;
+      asian: number;
+      amerindalasknat: number;
+      nonresident: number;
+    },
+    byGender: {
+      men: number;
+      women: number;
+      unknown: number;
+      other: number;
+    },
+  },
+  retention: {
+    fullTime: number;
+    partTime: number;
+  },
+  graduation: Graduation;
+  years: YearData[];
+};
+
+export type SavedSchools = {
+  schools: string[];
+  schoolIsSaved: (id: string) => boolean;
+  toggleSavedSchool: (id: string) => void;
+};
+
+export type IncomeBracket = {
+  bracket: IncomeBracketKey | undefined;
+  setIncomeBracket: (bracket: IncomeBracketKey | undefined) => void;
+};
+
+export type RecirculationArticle = {
+  url: string;
+  headline: string;
+  image: string;
+  imageAlt?: string | null;
+};
+
+export type RecommendationSection = {
+  dbId?: number;
+  key: string;
+  pageOrder: number,
+  title: {
+    en: string;
+    es: string;
+  };
+  schools: SchoolIndex[];
+};
+
+export type RecommendationSectionAdmin = {
+  dbId?: number;
+  pageOrder: number;
+  title: {
+    en: string;
+    es: string;
+  },
+  schoolIds: string[];
+};
+
+export type NationalAverages = Record<DegreeLevel, Record<string, number>>;

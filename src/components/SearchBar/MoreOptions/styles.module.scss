@@ -1,0 +1,25 @@
+@use "@/styles/colors.scss";
+
+.moreOptions {
+  padding: var(--bar-padding);
+
+  .label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .placeholder {
+    font-size: 18px;
+    padding: 0;
+    background: none;
+    outline: none;
+    border: none;
+    color: colors.$text-light;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+  }
+}

@@ -1,0 +1,122 @@
+"use client";
+
+import { useState } from "react";
+import {
+  GraduationCapIcon,
+  MapPinIcon,
+  BuildingApartmentIcon,
+  TrophyIcon,
+  CaretDownIcon,
+} from "@phosphor-icons/react";
+import {
+  getGraduation,
+} from "@/utils/formatSchoolInfo";
+import { formatPercent } from "@/utils/formatPercent";
+import Well from "@/components/Well";
+import Robotext from "@/components/Robotext";
+import { useContent } from "@/hooks/useContent";
+import type { SchoolDetail } from "@/types";
+import styles from "./styles.module.scss";
+
+/**
+ * Renders the "school details" box on the school detail page.
+ */
+export default function SchoolDetails(props: {
+  school: SchoolDetail;
+}) {
+  const {
+    school,
+  } = props;
+  const [isOpen, setIsOpen] = useState(false);
+  const content = useContent();
+
+  const grad = getGraduation(school);
+  const acceptance = school.stats.percentAdmitted;
+
+  const place = `${school.city}, ${school.state}`;
+  const acceptanceRate = acceptance && formatPercent(acceptance);
+  const gradRate = grad && formatPercent(grad.total);
+
+  const { schoolControl, degreeLevel } = school;
+
+  return (
+    <Well width="text">
+      <div className={styles.schoolDetails}>
+        <div className={styles.icon}>
+          <GraduationCapIcon />
+        </div>
+        <h2>
+          {content("SchoolPage.SchoolDetails.title")}
+        </h2>
+
+        <div className={styles.facts}>
+          <div className={styles.fact}>
+            <MapPinIcon />
+            <Robotext
+              as="span"
+              template={content("SchoolPage.SchoolDetails.location")}
+              context={{
+                LOCATION: place,
+              }}
+            />
+          </div>
+
+          {acceptanceRate && (
+            <div className={styles.fact}>
+              <TrophyIcon />
+              <Robotext
+                as="span"
+                template={content("SchoolPage.SchoolDetails.acceptanceRate")}
+                context={{
+                  ACCEPTANCE_RATE: acceptanceRate,
+                }}
+              />
+            </div>
+          )}
+
+          <div className={styles.fact}>
+            <BuildingApartmentIcon />
+            <Robotext
+              as="span"
+              template={content("SchoolPage.SchoolDetails.schoolType")}
+              context={{
+                SCHOOL_CONTROL: content(`GeneralPurpose.schoolControl.${schoolControl}`),
+                DEGREE_LEVEL: content(`GeneralPurpose.degreeLevel.${degreeLevel}`),
+              }}
+            />
+          </div>
+
+          {gradRate && (
+            <div className={styles.fact}>
+              <GraduationCapIcon />
+              <Robotext
+                as="span"
+                template={content("SchoolPage.SchoolDetails.graduationRate")}
+                context={{
+                  GRADUATION_RATE: gradRate,
+                }}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className={styles.about}>
+          <button
+            type="button"
+            onClick={() => setIsOpen((old) => !old)}
+          >
+            About the data <CaretDownIcon />
+          </button>
+
+          {isOpen && (
+            <div className={styles.aboutText}>
+              <Robotext
+                template={content("SchoolPage.SchoolDetails.aboutTheData")}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </Well>
+  );
+}

@@ -1,0 +1,14 @@
+@use "@/styles/colors.scss";
+
+.select {
+  appearance: none;
+  border: none;
+  border-bottom: 1px solid colors.$text-light;
+  outline: none;
+  background: url("./caret-down.svg");
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+  background-size: 18px;
+  padding: 0px 24px 0px 0px;
+  cursor: pointer;
+}

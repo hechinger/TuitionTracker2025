@@ -1,0 +1,42 @@
+@use "@/styles/colors.scss";
+@use "@/styles/breakpoints.scss";
+
+.recirculation {
+  background-color: colors.$bg-dark;
+  color: white;
+  padding: 40px 0;
+  margin: 40px 0;
+
+  .title {
+    margin-bottom: 1em;
+    font-weight: bold;
+  }
+
+  .articles {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 2em;
+
+    @include breakpoints.at-least("md") {
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 1em;
+    }
+
+    .article {
+      display: block;
+
+      .img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        margin-bottom: 12px;
+      }
+
+      .headline {
+        font-weight: bold;
+        font-size: 18px;
+      }
+    }
+  }
+}

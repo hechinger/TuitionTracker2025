@@ -1,0 +1,55 @@
+@use "@/styles/colors.scss";
+@use "@/styles/breakpoints.scss";
+
+.container {
+  margin: 40px 0;
+}
+
+.title {
+  margin-bottom: 12px;
+  font-size: 28px;
+}
+
+.graf {
+  font-size: 22px;
+  line-height: 140%;
+  margin-bottom: 1em;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: center;
+  column-gap: 12px;
+  row-gap: 20px;
+
+  @include breakpoints.at-least("xl") {
+    grid-template-columns: unset;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+}
+
+.placeholder {
+  background: colors.$bg-light;
+  min-height: 100px;
+}
+
+.noData {
+  background: colors.$bg-light;
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.sticker {
+  color: colors.$brand-blue-dark;
+  font-weight: bold;
+}
+
+.net {
+  color: colors.$brand-pink;
+  font-weight: bold;
+}

@@ -1,0 +1,45 @@
+@use "@/styles/colors.scss";
+
+.downloadData {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dataset {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 12px;
+  align-items: center;
+  padding: 10px 15px;
+  background: colors.$bg-light;
+}
+
+.icon {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: colors.$brand-blue;
+  color: white;
+  padding: 6px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.description {
+  color: colors.$text-light;
+}
+
+.download {
+  color: colors.$text-light;
+}

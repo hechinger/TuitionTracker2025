@@ -1,0 +1,37 @@
+@use "@/styles/colors.scss";
+
+$scroll-hint-width: 32px;
+
+.recommendedSection {
+  position: relative;
+  margin: 40px 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -1px;
+    width: $scroll-hint-width;
+    background: linear-gradient(90deg, #FFFFFF00, #FFFFFFFF);
+  }
+
+  .title {
+    margin-bottom: 1em;
+  }
+
+  .schools {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 250px;
+    grid-template-rows: auto;
+    column-gap: 1em;
+    padding-bottom: 12px;
+    padding-right: $scroll-hint-width;
+  }
+
+  .placeholder {
+    height: 200px;
+    background: colors.$bg-light;
+  }
+}

@@ -1,0 +1,35 @@
+@use "@/styles/colors.scss";
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.barContainer {
+  position: relative;
+  height: 24px;
+  background: colors.$bg-light;
+
+  .barHighlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--percent);
+    height: 100%;
+    background: colors.$text-main;
+  }
+
+  .label {
+    position: absolute;
+    top: 50%;
+    left: var(--percent);
+    transform: translate(4px, -50%);
+    line-height: 1em;
+
+    &.left {
+      transform: translate(-4px, -50%) translateX(-100%);
+      color: white;
+    }
+  }
+}

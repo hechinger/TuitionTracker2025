@@ -1,0 +1,131 @@
+@use "@/styles/breakpoints.scss";
+@use "@/styles/colors.scss";
+
+.wrapper {
+  padding: 40px 0 0;
+
+  &.highlight {
+    padding: 40px 0;
+    background: colors.$bg-light;
+
+    @include breakpoints.at-most("sm") {
+      padding: 40px 10px;
+    }
+  }
+}
+
+.nav {
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 890px;
+
+  .brand {
+    width: 200px;
+  }
+}
+
+.searchBarContainer {
+  --bar-padding: 10px;
+
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  background: white;
+  border: 1px solid colors.$text-light;
+  width: 100%;
+  max-width: 890px;
+  margin: 10px auto;
+
+  @include breakpoints.at-least("md") {
+    --bar-padding: 20px;
+
+    grid-template-columns: 1fr 1fr auto;
+  }
+
+  &.mobileDialog {
+    @include breakpoints.at-most("sm") {
+      position: initial;
+    }
+  }
+
+  &.active {
+    filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  }
+
+  &.active.mobileDialog {
+    filter: none;
+  }
+
+  .searchButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-self: flex-end;
+    padding: var(--bar-padding);
+
+    button {
+      background: colors.$brand-yellow;
+      outline: none;
+      border: 2px solid colors.$brand-yellow-dark;
+      padding: 6px;
+      cursor: pointer;
+
+      @include breakpoints.at-least("md") {
+        padding: 12px;
+      }
+    }
+  }
+}
+
+.moreOptions {
+  display: none;
+  overflow: hidden;
+
+  @include breakpoints.at-least("md") {
+    display: initial;
+  }
+}
+
+.mobileMoreButton {
+  display: flex;
+  justify-content: center;
+
+  @include breakpoints.at-least("md") {
+    display: none;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: colors.$bg-light;
+    border: 1px solid colors.$border-main;
+    padding: 4px 6px;
+    cursor: pointer;
+  }
+}
+
+.grayed {
+  background: colors.$bg-light;
+}
+
+.dividerRight {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    width: 1px;
+    height: 60%;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: colors.$border-main;
+
+    @include breakpoints.at-least("md") {
+      content: "";
+    }
+  }
+}

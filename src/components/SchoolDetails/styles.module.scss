@@ -1,0 +1,72 @@
+@use "@/styles/colors.scss";
+@use "@/styles/breakpoints.scss";
+
+.schoolDetails {
+  position: relative;
+  margin: 40px auto;
+  background: colors.$bg-light;
+  border-top: 4px solid colors.$border-main;
+  padding: 20px;
+  text-align: center;
+
+  .icon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(-2px);
+    width: 32px;
+    height: 32px;
+    background: colors.$bg-dark;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h2 {
+    margin-bottom: 0.6em;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 12px;
+    row-gap: 8px;
+    text-align: left;
+
+    @include breakpoints.at-least("md") {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .fact {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+.about {
+  text-align: left;
+  margin-top: 1em;
+
+  button {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    padding: none;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+
+  .aboutText {
+    p {
+      margin-top: 0.6em;
+    }
+  }
+}

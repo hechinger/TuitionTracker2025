@@ -1,0 +1,23 @@
+@use "@/styles/colors.scss";
+
+.title {
+  margin-bottom: 12px;
+  font-size: 28px;
+}
+
+.graf {
+  font-size: 22px;
+  line-height: 140%;
+  margin-bottom: 1em;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 12px;
+}
+
+.placeholder {
+  height: 120px;
+  background: colors.$bg-light;
+}

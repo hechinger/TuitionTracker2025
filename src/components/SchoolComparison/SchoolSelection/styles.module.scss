@@ -1,0 +1,83 @@
+@use "@/styles/colors.scss";
+@use "@/styles/breakpoints.scss";
+
+$scroll-hint-width: 32px;
+
+.schoolSelection {
+  .savedSchools {
+    margin: 40px 0;
+
+    .header {
+      margin-bottom: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+
+      .title {
+        font-size: 20px;
+
+        @include breakpoints.at-least("md") {
+          font-size: 28px;
+        }
+      }
+    }
+
+    .copyButton {
+      background: colors.$bg-dark;
+      border: none;
+      padding: 4px 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .schoolOptions {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: -1px;
+        width: $scroll-hint-width;
+        background: linear-gradient(90deg, #FFFFFF00, #FFFFFFFF);
+      }
+    }
+
+    .schools {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 250px;
+      grid-template-rows: auto;
+      column-gap: 1em;
+      padding-bottom: 12px;
+      padding-right: $scroll-hint-width;
+    }
+  }
+
+  .selection {
+    .header {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .clearButton {
+      background: colors.$bg-light;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .slots {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(250px, 1fr);
+      grid-template-rows: auto;
+      column-gap: 1em;
+      padding-bottom: 12px;
+    }
+  }
+}

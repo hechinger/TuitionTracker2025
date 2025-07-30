@@ -1,0 +1,33 @@
+header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	width: 100%;
+	height: 50px;
+	border-bottom: 1px solid $darkGray;
+	background-color: rgba( 255, 245, 209, 0.95);
+}
+
+#goc-logos {
+	display: flex;
+	height: 50px;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+
+    &>div {
+    	margin-right: 25px;
+
+    	img {
+    		max-width: 150px;
+    		width: 100%;
+    	}
+
+    	&:last-of-type {
+    		img {
+    			max-width: 185px;
+    		}
+    	}
+    }
+}

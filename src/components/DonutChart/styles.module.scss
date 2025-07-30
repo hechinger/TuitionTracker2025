@@ -1,0 +1,66 @@
+@use "@/styles/colors.scss";
+@use "@/styles/fonts.scss";
+
+.donutContainer {
+  display: inline-block;
+
+  h3 {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .donut {
+    position: relative;
+
+    .canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .bgSegment {
+      fill: colors.$bg-light;
+    }
+
+    .dataSegment {
+      fill: colors.$brand-blue;
+    }
+
+    .tick {
+      stroke: colors.$brand-blue-dark;
+      stroke-width: 2px;
+    }
+
+    .benchmark {
+      stroke: black;
+      stroke-width: 1px;
+      stroke-dasharray: 4px 2px;
+    }
+
+    .number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .bigNumber {
+        font-size: 40px;
+        font-weight: bold;
+        font-family: fonts.$numbers;
+        color: colors.$brand-blue-dark;
+      }
+
+      .smallLabel {
+        width: min-content;
+      }
+    }
+  }
+}
+
+.benchmark {
+  text-align: center;
+}

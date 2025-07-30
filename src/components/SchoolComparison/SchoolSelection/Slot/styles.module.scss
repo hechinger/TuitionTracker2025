@@ -1,0 +1,57 @@
+@use "@/styles/colors.scss";
+@use "@/styles/fonts.scss";
+
+.slot {
+  &.empty {
+    border: 1px dashed colors.$border-main;
+    color: colors.$text-light;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  &.over {
+    outline: 1px solid red;
+  }
+
+  .school {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: colors.$bg-light;
+
+    img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px 12px 20px;
+
+      .name {
+        font-weight: bold;
+        font-size: 24px;
+      }
+
+      .fact {
+        .label {
+          font-weight: bold;
+          text-transform: uppercase;
+          color: colors.$text-light;
+        }
+
+        .value {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}

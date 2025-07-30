@@ -1,0 +1,46 @@
+$white: #FFF;
+$black: #261609;
+$gray: #53604F;
+$darkGray: #2F362C;
+
+$yellow: #fff5d1;
+
+$green: #008855;
+$lightGreen: #e2e8db;
+
+$orange: #f57b49;
+
+$violet: #686bd4;
+
+$tan: #fef1e6;
+
+$breakpoints: (
+	phone:320px, 
+	tablet:768px, 
+	desktop:1024px
+) !default;
+
+$desktop-height: 907px;
+
+$media-expressions: (
+	'screen': 		'screen',
+	'print': 		'print',
+	'handheld':		'handheld',
+	'landscape': 	'(orientation: landscape)',
+  	'portrait': 	'(orientation: portrait)',
+  	'retina2x': 	'(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)',
+  	'retina3x': 	'(-webkit-min-device-pixel-ratio: 3), (min-resolution: 350dpi)'
+) !default;
+
+@mixin absCenter {
+	position: absolute !important;
+	top: 50%;
+	left: 50%;
+	@include translate(-50%, -50%);
+}
+
+@mixin baseFlex {
+	display: flex;
+	flex-direction: row;
+    justify-content: space-between;
+}
