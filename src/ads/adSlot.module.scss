@@ -9,14 +9,21 @@
   padding: 10px 0px 16px;
   margin: 60px 0;
   background-color: colors.$bg-light;
+}
+
+.adLabel {
   text-transform: uppercase;
   color: colors.$text-light;
 }
 
 .adContainer {
-  min-height: 90px;
-
-  @media screen and (max-width: 740px) {
+  @media screen and (min-width: 300px) {
+    min-width: 300px;
     min-height: 250px;
+  }
+
+  @media screen and (min-width: 740px) {
+    min-width: 728px;
+    min-height: 90px;
   }
 }
