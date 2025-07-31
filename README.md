@@ -2,7 +2,7 @@
 
 This project contains all the font-end and back-end code for the Tuition Tracker built by The Hechinger Report.
 
-**Tech stack**: Next.js 15, React, PostgreSQL (via Neon), Clerk (auth), next-intl (i18n), SCSS
+**Tech stack**: Next.js 15 (app router), React, PostgreSQL (via Neon), Clerk (auth), next-intl (i18n), SCSS
 
 > [!NOTE]
 > If you are looking for the code from the original Tuition Tracker project, [that can be found here](https://github.com/hechinger/TuitionTracker).
@@ -15,6 +15,13 @@ This project contains all the font-end and back-end code for the Tuition Tracker
 4. (Optional, requires local database setup) Bootstrap local data with `npm run bootstrap`
 5. Run `npm run dev`
 6. Open [localhost:3000](http://localhost:3000)
+
+## 👀 Quick links
+
+- [Tuition Tracker](https://tuitiontracker.org)
+- [Admin portal](https://tuitiontracker.org/admin)
+- [Vercel project dashboard](https://vercel.com/hechingers-projects/tuition-tracker-2025)
+- [Clerk admin user management (production)](https://dashboard.clerk.com/apps/app_30KjQAmWUStUY61HPibo2F4wr3d/instances/ins_30asmArP9S32cXaE4yofjCbQdML/users)
 
 ## ⚙️ Framework overview
 
@@ -97,6 +104,13 @@ The admin dashboard lets users do a number of things, including:
 - configure recommended schools on the landing page;
 - control which articles are included in the recirculation module; and
 - run the data pipeline to pull in new data.
+
+### Managing admin users
+
+The admin section of the site authenticates users with [Clerk](https://clerk.com/), so you can invite new users and control who has access to the production admin portal through [the Clerk users dashboard for the project](https://dashboard.clerk.com/apps/app_30KjQAmWUStUY61HPibo2F4wr3d/instances/ins_30asmArP9S32cXaE4yofjCbQdML/users). Through the portal you can either create users directly or invite them to join from an emailed link. Inviting users allows them to configure their own password when they create their account.
+
+> [!NOTE]
+> The preview deployment of the site uses Clerk's development instance to manage users. You can control who has access to the preview admin portal through [the development instance of the same Clerk project](https://dashboard.clerk.com/apps/app_30KjQAmWUStUY61HPibo2F4wr3d/instances/ins_30KjQArabdFrUCR0lnE7ecw2co0/users).
 
 ### Managing content
 
