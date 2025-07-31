@@ -4,6 +4,7 @@
 import { useEffect, useRef } from "react";
 import Script from "next/script";
 import get from "lodash/get";
+import { getValue } from "@/hooks/useStorageContext";
 
 export const getDataLayer = () => {
   return get(window, "dataLayer", []) as (unknown)[];
@@ -18,15 +19,24 @@ export default function DataLayer(props: {
     dataLayer,
   } = props;
 
-  const ref = useRef<string>(null);
+  const dataLayerKeyRef = useRef<string>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (ref.current === dataLayerKey) return;
+    if (dataLayerKeyRef.current === dataLayerKey) return;
 
-    ref.current = dataLayerKey;
+    dataLayerKeyRef.current = dataLayerKey;
 
-    getDataLayer().push({ ...dataLayer });
+    const referrer = getValue<string>("pageReferrer")
+      || window.document.referrer
+      || window.location.href;
+
+    const e = {
+      event: "ttpv",
+      pageReferrer: referrer,
+      ...dataLayer,
+    };
+    getDataLayer().push(e);
     return () => {
       getDataLayer().push(function(this: { reset: () => void; }) {
         this.reset();

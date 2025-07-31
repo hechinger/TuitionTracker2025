@@ -16,6 +16,14 @@
   }
 
   .mailchimp {
+    & > div > div {
+      background: none !important;
+    }
+
+    form {
+      margin: 0 !important;
+    }
+
     // hide Mailchimp title
     h2 {
       display: none;
@@ -38,8 +46,10 @@
 
     input:not([type=submit]) {
       background: rgba(#fff, 33%);
-      border: 1px solid black;
-      padding: 10px 16px;
+      border: 1px solid black !important;
+      padding: 10px 16px !important;
+      text-indent: unset !important;
+      border-radius: 0px !important;
 
       &:focus-visible {
         outline: 2px solid colors.$brand-yellow-dark;
