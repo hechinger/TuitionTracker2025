@@ -224,7 +224,8 @@ Or production deployments, which will publish a new version of the site live to 
 npx vercel --prod
 ```
 
-Note that once you have created a preview deployment, you can also promote it to production through [the Vercel deployments dashboard](https://vercel.com/hechingers-projects/tuition-tracker-2025/deployments).
+> [!TIP]
+> Once you have created a preview deployment, you can also promote it to production through [the Vercel deployments dashboard](https://vercel.com/hechingers-projects/tuition-tracker-2025/deployments). Promoting from the dashboard gives you the additional comfort that you're deploying to production exactly what is already on preview.
 
 ## Credit
 
