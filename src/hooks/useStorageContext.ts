@@ -16,7 +16,7 @@ export const StorageContext = createContext({
 
 const getKey = (key: string) => `tuitionTracker.${key}`;
 
-const getValue = <T>(key: string) => {
+export const getValue = <T>(key: string) => {
   const value = window.sessionStorage.getItem(getKey(key));
   if (!value) return undefined;
   return JSON.parse(value) as T;
@@ -79,6 +79,18 @@ export function useStorageContext() {
     setValue("savedSchools", savedSchools);
     setValue("incomeBracket", incomeBracket);
   }, [isLoaded, savedSchools, incomeBracket]);
+
+  useEffect(() => {
+    const val = getValue<string>("pageReferrer") || window.document.referrer || window.location.href;
+    setValue("pageReferrer", val);
+  }, []);
+
+  useEffect(() => {
+    const currentLocation = window.location.href;
+    return () => {
+      setValue("pageReferrer", currentLocation);
+    };
+  }, [pathname]);
 
   return {
     savedSchools: {

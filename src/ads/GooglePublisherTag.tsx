@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-before-interactive-script-outside-document */
+"use client";
+
 import Script from "next/script";
 
 export default function GooglePublisherTag() {
@@ -13,8 +15,7 @@ export default function GooglePublisherTag() {
         {`
           window.googletag = window.googletag || {cmd: []};
           googletag.cmd.push(function() {
-            googletag.defineSlot('/6160094/tuition-tracker-top-001', [728, 90], 'div-gpt-ad-1732288624207-0-desktop').addService(googletag.pubads());
-            googletag.defineSlot('/6160094/tuition-tracker-top-001', [300, 250], 'div-gpt-ad-1732288624207-0-mobile').addService(googletag.pubads());
+            googletag.pubads().set("page_url", "https://tuitiontracker.org");
             googletag.pubads().enableSingleRequest();
             googletag.enableServices();
           });
