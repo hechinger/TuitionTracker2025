@@ -146,6 +146,21 @@ When any content or data changes, usually because someone at The Hechinger Repor
 > [!WARNING]
 > If we add new routes in the future with similar caching policies, we will need to make sure to invalidate them as necessary when data changes in [`src/cache.ts`](./src/cache.ts).
 
+## Ads
+
+The site includes some ad placements served from Google Ad Manager using Google Publisher Tag. The relevant components can be found in the `src/ads/` directory. Notably:
+
+- [`GooglePublisherTag`](./src/ads/GooglePublisherTag.tsx) provides the ad script configuration and should be included once on each page that includes an ad placement.
+- [`AdSlot`](./src/ads/AdSlot.tsx) renders an individual ad slot using the `/6160094/tuition-tracker-top-001` ad unit from Google Ad Manager. It is important that the sizes listed in the array at the top of the file match the sizes configured for the slot in Google Ad Manager.
+
+## Analytics
+
+The site uses Google Analytics to track things like page views and newletter subscriptions. The relevant components can be found in the `src/analytics/` directory. Notably:
+
+- [`GoogleTagManager`](./src/analytics/GoogleTagManager.tsx) renders the standard Google Tag Manager configuration snippet. This should be included once on each page that tracks analytics.
+- [`GoogleTagManagerNoScript`](./src/analytics/GoogleTagManagerNoScript.tsx) renders the iframe-based fallback to configure Google Analytics when JavaScript is disabled on the client. This should also be included on each page that tracks analytics.
+- [`DataLayer`](./src/analytics/DataLayer.tsx) tracks a custom page-view event (a `ttpv` event) with custom data set per page. It should be rendered on each page that should trigger a `ttpv` event.
+
 ## Local development
 
 This project was built using Node v22.12 for local development, but most modern versions of Node should work. Install dependencies:

@@ -1,4 +1,5 @@
 import { Roboto_Condensed, Teko } from "next/font/google";
+import { DataLayer } from "@/analytics";
 import GameOfCollege from "@/components/GameOfCollege";
 import "./style.scss";
 
@@ -15,6 +16,9 @@ const teko = Teko({
 export default async function GameOfCollegePage() {
   return (
     <div className={`${roboto.className} ${teko.className}`}>
+      <DataLayer
+        dataLayerKey="game-of-college"
+      />
       <GameOfCollege />
     </div>
   );

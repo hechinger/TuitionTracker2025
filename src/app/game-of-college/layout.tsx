@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleTagManager, GoogleTagManagerNoScript } from "@/analytics";
 
 export const metadata: Metadata = {
   title: "A Game of College | The Hechinger Report",
@@ -23,7 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <GoogleTagManager />
+      </head>
       <body>
+        <GoogleTagManagerNoScript />
         {children}
       </body>
     </html>
