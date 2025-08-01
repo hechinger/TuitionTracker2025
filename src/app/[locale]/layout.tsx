@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Tuition Tracker - True University Costs per Income Bracket",
   openGraph: {
     title: "Tuition Tracker",
-    description: "True University Costs per Income Bracket",
+    description: "True university costs per income bracket",
     url: "https://www.tuitiontracker.org",
     siteName: "Tuition Tracker",
     images: "https://hechingerreport.org/wp-content/uploads/2020/07/THR-for-Cisco-wallpaper.jpg",

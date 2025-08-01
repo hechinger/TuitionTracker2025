@@ -54,7 +54,7 @@ export async function generateMetadata({
     title: `${school.name} Real Tuition Costs (What You’ll Pay After Assistance)`,
     openGraph: {
       title: `Tuition Tracker - ${school.name}`,
-      description: "What You’ll Pay After Assistance",
+      description: "What you’ll pay after assistance",
       url: `https://www.tuitiontracker.org/schools/${schoolSlug}`,
       siteName: "Tuition Tracker",
       images: img,
