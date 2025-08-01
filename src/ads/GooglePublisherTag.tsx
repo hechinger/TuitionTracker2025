@@ -15,7 +15,7 @@ export default function GooglePublisherTag() {
         {`
           window.googletag = window.googletag || {cmd: []};
           googletag.cmd.push(function() {
-            googletag.pubads().set("page_url", "https://tuitiontracker.org");
+            googletag.pubads().set("page_url", "https://www.tuitiontracker.org");
             googletag.pubads().enableSingleRequest();
             googletag.enableServices();
           });

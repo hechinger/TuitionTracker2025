@@ -46,8 +46,8 @@ export async function generateMetadata({
   if (!school) return {};
 
   const fallbackImage = (school.schoolControl === "public")
-    ? "https://tuitiontracker.org/public.jpg"
-    : "https://tuitiontracker.org/private.jpg";
+    ? "https://www.tuitiontracker.org/public.jpg"
+    : "https://www.tuitiontracker.org/private.jpg";
   const img = school.image || fallbackImage;
 
   return {
@@ -55,7 +55,7 @@ export async function generateMetadata({
     openGraph: {
       title: `Tuition Tracker - ${school.name}`,
       description: "What You’ll Pay After Assistance",
-      url: `https://tuitiontracker.org/schools/${schoolSlug}`,
+      url: `https://www.tuitiontracker.org/schools/${schoolSlug}`,
       siteName: "Tuition Tracker",
       images: img,
       type: "website",
@@ -67,13 +67,13 @@ export async function generateMetadata({
     },
     alternates: {
       languages: {
-        en: `https://tuitiontracker.org/schools/${schoolSlug}`,
-        es: `https://tuitiontracker.org/es/schools/${schoolSlug}`,
+        en: `https://www.tuitiontracker.org/schools/${schoolSlug}`,
+        es: `https://www.tuitiontracker.org/es/schools/${schoolSlug}`,
       },
     },
     other: {
       "parsely-title": school.name,
-      "parsely-link": `https://tuitiontracker.org/schools/${schoolSlug}`,
+      "parsely-link": `https://www.tuitiontracker.org/schools/${schoolSlug}`,
       "parsely-type": "post",
       "parsely-image-url": img,
       "parsely-pub-date": LAST_MODIFIED.toISOString(),

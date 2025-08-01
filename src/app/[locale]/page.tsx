@@ -22,7 +22,7 @@ export const revalidate = 86400; // 1d
 export const metadata: Metadata = {
   other: {
     "parsely-title": "index",
-    "parsely-link": "https://tuitiontracker.org",
+    "parsely-link": "https://www.tuitiontracker.org",
     "parsely-type": "index",
     "parsely-section": "homepage",
     "parsely-author": "Tuition Tracker",

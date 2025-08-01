@@ -18,11 +18,11 @@ export const revalidate = 86400; // 1d
 export const metadata: Metadata = {
   title: "Tuition Tracker - Search Results",
   openGraph: {
-    url: "https://tuitiontracker.org/search",
+    url: "https://www.tuitiontracker.org/search",
   },
   other: {
     "parsely-title": "search-results",
-    "parsely-link": "https://tuitiontracker.org/search",
+    "parsely-link": "https://www.tuitiontracker.org/search",
     "parsely-type": "index",
     "parsely-section": "search-results",
     "parsely-author": "Tuition Tracker",

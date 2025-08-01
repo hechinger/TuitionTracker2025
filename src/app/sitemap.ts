@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllSchoolNames } from "@/db/schools";
 import { LAST_MODIFIED } from "@/constants";
 
-const baseUrl = "https://tuitiontracker.org/";
+const baseUrl = "https://www.tuitiontracker.org/";
 const localizedRoutes = [
   "",
   "saved-schools",

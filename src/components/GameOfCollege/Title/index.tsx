@@ -2,7 +2,7 @@
 
 import { useGtag } from "@/hooks/useGtag";
 
-const url = "https://tuitiontracker.org/game-of-college";
+const url = "https://www.tuitiontracker.org/game-of-college";
 const shareText = `A Game of College: Can you get into college and finish a degree without taking on too much debt? via @hechingerreport ${url}`;
 
 const twitterParams = new URLSearchParams({

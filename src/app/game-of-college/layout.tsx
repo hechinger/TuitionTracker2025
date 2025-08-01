@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "A Game of College | The Hechinger Report",
   openGraph: {
     title: "A Game of College: Can you get into college and finish a degree without taking on too much debt?",
-    url: "https://tuitiontracker.org/game-of-college",
+    url: "https://www.tuitiontracker.org/game-of-college",
     siteName: "A Game of College",
     images: "https://kjxofjq2cxejjxiu.public.blob.vercel-storage.com/game-of-college-share.jpg",
     type: "website",

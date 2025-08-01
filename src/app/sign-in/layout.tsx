@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Tuition Tracker",
     description: "True University Costs per Income Bracket",
-    url: "https://tuitiontracker.org",
+    url: "https://www.tuitiontracker.org",
     siteName: "Tuition Tracker",
     images: "https://hechingerreport.org/wp-content/uploads/2020/07/THR-for-Cisco-wallpaper.jpg",
     type: "website",
