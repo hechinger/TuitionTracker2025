@@ -1,5 +1,8 @@
 import { revalidatePath } from "next/cache";
+import { head, put, del } from "@vercel/blob";
 import ms, { type StringValue } from "ms";
+import { locales } from "@/i18n/routing";
+import { crossProduct } from "@/utils/crossProduct";
 import { isProduction } from "@/env";
 
 export const cacheControl = (opts: {
@@ -30,7 +33,39 @@ export const cacheControl = (opts: {
   };
 };
 
-export const revalidateSchools = (ids?: string[]) => {
+export const blobCache = async <T>(key: string | null, compute: () => Promise<T>) => {
+  if (!key) {
+    return compute();
+  }
+
+  const blobKey = `blob-cache/${key}`;
+
+  try {
+    const blob = await head(blobKey);
+    const rsp = await fetch(blob.url);
+    const data = await rsp.json();
+    return data as T;
+  } catch (_) { // eslint-disable-line
+    // pass
+  }
+
+  const data = await compute();
+  await put(blobKey, JSON.stringify(data), {
+    access: "public",
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    contentType: "application/json",
+  });
+
+  return data;
+};
+
+export const clearBlobCache = async (keys: string[]) => {
+  const blobKeys = keys.map((k) => `blob-cache/${k}`);
+  await del(blobKeys);
+};
+
+export const revalidateSchools = async (ids?: string[]) => {
   revalidatePath("/api/schools", "page");
   revalidatePath("/api/schools/names", "page");
   revalidatePath("/api/schools/price-histogram", "page");
@@ -44,22 +79,38 @@ export const revalidateSchools = (ids?: string[]) => {
   } else {
     revalidatePath("/api/schools/[id]", "page");
   }
+  const sizeHistoKeys = crossProduct(
+    ["all", "public", "private", "for-profit"],
+    ["all", "2-year", "4-year"],
+  ).map(([a, b]) => `schools-size-histogram-${a}-${b}`);
+  await clearBlobCache([
+    "schools-all-school-names",
+    "schools-schools-index",
+    "schools-price-histogram",
+    ...sizeHistoKeys,
+  ]);
+  await revalidateRecommendedSchools();
 };
 
-export const revalidateContent = () => {
+export const revalidateContent = async () => {
+  // revalidate all pages under the [locale] layout
+  revalidatePath("/[locale]", "layout");
+  revalidatePath("/admin", "layout");
+  await clearBlobCache([
+    "content-locale-default",
+    ...locales.map((locale) => `content-locale-${locale}`),
+  ]);
+};
+
+export const revalidateRecirculation = async () => {
   // revalidate all pages under the [locale] layout
   revalidatePath("/[locale]", "layout");
   revalidatePath("/admin", "layout");
 };
 
-export const revalidateRecirculation = () => {
-  // revalidate all pages under the [locale] layout
-  revalidatePath("/[locale]", "layout");
-  revalidatePath("/admin", "layout");
-};
-
-export const revalidateRecommendedSchools = () => {
+export const revalidateRecommendedSchools = async () => {
   // only used on the landing page
   revalidatePath("/[locale]", "page");
   revalidatePath("/admin", "layout");
+  await clearBlobCache(["recommended-schools"]);
 };

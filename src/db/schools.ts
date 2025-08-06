@@ -1,4 +1,5 @@
 import { bin, quantileSorted } from "d3-array";
+import { blobCache } from "@/cache";
 import type { SchoolIndex, SchoolDetail, YearData } from "@/types";
 import { queryRows, run } from "./pool";
 
@@ -79,10 +80,12 @@ export type PricesRow = {
 };
 
 export const getAllSchoolNames = async () => {
-  const schools = await queryRows<Pick<SchoolsRow, "id" | "name" | "slug" | "alias">>(
-    "SELECT id, name, slug, alias FROM schools;",
-  );
-  return schools;
+  return blobCache("schools-all-school-names", async () => {
+    const schools = await queryRows<Pick<SchoolsRow, "id" | "name" | "slug" | "alias">>(
+      "SELECT id, name, slug, alias FROM schools;",
+    );
+    return schools;
+  });
 };
 
 const getIndexQuery = (ids?: string[]) => {
@@ -127,35 +130,39 @@ export const getSchoolsIndex = async (opts: {
     schoolIds,
   } = opts;
 
-  const query = getIndexQuery(schoolIds);
-  const schools = await queryRows<SchoolsRow & PricesRow>(query);
-  return schools.map((school) => ({
-    id: school.id,
-    slug: school.slug,
-    image: school.image,
-    imageCredit: school.image_credit,
-    name: school.name,
-    alias: school.alias,
-    city: school.city,
-    state: school.state,
-    hbcu: school.hbcu,
-    tribalCollege: school.tribal_college,
-    schoolControl: school.school_control,
-    degreeLevel: school.degree_level,
-    enrollment: school.enrollment_total,
-    stickerPrice: {
-      type: school.sticker_price_type,
-      price: school.sticker_price_in_state,
-    },
-    netPricesByBracket: {
-      average: school.net_price_average,
-      "0_30000": school.net_price_bracket0,
-      "30001_48000": school.net_price_bracket1,
-      "48001_75000": school.net_price_bracket2,
-      "75001_110000": school.net_price_bracket3,
-      "110001": school.net_price_bracket4,
-    },
-  })) as SchoolIndex[];
+  const key = schoolIds ? null : "schools-schools-index";
+
+  return blobCache(key, async () => {
+    const query = getIndexQuery(schoolIds);
+    const schools = await queryRows<SchoolsRow & PricesRow>(query);
+    return schools.map((school) => ({
+      id: school.id,
+      slug: school.slug,
+      image: school.image,
+      imageCredit: school.image_credit,
+      name: school.name,
+      alias: school.alias,
+      city: school.city,
+      state: school.state,
+      hbcu: school.hbcu,
+      tribalCollege: school.tribal_college,
+      schoolControl: school.school_control,
+      degreeLevel: school.degree_level,
+      enrollment: school.enrollment_total,
+      stickerPrice: {
+        type: school.sticker_price_type,
+        price: school.sticker_price_in_state,
+      },
+      netPricesByBracket: {
+        average: school.net_price_average,
+        "0_30000": school.net_price_bracket0,
+        "30001_48000": school.net_price_bracket1,
+        "48001_75000": school.net_price_bracket2,
+        "75001_110000": school.net_price_bracket3,
+        "110001": school.net_price_bracket4,
+      },
+    })) as SchoolIndex[];
+  });
 };
 
 const getDetailQueries = (ids: string[]) => {
@@ -379,50 +386,52 @@ export const getPriceHistogram = async () => {
     net_price_bracket4: number;
   };
 
-  const prices = await queryRows<PriceHistogramPrices>(`
-    SELECT
-      sticker_price_in_state,
-      net_price_average,
-      net_price_bracket0,
-      net_price_bracket1,
-      net_price_bracket2,
-      net_price_bracket3,
-      net_price_bracket4
-    FROM
-      prices
-    INNER JOIN (
+  return blobCache("schools-price-histogram", async () => {
+    const prices = await queryRows<PriceHistogramPrices>(`
       SELECT
-        school_id as max_school_id,
-        max(start_year) as start_year
-      FROM prices
-      GROUP BY school_id
-    ) as years
-    ON
-      prices.school_id = years.max_school_id
-      AND prices.start_year = years.start_year;
-  `);
+        sticker_price_in_state,
+        net_price_average,
+        net_price_bracket0,
+        net_price_bracket1,
+        net_price_bracket2,
+        net_price_bracket3,
+        net_price_bracket4
+      FROM
+        prices
+      INNER JOIN (
+        SELECT
+          school_id as max_school_id,
+          max(start_year) as start_year
+        FROM prices
+        GROUP BY school_id
+      ) as years
+      ON
+        prices.school_id = years.max_school_id
+        AND prices.start_year = years.start_year;
+    `);
 
-  const getBins = (key: keyof PriceHistogramPrices) => {
-    const binPrices = prices
-      .map((p) => p[key])
-      .filter((p) => p && p > 0 && Number.isFinite(p));
-    const binner = bin().thresholds(50);
-    return binner(binPrices).map((b) => ({
-      length: b.length,
-      x0: b.x0,
-      x1: b.x1,
-    }));
-  };
+    const getBins = (key: keyof PriceHistogramPrices) => {
+      const binPrices = prices
+        .map((p) => p[key])
+        .filter((p) => p && p > 0 && Number.isFinite(p));
+      const binner = bin().thresholds(50);
+      return binner(binPrices).map((b) => ({
+        length: b.length,
+        x0: b.x0,
+        x1: b.x1,
+      }));
+    };
 
-  return {
-    sticker: getBins("sticker_price_in_state"),
-    average: getBins("net_price_average"),
-    "0_30000": getBins("net_price_bracket0"),
-    "30001_48000": getBins("net_price_bracket1"),
-    "48001_75000": getBins("net_price_bracket2"),
-    "75001_110000": getBins("net_price_bracket3"),
-    "110001": getBins("net_price_bracket4"),
-  };
+    return {
+      sticker: getBins("sticker_price_in_state"),
+      average: getBins("net_price_average"),
+      "0_30000": getBins("net_price_bracket0"),
+      "30001_48000": getBins("net_price_bracket1"),
+      "48001_75000": getBins("net_price_bracket2"),
+      "75001_110000": getBins("net_price_bracket3"),
+      "110001": getBins("net_price_bracket4"),
+    };
+  });
 };
 
 export const getSizeHistogram = async (opts: {
@@ -434,58 +443,61 @@ export const getSizeHistogram = async (opts: {
     degreeLevel,
   } = opts;
 
-  let i = 1;
-  const conditions = [
-    (typeof schoolControl === "string") && {
-      condition: `school_control = $${i++}`,
-      value: schoolControl,
-    },
-    (typeof degreeLevel === "string") && {
-      condition: `degree_level = $${i++}`,
-      value: degreeLevel,
-    },
-  ].filter((d) => d !== false);
+  const key = `schools-size-histogram-${schoolControl || "all"}-${degreeLevel || "all"}`;
+  return blobCache(key, async () => {
+    let i = 1;
+    const conditions = [
+      (typeof schoolControl === "string") && {
+        condition: `school_control = $${i++}`,
+        value: schoolControl,
+      },
+      (typeof degreeLevel === "string") && {
+        condition: `degree_level = $${i++}`,
+        value: degreeLevel,
+      },
+    ].filter((d) => d !== false);
 
-  const where = ["enrollment_total IS NOT NULL", ...conditions.map((c) => c.condition)];
+    const where = ["enrollment_total IS NOT NULL", ...conditions.map((c) => c.condition)];
 
-  type SizeRow = {
-    enrollment_total: number;
-  };
-  const schools = await queryRows<SizeRow>({
-    text: `
-      SELECT
-        enrollment_total
-      FROM
-        schools
-      WHERE
-        ${where.join(" AND ")};
-    `,
-    values: conditions.map((c) => c.value),
+    type SizeRow = {
+      enrollment_total: number;
+    };
+    const schools = await queryRows<SizeRow>({
+      text: `
+        SELECT
+          enrollment_total
+        FROM
+          schools
+        WHERE
+          ${where.join(" AND ")};
+      `,
+      values: conditions.map((c) => c.value),
+    });
+
+    const sizes = schools
+      .map((school) => school.enrollment_total)
+      .sort((a, b) => a - b);
+
+    const percentiles = [...Array(100)].map((_, i) => quantileSorted(
+      sizes,
+      i / 100,
+    ));
+
+    const upperLimit = quantileSorted(sizes, 0.96)!;
+    const binValues = sizes.map((s) => Math.min(s, upperLimit));
+
+    const binner = bin()
+      .thresholds(100);
+
+    return {
+      percentiles,
+      bins: binner(binValues).map((b) => ({
+        length: b.length,
+        x0: b.x0,
+        x1: b.x1,
+      })),
+    };
   });
-
-  const sizes = schools
-    .map((school) => school.enrollment_total)
-    .sort((a, b) => a - b);
-
-  const percentiles = [...Array(100)].map((_, i) => quantileSorted(
-    sizes,
-    i / 100,
-  ));
-
-  const upperLimit = quantileSorted(sizes, 0.96)!;
-  const binValues = sizes.map((s) => Math.min(s, upperLimit));
-
-  const binner = bin()
-    .thresholds(100);
-
-  return {
-    percentiles,
-    bins: binner(binValues).map((b) => ({
-      length: b.length,
-      x0: b.x0,
-      x1: b.x1,
-    })),
-  };
 };
 
 export const getStickerPriceDataset = async () => {

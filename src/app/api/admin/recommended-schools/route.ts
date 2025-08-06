@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const sections = await request.json();
 
     await setRecommendedSchools(sections);
-    revalidateRecommendedSchools();
+    await revalidateRecommendedSchools();
 
     return NextResponse.json({
       message: "Content updated",

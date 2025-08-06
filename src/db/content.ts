@@ -1,4 +1,5 @@
 import set from "lodash/set";
+import { blobCache } from "@/cache";
 import { queryRows, run } from "./pool";
 import { getValueIdSet } from "./getValueIdSet";
 
@@ -34,24 +35,27 @@ export const getContent = async (opts: {
     locale,
   } = opts;
 
-  const query = getQuery(locale);
-  const contentEntries = await queryRows<Row>(query);
+  const key = `content-locale-${locale || "default"}`;
+  return blobCache(key, async () => {
+    const query = getQuery(locale);
+    const contentEntries = await queryRows<Row>(query);
 
-  const contentByLocale = {
-    en: {},
-    es: {},
-  } as Record<string, Record<string, string>>;
-  contentEntries.forEach((row) => {
-    const l = row.locale;
-    if (!l || l === "en") {
-      set(contentByLocale.en, [`${row.component}.${row.path}`], row.value);
-    }
-    if (!l || l === "es") {
-      set(contentByLocale.es, [`${row.component}.${row.path}`], row.value);
-    }
+    const contentByLocale = {
+      en: {},
+      es: {},
+    } as Record<string, Record<string, string>>;
+    contentEntries.forEach((row) => {
+      const l = row.locale;
+      if (!l || l === "en") {
+        set(contentByLocale.en, [`${row.component}.${row.path}`], row.value);
+      }
+      if (!l || l === "es") {
+        set(contentByLocale.es, [`${row.component}.${row.path}`], row.value);
+      }
+    });
+
+    return contentByLocale;
   });
-
-  return contentByLocale;
 };
 
 export const getContentForAdmin = async () => {

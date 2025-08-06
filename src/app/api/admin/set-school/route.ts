@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   try {
     const school = await request.json();
     await setSchool(school);
-    revalidateSchools([school.id]);
+    await revalidateSchools([school.id]);
     return NextResponse.json({
       message: "School updated",
     });

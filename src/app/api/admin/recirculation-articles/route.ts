@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const articles = await request.json();
 
     await setRecirculationArticles(articles);
-    revalidateRecirculation();
+    await revalidateRecirculation();
 
     return NextResponse.json({
       message: "Content updated",

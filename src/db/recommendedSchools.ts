@@ -1,4 +1,5 @@
 import type { SchoolIndex, RecommendationSectionAdmin } from "@/types";
+import { blobCache } from "@/cache";
 import { queryRows, run } from "./pool";
 import { getValueIdSet } from "./getValueIdSet";
 import { getSchoolsIndex } from "./schools";
@@ -30,48 +31,50 @@ export const getRecommendedSchoolSlugs = async () => {
 };
 
 export const getRecommendedSchools = async () => {
-  const sectionSchools = await queryRows<RecommendedSchoolsRow>(`
-    SELECT recommended_schools.db_id, page_order, title, title_spanish, school_id
-    FROM recommended_schools
-    INNER JOIN recommended_school_ids
-    ON recommended_schools.db_id = recommended_school_ids.section_id;
-  `);
+  return blobCache("recommended-schools", async () => {
+    const sectionSchools = await queryRows<RecommendedSchoolsRow>(`
+      SELECT recommended_schools.db_id, page_order, title, title_spanish, school_id
+      FROM recommended_schools
+      INNER JOIN recommended_school_ids
+      ON recommended_schools.db_id = recommended_school_ids.section_id;
+    `);
 
-  const ids = sectionSchools.map((s) => s.school_id);
-  const schools = await getSchoolsIndex({
-    schoolIds: ids,
+    const ids = sectionSchools.map((s) => s.school_id);
+    const schools = await getSchoolsIndex({
+      schoolIds: ids,
+    });
+    const schoolsById = new Map(schools.map((school) => [
+      school.id,
+      school,
+    ]));
+
+    const sections = new Map<number, RecommendedSchoolsSection>();
+    sectionSchools.forEach((row) => {
+      const { db_id, school_id, ...rest } = row;
+      const section = sections.get(db_id) || {
+        db_id,
+        ...rest,
+        schools: [],
+      };
+      section.schools.push(schoolsById.get(school_id)!);
+      sections.set(db_id, section);
+    });
+
+    const sortedSections = Array.from(sections.values())
+      .map((section, i) => ({
+        dbId: section.db_id,
+        key: `section-${i}`,
+        pageOrder: section.page_order,
+        title: {
+          en: section.title,
+          es: section.title_spanish,
+        },
+        schools: section.schools,
+      }))
+      .sort((a, b) => a.pageOrder - b.pageOrder);
+
+    return sortedSections;
   });
-  const schoolsById = new Map(schools.map((school) => [
-    school.id,
-    school,
-  ]));
-
-  const sections = new Map<number, RecommendedSchoolsSection>();
-  sectionSchools.forEach((row) => {
-    const { db_id, school_id, ...rest } = row;
-    const section = sections.get(db_id) || {
-      db_id,
-      ...rest,
-      schools: [],
-    };
-    section.schools.push(schoolsById.get(school_id)!);
-    sections.set(db_id, section);
-  });
-
-  const sortedSections = Array.from(sections.values())
-    .map((section, i) => ({
-      dbId: section.db_id,
-      key: `section-${i}`,
-      pageOrder: section.page_order,
-      title: {
-        en: section.title,
-        es: section.title_spanish,
-      },
-      schools: section.schools,
-    }))
-    .sort((a, b) => a.pageOrder - b.pageOrder);
-
-  return sortedSections;
 };
 
 export const setRecommendedSchools = async (sections: RecommendationSectionAdmin[]) => {

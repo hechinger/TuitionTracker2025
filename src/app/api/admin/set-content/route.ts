@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   try {
     const content = await request.json();
     await setContent(content);
-    revalidateContent();
+    await revalidateContent();
     return NextResponse.json({
       message: "Content updated",
     });
