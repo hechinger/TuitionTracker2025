@@ -1,5 +1,8 @@
 import { cache } from "react";
 import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { locales } from "@/i18n/routing";
 import { DataLayer } from "@/analytics";
 import { LAST_MODIFIED } from "@/constants";
 import { getContent } from "@/db/content";
@@ -84,13 +87,25 @@ export async function generateMetadata({
   };
 }
 
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
 export default async function School({
   params,
 }: {
   params: Promise<{ locale: string, school: string }>;
 }) {
   const { locale, school: schoolSlug } = await params;
+
+  if (!hasLocale(locales, locale)) {
+    notFound();
+  }
+
+  setRequestLocale(locale);
+
   const schoolId = `${schoolSlug.split('-').at(-1)}`;
+
   const [
     content,
     school,

@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { locales } from "@/i18n/routing";
 import { getContent } from "@/db/content";
 import { getRecirculationArticles } from "@/db/recirculationArticles";
 import { getRecommendedSchools } from "@/db/recommendedSchools";
@@ -29,12 +33,23 @@ export const metadata: Metadata = {
   },
 };
 
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
 export default async function Home({
   params,
 }: Readonly<{
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
+
+  if (!hasLocale(locales, locale)) {
+    notFound();
+  }
+
+  setRequestLocale(locale);
+
   const [
     content,
     articles,
