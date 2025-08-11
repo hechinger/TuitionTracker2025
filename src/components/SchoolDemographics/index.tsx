@@ -29,7 +29,7 @@ export default function SchoolDemographics(props: {
     degreeLevel: school.degreeLevel,
   });
 
-  if (!school) return null;
+  if (!school || !school.enrollment?.total) return null;
 
   const sizeContext = {
     SCHOOL_NAME: school.name,
