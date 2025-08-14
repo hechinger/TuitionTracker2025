@@ -215,7 +215,7 @@ export default function RadarChart(props: {
               className={styles.natAvgRing}
             />
 
-            {data.map((d) => (
+            {data.filter((d) => !!d.value).map((d) => (
               <circle
                 key={d.key}
                 cx={getXY(angle(d.key), r(d.value)).x}

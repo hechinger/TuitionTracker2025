@@ -54,7 +54,7 @@ export default function SchoolHistoricalPrices(props: {
   const bracketContext = useMemo(() => {
     if (!school) return undefined;
     const brackets = Object.entries(school.netPricesByBracket)
-      .filter(([key, value]) => key !== "average" && value !== 0);
+      .filter(([key, value]) => key !== "average" && value);
     if (brackets.length < 2) return undefined;
     const minBracket = brackets[minIndex(brackets, (b) => b[1])];
     const maxBracket = brackets[maxIndex(brackets, (b) => b[1])];
