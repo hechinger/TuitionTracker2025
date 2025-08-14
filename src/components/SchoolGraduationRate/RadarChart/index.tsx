@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { useResizeObserver } from "usehooks-ts";
 import { scaleLinear, scaleOrdinal } from "d3-scale";
 import { lineRadial, curveLinearClosed } from "d3-shape";
@@ -75,15 +75,19 @@ export default function RadarChart(props: {
   const labelValue = (value: number) => Math.max(minLabelValue, value);
 
   const graduation = getGraduation(props.school);
-  const data = categories.map((c) => {
-    const value = graduation.byRace[c.key];
-    if (typeof value !== "number") return undefined;
-    return {
-      key: c.key,
-      label: content(`GeneralPurpose.demographicCategories.${c.key}`),
-      value: graduation.byRace[c.key],
-    };
-  }).filter(isNotUndefined);
+  const data = useMemo(() => {
+    const dataCategories = categories.map((c) => {
+      const value = graduation.byRace[c.key];
+      return {
+        key: c.key,
+        label: content(`GeneralPurpose.demographicCategories.${c.key}`),
+        value,
+      };
+    });
+    const withData = dataCategories.filter((d) => isNotUndefined(d.value));
+    if (withData.length > 2) return withData;
+    return dataCategories;
+  }, [content, graduation]);
 
   const natAvgs = props.nationalAverages[props.school.degreeLevel];
   const natAvgData = data.map((d) => ({
