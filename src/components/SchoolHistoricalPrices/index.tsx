@@ -52,7 +52,7 @@ export default function SchoolHistoricalPrices(props: {
 
   const bracketTemplate = content("SchoolPage.Prices.incomeBracketTemplate");
   const bracketContext = useMemo(() => {
-    if (!school) return undefined;
+    if (!school || !school.netPricesByBracket) return undefined;
     const brackets = Object.entries(school.netPricesByBracket)
       .filter(([key, value]) => key !== "average" && value);
     if (brackets.length < 2) return undefined;
