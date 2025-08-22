@@ -73,6 +73,7 @@ export async function generateMetadata({
         en: `https://www.tuitiontracker.org/schools/${schoolSlug}`,
         es: `https://www.tuitiontracker.org/es/schools/${schoolSlug}`,
       },
+      canonical: `https://www.tuitiontracker.org/schools/${schoolSlug}`,
     },
     other: {
       "parsely-title": school.name,
