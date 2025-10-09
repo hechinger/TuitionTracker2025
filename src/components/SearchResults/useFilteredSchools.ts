@@ -100,6 +100,13 @@ export function useFilteredSchools(opts: {
       const alpha = a.name.localeCompare(b.name);
 
       if (sorting === "priceLowHigh") {
+        // Check if either school has "No Data" for price sorts
+        const aHasPrice = priceA != null && priceA > 0;
+        const bHasPrice = priceB != null && priceB > 0;
+        
+        if (!aHasPrice && bHasPrice) return 1;  // a goes after b
+        if (aHasPrice && !bHasPrice) return -1; // a goes before b
+        if (!aHasPrice && !bHasPrice) return alpha; // both no data, sort by name
         return (priceA - priceB) || alpha;
       }
 
