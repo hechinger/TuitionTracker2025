@@ -91,13 +91,13 @@ export default function SchoolHistoricalPrices(props: {
               variant="graf"
             />
 
-            {school.id === "191533" && (
-              <p style={{ fontStyle: 'italic', marginTop: '1rem' }}>
-                Tuition Tracker has been updated to reflect that Hartwick College reset tuition costs for the 2025-26 academic year.
-              </p>
-            )}
-
             <div className={styles.chart}>
+              {school.id === "191533" && (
+                <p style={{ fontStyle: 'italic' }}>
+                  Tuition Tracker has been updated to reflect that Hartwick College reset tuition costs for the 2025-26 academic year.
+                </p>
+              )}
+
               {school && (
                 <h2 className={styles.chartTitle}>
                   <Robotext
