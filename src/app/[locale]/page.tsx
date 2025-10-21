@@ -13,7 +13,7 @@ import PageTopOverlap from "@/components/PageTopOverlap";
 import HeroSplash from "@/components/HeroSplash";
 import SearchBar from "@/components/SearchBar";
 import RecommendedSchools from "@/components/RecommendedSchools";
-import NewsletterSignup from "@/components/NewsletterSignup";
+// import NewsletterSignup from "@/components/NewsletterSignup";
 import ContactUs from "@/components/ContactUs";
 import Recirculation from "@/components/Recirculation";
 import LandingPageTextSection from "@/components/LandingPageTextSection";
