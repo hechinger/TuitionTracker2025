@@ -83,7 +83,7 @@ export default async function Home({
         />
       ))}
       <AdSlot />
-      <NewsletterSignup />
+      {/* <NewsletterSignup /> */}
       <LandingPageTextSection
         titleKey="About.title"
         textKey="About.copy"
