@@ -68,9 +68,9 @@ export default async function Search({
       />
 
       <PageTopOverlap>
+        <AdSlot />
         <SearchBar autoload withNav />
       </PageTopOverlap>
-      <AdSlot />
       <Suspense>
         <SearchResults />
       </Suspense>
