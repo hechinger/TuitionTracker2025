@@ -15,6 +15,7 @@ import styles from "./styles.module.scss";
  */
 export default function SchoolCard(props: {
   school: SchoolIndex;
+  priority?: boolean;
 }) {
   const savedSchools = useSavedSchools();
   const isSaved = savedSchools.schoolIsSaved(props.school.id);
@@ -45,6 +46,7 @@ export default function SchoolCard(props: {
         <SchoolImage
           school={props.school}
           withFallback
+          priority={props.priority}
         />
 
         <div className={styles.info}>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { SchoolIndex, SchoolDetail } from "@/types";
 import privateImg from "./private.jpg";
 import publicImg from "./public.jpg";
@@ -16,11 +17,17 @@ export default function SchoolImage(props: {
   school: SchoolIndex | SchoolDetail;
   withFallback?: boolean;
   className?: string;
+  width?: number;
+  height?: number;
+  priority?: boolean;
 }) {
   const {
     school,
     withFallback = false,
     className,
+    width = 250,
+    height = 141,
+    priority = false,
   } = props;
 
   const fallback = fallbacks[school.schoolControl];
@@ -29,10 +36,14 @@ export default function SchoolImage(props: {
   if (!img && !withFallback) return null;
 
   return (
-    <img
+    <Image
       className={className}
       src={img || fallback}
       alt={school.name}
+      width={width}
+      height={height}
+      sizes="250px"
+      priority={priority}
     />
   );
 }

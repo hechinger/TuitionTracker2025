@@ -40,10 +40,11 @@ export default function RecommendedSchools(props: {
 
         <ScrollArea scroll="x">
           <div className={styles.schools}>
-            {recommendedSchools && recommendedSchools.map((school) => (
+            {recommendedSchools && recommendedSchools.map((school, index) => (
               <SchoolCard
                 key={school.id}
                 school={school}
+                priority={index === 0}
               />
             ))}
 

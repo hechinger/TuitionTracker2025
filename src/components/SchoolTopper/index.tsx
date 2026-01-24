@@ -46,6 +46,7 @@ export default function SchoolTopper(props: {
         <SchoolImage
           className={styles.schoolImage}
           school={school}
+          priority
         />
 
         <h1 className={styles.name}>

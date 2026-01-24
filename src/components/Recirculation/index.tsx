@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import { widont } from "@/utils/widont";
 import Well from "@/components/Well";
 import { useContent } from "@/hooks/useContent";
@@ -38,10 +39,13 @@ export default function Recirculation(props: {
               className={styles.article}
               href={article.url}
             >
-              <img
+              <Image
                 className={styles.img}
                 src={article.image}
                 alt={article.imageAlt || ""}
+                width={389}
+                height={231}
+                sizes="(max-width: 768px) 100vw, 389px"
               />
               <div className={styles.headline}>
                 {widont(article.headline)}
