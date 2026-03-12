@@ -37,6 +37,17 @@ const matchCost = (opts: {
   return true;
 };
 
+const matchSize = (opts: {
+  school: SchoolIndex;
+  minSize: number;
+  maxSize?: number;
+}) => {
+  const size = opts.school.enrollment;
+  if (size < opts.minSize) return false;
+  if (opts.maxSize && opts.maxSize < size) return false;
+  return true;
+};
+
 const matchSchoolType = (opts: {
   school: SchoolIndex;
   schoolType: SearchOptions["schoolType"];
@@ -87,6 +98,7 @@ export function useFilteredSchools(opts: {
       matchName({ school, name: search.where })
       && matchStates({ school, states: search.states })
       && matchCost({ school, bracket, minPrice: search.minPrice, maxPrice: search.maxPrice })
+      && matchSize({ school, minSize: search.minSize, maxSize: search.maxSize })
       && matchSchoolType({ school, schoolType: search.schoolType })
       && matchDegreeType({ school, degreeType: search.degreeType })
       && matchTribalCollege({ school, tribalCollege: search.tribalCollege })

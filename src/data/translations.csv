@@ -35,6 +35,11 @@ SearchBar.advanced.cost.anyIncome,Any,Cualquiera
 SearchBar.advanced.cost.histogramTitle,Net price for,Precio neto
 SearchBar.advanced.cost.minimum,Minimum,Mínimo
 SearchBar.advanced.cost.maximum,Maximum,Máximo
+SearchBar.advanced.size.title,Size of school,Tamaño de la institución
+SearchBar.advanced.size.instructions,Use the slider to filter schools by enrollment size,Use el control deslizante para filtrar escuelas por tamaño de matrícula
+SearchBar.advanced.size.histogramTitle,Enrollment,Matrícula
+SearchBar.advanced.size.minimum,Minimum,Mínimo
+SearchBar.advanced.size.maximum,Maximum,Máximo
 SearchBar.advanced.schoolType.title,School type,Tipo de institución
 SearchBar.advanced.degreeType.title,Degree type,Tipo de diploma
 SearchBar.advanced.degreeType.anyType,Any type,Cualquier tipo

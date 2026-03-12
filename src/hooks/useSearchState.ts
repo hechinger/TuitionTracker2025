@@ -14,6 +14,8 @@ const SearchSchema = z.object({
   states: z.array(z.string()).default([]),
   minPrice: z.number().default(0),
   maxPrice: z.number().optional(),
+  minSize: z.number().default(0),
+  maxSize: z.number().optional(),
   schoolType: z.array(z.enum(schoolTypes)).default([]),
   degreeType: z.enum(degreeTypes).default("any"),
   tribalCollege: z.boolean().default(false),

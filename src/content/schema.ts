@@ -1006,6 +1006,26 @@ export const contentSections = [
           },
           {
             type: "copy",
+            path: "SearchBar.advanced.size.title",
+            title: "Advanced enrollment title"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.size.instructions",
+            title: "Advanced enrollment instructions"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.size.minimum",
+            title: "Advanced enrollment minimum"
+          },
+          {
+            type: "copy",
+            path: "SearchBar.advanced.size.maximum",
+            title: "Advanced enrollment maximum"
+          },
+          {
+            type: "copy",
             path: "SearchBar.advanced.schoolType.title",
             title: "Advanced school type title"
           },
