@@ -20,6 +20,8 @@ export default function MoreOptions(props: {
   const {
     minPrice = 0,
     maxPrice = 0,
+    minSize = 0,
+    maxSize = 0,
     schoolType = [],
     degreeType = "any",
     tribalCollege = false,
@@ -28,8 +30,15 @@ export default function MoreOptions(props: {
 
   const content = useContent();
 
+  const sizeText = (minSize !== 0 || !!maxSize)
+    ? maxSize
+      ? `${minSize.toLocaleString()}–${maxSize.toLocaleString()} students`
+      : `${minSize.toLocaleString()}+ students`
+    : "";
+
   const text = [
     (minPrice !== 0 || !!maxPrice) && `${formatDollars(minPrice)} to ${formatDollars(maxPrice)}`,
+    sizeText,
     schoolType.join(", "),
     (degreeType !== "any") ? degreeType : "",
     tribalCollege && "tribal college",

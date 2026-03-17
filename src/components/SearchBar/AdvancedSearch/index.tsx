@@ -7,6 +7,7 @@ import { useIncomeBracket } from "@/hooks/useIncomeBracket";
 import type { IncomeBracketKey } from "@/types";
 import type { SearchOptions, UpdateSearch } from "@/hooks/useSearchState";
 import PriceHistogram from "./PriceHistogram";
+import SizeHistogram from "./SizeHistogram";
 import styles from "./styles.module.scss";
 
 /**
@@ -149,7 +150,8 @@ export default function AdvancedSearch(props: {
               <label>
                 <input
                   type="number"
-                  value={search.minPrice}
+                  value={search.minPrice || ""}
+                  placeholder="No minimum"
                   onChange={(e) => updateSearch("minPrice", +e.target.value)}
                 />
                 <span>{content("SearchBar.advanced.cost.minimum")}</span>
@@ -159,9 +161,51 @@ export default function AdvancedSearch(props: {
                 <input
                   type="number"
                   value={search.maxPrice || ""}
+                  placeholder="No maximum"
                   onChange={(e) => updateSearch("maxPrice", +e.target.value)}
                 />
                 <span>{content("SearchBar.advanced.cost.maximum")}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.sizeSection}>
+          <h3>{content("SearchBar.advanced.size.title")}</h3>
+
+          <p className={styles.instructions}>
+            {content("SearchBar.advanced.size.instructions")}
+          </p>
+
+          <div>
+            <div className={styles.sizeHistogram}>
+              <SizeHistogram
+                minSize={search.minSize}
+                maxSize={search.maxSize}
+                updateMinSize={(size: number) => updateSearch("minSize", size)}
+                updateMaxSize={(size: number) => updateSearch("maxSize", size)}
+              />
+            </div>
+
+            <div className={styles.size}>
+              <label>
+                <input
+                  type="number"
+                  value={search.minSize || ""}
+                  placeholder="No minimum"
+                  onChange={(e) => updateSearch("minSize", +e.target.value)}
+                />
+                <span>{content("SearchBar.advanced.size.minimum")}</span>
+              </label>
+
+              <label>
+                <input
+                  type="number"
+                  value={search.maxSize || ""}
+                  placeholder="No maximum"
+                  onChange={(e) => updateSearch("maxSize", +e.target.value)}
+                />
+                <span>{content("SearchBar.advanced.size.maximum")}</span>
               </label>
             </div>
           </div>

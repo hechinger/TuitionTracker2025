@@ -17,6 +17,7 @@
 }
 
 .costSection,
+.sizeSection,
 .schoolTypeSection,
 .degreeTypeSection,
 .otherSection {
@@ -81,6 +82,33 @@
   margin: 18px 0 12px;
 }
 
+.sizeHistogram {
+  margin: 18px 0 12px;
+}
+
+.size {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  label {
+    justify-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: colors.$text-light;
+
+    &:last-child {
+      justify-self: flex-end;
+    }
+  }
+
+  input {
+    border: 1px solid colors.$border-main;
+    padding: 6px 8px;
+    text-align: center;
+  }
+}
+
 .cost {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -100,7 +128,7 @@
   input {
     border: 1px solid colors.$border-main;
     padding: 6px 8px;
-    text-align: right;
+    text-align: center;
   }
 }
 

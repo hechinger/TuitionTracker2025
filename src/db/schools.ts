@@ -487,7 +487,7 @@ export const getSizeHistogram = async (opts: {
     const binValues = sizes.map((s) => Math.min(s, upperLimit));
 
     const binner = bin()
-      .thresholds(100);
+      .thresholds(30);
 
     return {
       percentiles,
