@@ -426,9 +426,11 @@ const main = async () => {
     for (const school of [...stateSchools, ...liberalArtsSchools]) {
       console.log(`Fetching image for school ${school.id}...`);
       try {
-        const rsp = await fetch(school.imageUrl);
+        const rsp = await fetch(school.imageUrl, {
+          headers: { "User-Agent": "TuitionTracker/1.0 (https://tuitiontracker.org)" },
+        });
         if (!rsp.ok || !rsp.body) {
-          throw new Error(`Failed to download image for school ${school.id} from ${school.imageUrl}`);
+          throw new Error(`Failed to download image for school ${school.id} from ${school.imageUrl} (${rsp.status})`);
         }
         const blob = await put(`school-image-${school.id}`, rsp.body, {
           access: "public",
@@ -440,7 +442,7 @@ const main = async () => {
         });
       } catch (error) {
         console.error(error);
-        return null;
+        continue;
       }
     }
   }

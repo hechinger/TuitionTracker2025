@@ -67,7 +67,7 @@ export default function Field(props: {
       <TextField
         id={field.path}
         label={field.title}
-        value={value}
+        value={value ?? ""}
         variant="outlined"
         onChange={(e) => onChange([field.path], e.target.value)}
         sx={{ flexGrow: 1 }}
@@ -81,7 +81,7 @@ export default function Field(props: {
         <TextField
           id={field.path}
           label={`${field.title} (${localeLabel})`}
-          value={value}
+          value={value ?? ""}
           variant="outlined"
           onChange={(e) => onChange([field.path, locale], e.target.value)}
         />
@@ -180,7 +180,7 @@ export default function Field(props: {
         <Select
           labelId={`select-${id}-label`}
           id={`select-${id}`}
-          value={value}
+          value={value ?? ""}
           label={field.title}
           onChange={(e) => onChange([field.path], e.target.value)}
         >

@@ -59,7 +59,8 @@ export const getNationalAverages = (schools: Record<string, unknown>[]) => {
   ) => {
     const value = get(school, valuePath);
     if (typeof value === "undefined") return;
-    const degreeLevel = get(school, "degreeLevel") as string;
+    const degreeLevel = get(school, "degreeLevel") as string | null;
+    if (!degreeLevel) return;
     const avg = get(averages, [degreeLevel, avgPath]);
     if (!avg) {
       throw new Error(`Invalid average path: ${degreeLevel}.${avgPath}`);

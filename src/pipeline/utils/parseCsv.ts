@@ -10,6 +10,7 @@ export const parseCsv = async <T = unknown>(text: string) => {
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
+        transform: (value) => value === "." ? "" : value,
         complete: (results) => {
           resolve(results);
         },
