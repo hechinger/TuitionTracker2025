@@ -29,6 +29,7 @@ export const fetchIpedsFile = async <FileRow = unknown>({
     fetchAndUnzipIpeds({
       file: `${fileType}.zip`,
       baseUrl,
+      surveyYear: year,
     }),
   ]);
 

@@ -1,7 +1,7 @@
 import type { ParseContext } from "../utils/parseIpedsFile";
 
 export type RowSFA = {
-  UAGRNTP: number; // percent paying less than sticker price (0 - 100)
+  UAGRNTP?: number; // percent paying less than sticker price (0 - 100); missing in COST2 files (2024+)
   NPIST2: number; // average on-campus net price
   NPGRN2: number; // average off-campus net price
   NPIS412: number; // the rest are on-campus, off-campus net for income brackets
@@ -21,7 +21,9 @@ export const parseSFA = (
   { year: baseYear }: ParseContext,
 ) => {
   const [[mostRecentYear]] = years;
-  const percentSticker = (100 - mostRecentYear.UAGRNTP) / 100;
+  const percentSticker = mostRecentYear.UAGRNTP != null
+    ? (100 - mostRecentYear.UAGRNTP) / 100
+    : null;
 
   const getNetPriceYear = (year: RowSFA, yearNumber: number) => {
     return {

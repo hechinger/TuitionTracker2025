@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+import { waitUntil } from "@vercel/functions";
 import { pipeline } from "@/pipeline";
 import { revalidateSchools } from "@/cache";
+
+export const maxDuration = 300;
 
 export async function POST(request: Request) {
   try {
@@ -12,8 +15,9 @@ export async function POST(request: Request) {
       throw new Error("Specify year in query parameter");
     }
 
-    // Do not await this promise so that it runs in the background
-    pipeline({ year }).then(() => revalidateSchools());
+    // Use waitUntil to keep the serverless function alive while the
+    // pipeline runs in the background after the response is sent.
+    waitUntil(pipeline({ year }).then(() => revalidateSchools()));
 
     return NextResponse.json({
       message: "Success",

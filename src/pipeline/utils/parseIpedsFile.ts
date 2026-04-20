@@ -14,7 +14,7 @@ export type ParseContext = {
 };
 
 export type IpedsFullFileConfig<FileRow = unknown> = {
-  file: string;
+  file: string | ((year: number) => string);
   year: number;
   baseUrl: string;
   parseSchoolRows: (years: FileRow[][], context: ParseContext) => Record<string, unknown>;
@@ -33,7 +33,7 @@ export type IpedsFileConfig<FileRow = unknown> = Pick<
  */
 export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
   config: {
-    file: string;
+    file: string | ((year: number) => string);
     years?: number;
     schoolIdKey?: string;
     parseSchoolRows: (years: FileRow[][], context: ParseContext) => SchoolDataSegment;
@@ -65,8 +65,9 @@ export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
   await [...Array(years)].reduce(async (promise, _, i) => {
     await promise;
 
+    const fileTemplate = typeof file === 'function' ? file(year - i) : file;
     const data = await fetchIpedsFile<FileRow>({
-      fileTemplate: file,
+      fileTemplate,
       year: year - i,
       baseUrl,
     });
@@ -86,7 +87,7 @@ export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
       year,
       registerError: (error) => registerError({
         schoolId,
-        file,
+        file: typeof file === 'function' ? file(year) : file,
         error,
       }),
     });

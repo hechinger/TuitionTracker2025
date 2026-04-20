@@ -4,7 +4,6 @@ import { run } from "@/db/pool";
 const schoolColumns = {
   id: "id", 
   slug: "slug",
-  image: "image", 
   name: "name", 
   alias: "alias", 
   city: "city", 
@@ -67,6 +66,7 @@ export const loadSchoolTable = async <School = Record<string, unknown>>(schools:
 
   const valueIdSets = valueIds.map((v) => v.join(", ")).map((v) => `(${v})`).join(", ");
   const updateColumns = Object.keys(schoolColumns)
+    .filter((c) => c !== "id")
     .map((c) => `${c} = EXCLUDED.${c}`)
     .join(", ");
   const query = {

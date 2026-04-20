@@ -26,6 +26,7 @@
     "@tanstack/react-query": "^5.80.3",
     "@types/google-publisher-tag": "^1.20250728.0",
     "@vercel/blob": "^1.1.1",
+    "@vercel/functions": "^3.4.3",
     "adm-zip": "^0.5.16",
     "cheerio": "^1.1.2",
     "clsx": "^2.1.1",
