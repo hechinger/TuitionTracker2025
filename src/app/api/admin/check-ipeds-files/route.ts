@@ -59,7 +59,7 @@ export async function GET(request: Request) {
       files: results,
     });
   } catch (error) {
-    console.error(error);
+    console.error("[pipeline]", error);
     return new Response(null, {
       status: 400,
       statusText: "Bad request",

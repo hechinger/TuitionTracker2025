@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       year,
     });
   } catch (error) {
-    console.error(error);
+    console.error("[pipeline]", error);
     return new Response(null, {
       status: 400,
       statusText: "Bad request",
