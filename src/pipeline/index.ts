@@ -20,6 +20,13 @@ import { synthesize } from "./parsing/synthesize";
  */
 const COST_TRANSITION_YEAR = 2024;
 
+/** Log current heap usage so we can predict Vercel OOM (2 GB limit). */
+const logMemory = (label: string) => {
+  const { heapUsed, rss } = process.memoryUsage();
+  const mb = (bytes: number) => (bytes / 1024 / 1024).toFixed(0);
+  console.log(`[pipeline] [mem] ${label}: heap ${mb(heapUsed)} MB, rss ${mb(rss)} MB`);
+};
+
 /**
   * This function runs the data pipeline for a specific year. It pulls bulk
   * data from IPEDS ([1][]), parses it, performs the necessary analysis, and
@@ -48,13 +55,11 @@ export const pipeline = async ({
   console.log("[pipeline] Fetching and parsing data files...");
   performance.mark("fetch-start");
 
-  // Phase 1 — smaller files (1-5 years each) can run in parallel.
+  // Phase 1a — single-year files can all run in parallel.
   const [
     hd, // institutional characteristics
     adm, // admissions
-    gr, // graduation rates
     effy, // 12-month enrollment
-    efd, // fall enrollment
   ] = await Promise.all([
     parseIpedsFile({
       file: "HD{YEAR}",
@@ -65,38 +70,51 @@ export const pipeline = async ({
       parseSchoolRows: parseADM,
     }, parsingContext),
     parseIpedsFile({
-      file: "GR{YEAR}",
-      years: 5,
-      parseSchoolRows: parseGR,
-    }, parsingContext),
-    parseIpedsFile({
       file: "EFFY{YEAR}",
       parseSchoolRows: parseEFFY,
     }, parsingContext),
-    parseIpedsFile({
-      file: "EF{YEAR}D",
-      years: 5,
-      parseSchoolRows: parseEFD,
-    }, parsingContext),
   ]);
+  logMemory("after phase 1a (single-year files)");
+
+  // Phase 1b — 5-year files fetched sequentially with column pruning.
+  const gr = await parseIpedsFile({
+    file: "GR{YEAR}",
+    years: 5,
+    columns: ["GRTYPE", "GRTOTLT", "GRUNKNT", "GR2MORT", "GRWHITT", "GRHISPT", "GRNHPIT", "GRBKAAT", "GRASIAT", "GRAIANT", "GRNRALT"],
+    parseSchoolRows: parseGR,
+  }, parsingContext);
+
+  const efd = await parseIpedsFile({
+    file: "EF{YEAR}D",
+    years: 5,
+    columns: ["RET_NMF", "RRFTCTA", "RET_NMP", "RRPTCTA"],
+    parseSchoolRows: parseEFD,
+  }, parsingContext);
+  logMemory("after phase 1b (5-year files)");
 
   // Phase 2 — large 11-year files fetched sequentially to avoid OOM on
   // Vercel (each accumulates ~7k schools × 11 years of raw CSV rows).
+  // The `columns` lists prune unused CSV columns (100+) immediately after
+  // parsing so only the ~10 needed fields per row stay in memory.
   const icay = await parseIpedsFile({
     file: year >= COST_TRANSITION_YEAR
       ? (y: number) => y >= COST_TRANSITION_YEAR ? "COST1_{YEAR}" : "IC{YEAR}_AY"
       : "IC{YEAR}_AY",
     years: 11,
+    columns: ["CHG2AY3", "CHG3AY3", "CHG4AY3", "CHG5AY3", "CHG6AY3", "CHG7AY3", "CHG8AY3"],
     parseSchoolRows: parseICAY,
   }, parsingContext);
+  logMemory("after sticker price (11 years)");
 
   const sfa = await parseIpedsFile({
     file: year >= COST_TRANSITION_YEAR
       ? (y: number) => y >= COST_TRANSITION_YEAR ? "COST2_{YEAR}" : "SFA{ACADEMIC_YEAR}"
       : "SFA{ACADEMIC_YEAR}",
     years: 11,
+    columns: ["UAGRNTP", "NPIST2", "NPGRN2", "NPIS412", "NPT412", "NPIS422", "NPT422", "NPIS432", "NPT432", "NPIS442", "NPT442", "NPIS452", "NPT452"],
     parseSchoolRows: parseSFA,
   }, parsingContext);
+  logMemory("after net price (11 years)");
 
   performance.mark("fetch-end");
   console.log(`[pipeline]   HD: ${hd.size} schools, ADM: ${adm.size}, GR: ${gr.size}, EFFY: ${effy.size}, EFD: ${efd.size}`);
@@ -140,6 +158,7 @@ export const pipeline = async ({
   }).filter(isNotUndefined);
   performance.mark("synthesize-end");
   console.log(`[pipeline] Synthesized ${schools.length} schools (${hd.size - schools.length} filtered out)`);
+  logMemory("after synthesize");
 
   console.log(`[pipeline] Loading ${schools.length} schools into database...`);
   performance.mark("load-start");

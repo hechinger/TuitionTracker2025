@@ -36,6 +36,7 @@ export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
     file: string | ((year: number) => string);
     years?: number;
     schoolIdKey?: string;
+    columns?: string[];
     parseSchoolRows: (years: FileRow[][], context: ParseContext) => SchoolDataSegment;
   },
   context: {
@@ -48,6 +49,7 @@ export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
     file,
     parseSchoolRows,
     schoolIdKey = "UNITID",
+    columns,
     years = 1,
   } = config;
 
@@ -75,7 +77,20 @@ export const parseIpedsFile = async <FileRow, SchoolDataSegment>(
 
     Object.entries(grouped).forEach(([schoolId, rows]) => {
       const schoolYearRows = schoolYears.get(schoolId) || [];
-      schoolYearRows.push(rows);
+      // When `columns` is provided, prune each row to only the needed
+      // fields so the full Papa Parse row objects (100+ columns) can be
+      // garbage-collected. This is critical for multi-year files whose
+      // accumulated raw data would otherwise exceed Vercel's memory limit.
+      const prunedRows = columns
+        ? rows.map((row) => {
+            const pruned = {} as Record<string, unknown>;
+            for (const col of columns) {
+              pruned[col] = (row as Record<string, unknown>)[col];
+            }
+            return pruned as FileRow;
+          })
+        : rows;
+      schoolYearRows.push(prunedRows);
       schoolYears.set(schoolId, schoolYearRows);
     });
   }, Promise.resolve());
