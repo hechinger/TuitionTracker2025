@@ -263,8 +263,8 @@ export const synthesize = (
     };
   } catch (error) {
     if (school.stickerPriceYears && school.netPriceYears) {
-      console.log(school);
-      console.error(error);
+      console.log("[pipeline]", school);
+      console.error("[pipeline]", error);
       throw error;
     }
     return null;

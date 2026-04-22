@@ -32,7 +32,7 @@ export const fetchAndUnzipIpeds = async ({
       const zipUrl = new URL(file, baseUrl).href;
       try {
         const rsp = await fetchWithRetries(zipUrl, 1);
-        console.log(`  Downloaded ${file} from static URL`);
+        console.log(`[pipeline]   Downloaded ${file} from static URL`);
         return Buffer.from(await rsp.arrayBuffer());
       } catch {
         // Fall back to the IPEDS data generator API
@@ -40,9 +40,9 @@ export const fetchAndUnzipIpeds = async ({
         const tableName = file.replace(/\.zip$/i, "");
         const t = getNetTicks();
         const fallbackUrl = `https://nces.ed.gov/ipeds/data-generator?year=${surveyYear}&tableName=${tableName}&HasRV=0&type=csv&t=${t}`;
-        console.log(`  Static URL not available for ${file}, trying data generator...`);
+        console.log(`[pipeline]   Static URL not available for ${file}, trying data generator...`);
         const rsp = await fetchWithRetries(fallbackUrl);
-        console.log(`  Downloaded ${file} from data generator`);
+        console.log(`[pipeline]   Downloaded ${file} from data generator`);
         return Buffer.from(await rsp.arrayBuffer());
       }
     })();
@@ -58,8 +58,8 @@ export const fetchAndUnzipIpeds = async ({
     const content = zip.readAsText(unzippedFile);
     return content;
   } catch (error) {
-    console.error(`Failed to download and unzip file: ${file}`);
-    console.error(error);
+    console.error(`[pipeline] Failed to download and unzip file: ${file}`);
+    console.error("[pipeline]", error);
     throw error;
   }
 };
