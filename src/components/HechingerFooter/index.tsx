@@ -40,6 +40,10 @@ const footerLinks = [
     text: "Jobs",
     url: "https://hechingerreport.org/jobs/",
   },
+  {
+    text: "Privacy Policy",
+    url: "https://hechingerreport.org/privacy-policy/",
+  }
 ];
 
 /**

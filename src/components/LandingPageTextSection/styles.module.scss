@@ -1,3 +1,5 @@
+@use "@/styles/colors.scss";
+
 .textSection {
   margin: 40px 0;
 
@@ -11,5 +13,14 @@
     font-size: 22px;
     line-height: 140%;
     margin-top: 1em;
+  }
+
+  a {
+    color: colors.$brand-blue-dark;
+    text-decoration: underline;
+
+    &:hover {
+      color: colors.$brand-blue;
+    }
   }
 }
