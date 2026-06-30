@@ -2,8 +2,13 @@
 "use client";
 
 import Script from "next/script";
+import { ADS_ENABLED } from "./config";
 
 export default function GooglePublisherTag() {
+  if (!ADS_ENABLED) {
+    return null;
+  }
+
   return (
     <>
       <Script

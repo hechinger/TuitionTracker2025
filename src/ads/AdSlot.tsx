@@ -2,6 +2,7 @@
 
 import { useId, useEffect } from "react";
 import { googletag } from "./googletag";
+import { ADS_ENABLED } from "./config";
 import styles from "./adSlot.module.scss";
 
 /**
@@ -18,6 +19,10 @@ export default function AdSlot() {
   const id = `ad-slot-${useId()}`;
 
   useEffect(() => {
+    if (!ADS_ENABLED) {
+      return;
+    }
+
     const gt = googletag();
     let slot: googletag.Slot | null;
 
@@ -53,6 +58,10 @@ export default function AdSlot() {
       });
     };
   }, [id]);
+
+  if (!ADS_ENABLED) {
+    return null;
+  }
 
   // Create the ad slot container.
   return (
