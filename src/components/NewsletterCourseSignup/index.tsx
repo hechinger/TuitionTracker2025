@@ -46,6 +46,7 @@ declare global {
     __blueLenaCallbacks?: Record<string, BlueLenaCallbacks>;
     _show_thank_you?: (id: string, message: string, trackcmpUrl?: string, email?: string) => void;
     _show_error?: (id: string, message: string, html?: string) => void;
+    _load_script?: (url: string, callback?: () => void) => void;
   }
 }
 
@@ -54,6 +55,9 @@ declare global {
  * globals directly (JSONP-style), rather than returning JSON we can parse
  * from a normal fetch. Registering them here lets us route that callback
  * into this component's own state instead of their default DOM-swapping.
+ * "_load_script" is also called directly by that response (e.g. to load a
+ * tracking pixel after a successful submission), so it needs to exist even
+ * though we never call it ourselves.
  */
 function registerBlueLenaCallbacks(formId: string, callbacks: BlueLenaCallbacks) {
   window.__blueLenaCallbacks = window.__blueLenaCallbacks || {};
@@ -64,6 +68,15 @@ function registerBlueLenaCallbacks(formId: string, callbacks: BlueLenaCallbacks)
   };
   window._show_error = (id, message) => {
     window.__blueLenaCallbacks?.[id]?.onError(message);
+  };
+  window._load_script = (url, callback) => {
+    const script = document.createElement("script");
+    script.charset = "utf-8";
+    script.src = url;
+    if (callback) {
+      script.onload = () => callback();
+    }
+    document.head.appendChild(script);
   };
 }
 
