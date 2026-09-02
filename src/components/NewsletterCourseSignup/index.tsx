@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isEmail } from "@/utils/isEmail";
 import { getDataLayer } from "@/analytics/DataLayer";
 import Well from "@/components/Well";
@@ -18,6 +18,7 @@ const COPY = {
   thankYou: "Thank you for signing up! Keep an eye out for our launch in September.",
   invalidEmail: "Enter a valid email address.",
   submitError: "Sorry your submission failed. Please try again.",
+  captchaPrompt: "Please confirm you're not a robot below, then submit again.",
 };
 
 /**
@@ -38,7 +39,7 @@ const HIDDEN_FIELDS: Record<string, string> = {
 
 type BlueLenaCallbacks = {
   onThankYou: () => void;
-  onError: (message: string) => void;
+  onError: (message: string, html?: string) => void;
 };
 
 declare global {
@@ -47,6 +48,10 @@ declare global {
     _show_thank_you?: (id: string, message: string, trackcmpUrl?: string, email?: string) => void;
     _show_error?: (id: string, message: string, html?: string) => void;
     _load_script?: (url: string, callback?: () => void) => void;
+    // Defined by BlueLena's response; renders any ".g-recaptcha" element found
+    // in the DOM using its "data-sitekey" attribute.
+    recaptcha_callback?: () => void;
+    grecaptcha?: { reset: (widgetId?: number) => void };
   }
 }
 
@@ -66,8 +71,8 @@ function registerBlueLenaCallbacks(formId: string, callbacks: BlueLenaCallbacks)
   window._show_thank_you = (id) => {
     window.__blueLenaCallbacks?.[id]?.onThankYou();
   };
-  window._show_error = (id, message) => {
-    window.__blueLenaCallbacks?.[id]?.onError(message);
+  window._show_error = (id, message, html) => {
+    window.__blueLenaCallbacks?.[id]?.onError(message, html);
   };
   window._load_script = (url, callback) => {
     const script = document.createElement("script");
@@ -96,6 +101,8 @@ export default function NewsletterCourseSignup() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string>();
 
+  const captchaRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     registerBlueLenaCallbacks(formId, {
       onThankYou: () => {
@@ -106,9 +113,32 @@ export default function NewsletterCourseSignup() {
           email,
         });
       },
-      onError: (message) => {
+      onError: (message, html) => {
         setStatus("error");
-        setErrorMessage(message);
+
+        // When BlueLena wants a captcha, it sends the widget markup as "html"
+        // and separately loads Google's script, whose onload handler renders
+        // any ".g-recaptcha" element it finds. We just have to get that
+        // element into the DOM for it to pick up.
+        if (!html || !captchaRef.current) {
+          setErrorMessage(message);
+          return;
+        }
+
+        setErrorMessage(COPY.captchaPrompt);
+
+        if (captchaRef.current.hasChildNodes()) {
+          // Already rendered: just clear the previous (used) response.
+          window.grecaptcha?.reset();
+          return;
+        }
+
+        captchaRef.current.innerHTML = html;
+        // If Google's script already loaded on an earlier attempt, its onload
+        // handler won't fire again, so render the new element ourselves.
+        if (window.grecaptcha) {
+          window.recaptcha_callback?.();
+        }
       },
     });
 
@@ -132,6 +162,14 @@ export default function NewsletterCourseSignup() {
       email,
       jsonp: "true",
     });
+
+    // Google injects this hidden field into the widget once it's solved.
+    const captchaResponse = captchaRef.current
+      ?.querySelector<HTMLTextAreaElement>("textarea[name='g-recaptcha-response']")
+      ?.value;
+    if (captchaResponse) {
+      params.set("g-recaptcha-response", captchaResponse);
+    }
 
     const script = document.createElement("script");
     script.src = `${ACTION_URL}?${params.toString()}`;
@@ -178,6 +216,9 @@ export default function NewsletterCourseSignup() {
             {status === "error" && errorMessage && (
               <p className={styles.error}>{errorMessage}</p>
             )}
+
+            {/* Populated by BlueLena's captcha response, not by React */}
+            <div ref={captchaRef} className={styles.captcha} />
 
             <button type="submit" className={styles.submit} disabled={status === "submitting"}>
               {status === "submitting" ? COPY.submitting : COPY.submit}
