@@ -13,7 +13,7 @@ import PageTopOverlap from "@/components/PageTopOverlap";
 import HeroSplash from "@/components/HeroSplash";
 import SearchBar from "@/components/SearchBar";
 import RecommendedSchools from "@/components/RecommendedSchools";
-// import NewsletterSignup from "@/components/NewsletterSignup";
+import NewsletterCourseSignup from "@/components/NewsletterCourseSignup";
 import ContactUs from "@/components/ContactUs";
 import Recirculation from "@/components/Recirculation";
 import LandingPageTextSection from "@/components/LandingPageTextSection";
@@ -83,7 +83,7 @@ export default async function Home({
         />
       ))}
       <AdSlot />
-      {/* <NewsletterSignup /> */}
+      <NewsletterCourseSignup />
       <LandingPageTextSection
         titleKey="About.title"
         textKey="About.copy"
