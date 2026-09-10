@@ -24,7 +24,7 @@ import SchoolImageCredit from "@/components/SchoolImageCredit";
 import Recirculation from "@/components/Recirculation";
 import SavedSchoolsNav from "@/components/SavedSchoolsNav";
 
-// Gets purged when content changes
+// Gets purged when content changes or the data pipeline runs
 export const revalidate = 86400; // 1d
 
 const getSchool = cache(async (id: string) => {
