@@ -66,6 +66,10 @@ export const clearBlobCache = async (keys: string[]) => {
 };
 
 export const revalidateSchools = async (ids?: string[]) => {
+  // The school detail pages read the database directly rather than going
+  // through the API routes, so they need purging here too — otherwise they
+  // serve stale numbers until their own 1d ISR window expires.
+  revalidatePath("/[locale]/schools/[school]", "page");
   revalidatePath("/api/schools", "page");
   revalidatePath("/api/schools/names", "page");
   revalidatePath("/api/schools/price-histogram", "page");

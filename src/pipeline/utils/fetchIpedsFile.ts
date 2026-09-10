@@ -12,11 +12,11 @@ import { parseCsv } from "./parseCsv";
 export const fetchIpedsFile = async <FileRow = unknown>({
   fileTemplate,
   year,
-  baseUrl,
+  baseUrls,
 }: {
   fileTemplate: string;
   year: number;
-  baseUrl: string;
+  baseUrls: string[];
 }) => {
   const {
     fileType,
@@ -28,8 +28,7 @@ export const fetchIpedsFile = async <FileRow = unknown>({
   ] = await Promise.all([
     fetchAndUnzipIpeds({
       file: `${fileType}.zip`,
-      baseUrl,
-      surveyYear: year,
+      baseUrls,
     }),
   ]);
 
