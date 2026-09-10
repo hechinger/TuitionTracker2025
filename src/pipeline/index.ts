@@ -12,6 +12,7 @@ import { parseEFD } from "./parsing/efd";
 import { parseICAY } from "./parsing/icay";
 import { parseSFA, type RowSFA } from "./parsing/sfa";
 import { synthesize } from "./parsing/synthesize";
+import { IPEDS_BASE_URLS } from "./utils/ipedsBaseUrls";
 
 /**
  * Starting with 2024, IPEDS reorganised sticker price and net price data
@@ -47,7 +48,7 @@ export const pipeline = async ({
 
   const parsingContext = {
     year,
-    baseUrl: "https://nces.ed.gov/ipeds/datacenter/data/",
+    baseUrls: IPEDS_BASE_URLS,
     registerError,
   };
 
