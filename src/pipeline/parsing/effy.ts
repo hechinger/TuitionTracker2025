@@ -2,12 +2,15 @@ import type { ParseContext } from "../utils/parseIpedsFile";
 
 /**
  * The 12-month enrollment file contains one row per school per level of
- * student (`EFFYALEV`). Level 1 is *all* students — including graduate
- * students — while level 2 is the undergraduate total, which is what we
- * report. Rows arrive in level order, so the first row for a school is the
- * all-students row and must not be used.
+ * student (`EFFYALEV`). Level 1 is *all* students, including graduate
+ * students. Level 2 is all undergraduates, which still counts students
+ * taking classes for credit without pursuing a degree — thousands at some
+ * schools. We report level 3, degree/certificate-seeking undergraduates,
+ * since that matches the number readers expect for a school's size. Rows
+ * arrive in level order, so the first row for a school is the all-students
+ * row and must not be used.
  */
-const UNDERGRADUATE_LEVEL = 2;
+const DEGREE_SEEKING_UNDERGRADUATE_LEVEL = 3;
 
 export type RowEFFY = {
   EFFYALEV: number; // level of student the row covers
@@ -32,13 +35,13 @@ export const parseEFFY = (
   { registerError }: ParseContext,
 ) => {
   const [rows] = years;
-  const data = rows.find((row) => `${row.EFFYALEV}` === `${UNDERGRADUATE_LEVEL}`);
+  const data = rows.find((row) => `${row.EFFYALEV}` === `${DEGREE_SEEKING_UNDERGRADUATE_LEVEL}`);
 
-  // Graduate-only schools have no undergraduate row at all. We report their
-  // enrollment as unknown rather than falling back to a total that would
-  // include graduate students.
+  // Graduate-only schools have no degree-seeking undergraduate row at all.
+  // We report their enrollment as unknown rather than falling back to a
+  // total that would include other students.
   if (!data) {
-    registerError("No undergraduate enrollment reported");
+    registerError("No degree-seeking undergraduate enrollment reported");
     return {
       enrollment: {
         total: null,

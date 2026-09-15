@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import { waitUntil } from "@vercel/functions";
+import { NextResponse, after } from "next/server";
 import { pipeline } from "@/pipeline";
 import { revalidateSchools } from "@/cache";
 
@@ -15,9 +14,16 @@ export async function POST(request: Request) {
       throw new Error("Specify year in query parameter");
     }
 
-    // Use waitUntil to keep the serverless function alive while the
-    // pipeline runs in the background after the response is sent.
-    waitUntil(pipeline({ year }).then(() => revalidateSchools()));
+    // Run the pipeline in the background after the response is sent. This
+    // must be `after` rather than a bare `waitUntil`: Next.js applies
+    // `revalidatePath` calls when the handler's response completes, so a
+    // purge queued minutes later from `waitUntil` is silently dropped.
+    // Callbacks passed to `after` get their revalidations applied when they
+    // finish.
+    after(async () => {
+      await pipeline({ year });
+      await revalidateSchools();
+    });
 
     return NextResponse.json({
       message: "Success",
