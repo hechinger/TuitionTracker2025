@@ -10,12 +10,12 @@ const ACTION_URL = "https://hechingerreport.bluelena.io/proc.php";
 
 const COPY = {
   title: "Found your net price? Good start.",
-  blurb: "Get the full picture with our free 7-part course on applying to college and paying for it. Launches in September.",
+  blurb: "Get the full picture with our free 7-part course on applying to college and paying for it.",
   emailLabel: "Email",
   emailPlaceholder: "Type your email",
   submit: "Submit",
   submitting: "Submitting…",
-  thankYou: "Thank you for signing up! Keep an eye out for our launch in September.",
+  thankYou: "Thank you for signing up! Keep an eye on your inbox.",
   invalidEmail: "Enter a valid email address.",
   submitError: "Sorry your submission failed. Please try again.",
   captchaPrompt: "Please confirm you're not a robot below, then submit again.",
